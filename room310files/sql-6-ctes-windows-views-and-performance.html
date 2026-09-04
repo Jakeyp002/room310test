@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Write readable analytical queries with common table expressions and window functions, package logic in views, and reason about indexes and execution plans." />
+    <title>SQL: CTEs, Windows, Views &amp; Performance · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page sql-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero sql-lesson-hero">
+        <a href="sql-study.html">← All SQL lessons</a>
+        <p>SQL / Chapter 06</p>
+        <h1>CTEs, Windows, Views &amp; Performance</h1>
+        <p>Write readable analytical queries with common table expressions and window functions, package logic in views, and reason about indexes and execution plans.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Write readable analytical queries with common table expressions and window functions, package logic in views, and reason about indexes and execution plans. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Structure queries with CTEs</li><li>Use window functions</li><li>Create useful views</li><li>Explain index tradeoffs and inspect plans</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">06.1</p>
+      <h2>Common table expressions</h2>
+      <p>A CTE names a query result for use by the following statement. It can separate a complex question into readable stages and prevent repeated subqueries. A recursive CTE can walk hierarchies or generate sequences, though syntax and recursion limits vary by database.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>WITH customer_totals AS (
+    SELECT customer_id, SUM(total) AS lifetime_value
+    FROM orders
+    WHERE status = 'paid'
+    GROUP BY customer_id
+)
+SELECT customer_id, lifetime_value
+FROM customer_totals
+WHERE lifetime_value &gt;= 1000;</pre><span class="panel-label">Result</span><pre>customer_id | lifetime_value
+44          | 1250.00
+81          | 1822.75</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">06.2</p>
+      <h2>Window functions</h2>
+      <p>A window function calculates across related rows without collapsing them. OVER defines the window, PARTITION BY creates groups, and ORDER BY defines sequence. Ranking, running totals, moving averages, and comparisons with previous rows are common uses.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT
+    employee_id, department, salary,
+    RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS salary_rank,
+    AVG(salary) OVER (PARTITION BY department) AS department_average
+FROM employees;</pre><span class="panel-label">Result</span><pre>employee_id | department | salary | salary_rank | department_average
+12          | Design     | 92000  | 1           | 81500</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">06.3</p>
+      <h2>Views and reusable query interfaces</h2>
+      <p>A view stores a query definition and behaves like a virtual table. It can centralize approved business logic, simplify access, and hide sensitive columns. Views do not automatically guarantee performance and should be documented with their grain and filtering assumptions.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>CREATE VIEW active_customer_summary AS
+SELECT c.customer_id, c.full_name, COUNT(o.order_id) AS order_count
+FROM customers AS c
+LEFT JOIN orders AS o ON o.customer_id = c.customer_id
+WHERE c.active = TRUE
+GROUP BY c.customer_id, c.full_name;</pre><span class="panel-label">Result</span><pre>Applications can query active_customer_summary without repeating its join and grouping logic.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">06.4</p>
+      <h2>Indexes and execution plans</h2>
+      <p>An index provides an additional structure for locating rows, often accelerating selective filters, joins, and ordering. It costs storage and makes writes more expensive. Use the database's plan command to see scans, joins, estimated rows, and whether an index serves the actual query.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>CREATE INDEX idx_orders_customer_date
+ON orders (customer_id, ordered_at);
+
+-- Database-specific syntax:
+EXPLAIN SELECT *
+FROM orders
+WHERE customer_id = 44
+ORDER BY ordered_at DESC;</pre><span class="panel-label">Result</span><pre>The plan can use the composite index to locate one customer's orders in date order.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A6.1</strong><p>Rewrite a nested analytical query as two or more named CTE stages and document each stage's grain.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A6.2</strong><p>Produce ranking, running total, previous-row comparison, and rolling-average reports with window functions.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A6.3</strong><p>Create a view that exposes a safe, reusable reporting interface without private columns.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A6.4</strong><p>Compare query plans before and after a targeted index, recording read cost and the index's write tradeoff.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Analytics Portfolio</h2>
+          <p>Analytics Portfolio — Build a small normalized database and a set of executive reports using joins, CTEs, windows, conditional aggregation, and views. Add only evidence-based indexes, capture plans, and write a README defining every report's purpose and grain.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>CTE</li><li>recursive query</li><li>window function</li><li>partition</li><li>frame</li><li>view</li><li>index</li><li>selectivity</li><li>execution plan</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="SQL lesson navigation">
+        <a href="sql-5-changing-data-and-database-design.html"><span>Previous</span>Changing Data &amp; Database Design</a>
+        <a href="sql-study.html"><span>Finished</span>Back to SQL →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

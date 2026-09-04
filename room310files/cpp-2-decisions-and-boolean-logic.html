@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Make programs choose among paths using comparisons, logical operators, if/else chains, switch statements, and input validation." />
+    <title>C++: Decisions &amp; Boolean Logic · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page cpp-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero cpp-lesson-hero">
+        <a href="cpp-study.html">← All C++ lessons</a>
+        <p>C++ / Chapter 02</p>
+        <h1>Decisions &amp; Boolean Logic</h1>
+        <p>Make programs choose among paths using comparisons, logical operators, if/else chains, switch statements, and input validation.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Make programs choose among paths using comparisons, logical operators, if/else chains, switch statements, and input validation. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Build boolean expressions</li><li>Use if, else if, and else</li><li>Choose between if chains and switch</li><li>Validate input before processing</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">02.1</p>
+      <h2>Comparisons and boolean expressions</h2>
+      <p>A condition evaluates to true or false. Comparison operators include ==, !=, &lt;, &lt;=, &gt;, and &gt;=. Do not confuse assignment with equality: = changes a value, while == compares two values. Store a complicated condition in a clearly named bool when that improves readability.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>int age = 17;
+bool hasPermit = true;
+bool mayPractice = age &gt;= 16 &amp;&amp; hasPermit;
+std::cout &lt;&lt; std::boolalpha &lt;&lt; mayPractice;</pre><span class="panel-label">Result</span><pre>true</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">02.2</p>
+      <h2>if, else if, and else</h2>
+      <p>An if chain checks conditions from top to bottom and runs only the first matching branch. Arrange narrow or exceptional cases before broad cases. Braces should be used even for one-line branches because they prevent mistakes during later edits.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>int score = 86;
+if (score &gt;= 90) {
+    std::cout &lt;&lt; &quot;A&quot;;
+} else if (score &gt;= 80) {
+    std::cout &lt;&lt; &quot;B&quot;;
+} else if (score &gt;= 70) {
+    std::cout &lt;&lt; &quot;C&quot;;
+} else {
+    std::cout &lt;&lt; &quot;Needs revision&quot;;
+}</pre><span class="panel-label">Result</span><pre>B</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">02.3</p>
+      <h2>Logical operators and nesting</h2>
+      <p>The &amp;&amp; operator requires both sides to be true, || requires at least one side, and ! reverses a boolean. Parentheses make compound logic easier to audit. Nested decisions are useful when a second question only makes sense after the first condition succeeds, but excessive nesting should be simplified.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>bool member = true;
+double total = 72.0;
+if (member &amp;&amp; total &gt;= 50.0) {
+    total *= 0.90;
+}
+std::cout &lt;&lt; total;</pre><span class="panel-label">Result</span><pre>64.8</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">02.4</p>
+      <h2>switch and validation</h2>
+      <p>A switch is useful when one expression is compared with several discrete constant choices. break prevents fall-through into the next case. Validation rejects or re-prompts for values outside an allowed range before the program performs calculations.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>char choice = 'b';
+switch (choice) {
+    case 'a': std::cout &lt;&lt; &quot;Add&quot;; break;
+    case 'b': std::cout &lt;&lt; &quot;Browse&quot;; break;
+    case 'q': std::cout &lt;&lt; &quot;Quit&quot;; break;
+    default:  std::cout &lt;&lt; &quot;Invalid choice&quot;;
+}</pre><span class="panel-label">Result</span><pre>Browse</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A2.1</strong><p>Classify an integer as positive, negative, or zero and also report whether it is even or odd.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A2.2</strong><p>Create a grade calculator that validates a score from 0 through 100 and prints both a letter grade and feedback.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A2.3</strong><p>Build a shipping-cost decision tree based on package weight, destination zone, and express delivery.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A2.4</strong><p>Create a four-operation calculator using switch and protect division from a zero divisor.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Eligibility Advisor</h2>
+          <p>Eligibility Advisor — Ask a user a sequence of questions for a fictional program, scholarship, or event. Use compound and nested conditions to produce a clear decision with reasons. Include at least eight test cases covering boundaries, invalid values, and every outcome.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>condition</li><li>comparison</li><li>boolean</li><li>branch</li><li>compound expression</li><li>short-circuit</li><li>switch</li><li>validation</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="C++ lesson navigation">
+        <a href="cpp-1-programs-types-and-console-i-o.html"><span>Previous</span>Programs, Types &amp; Console I/O</a>
+        <a href="cpp-3-loops-and-repeated-work.html"><span>Next</span>Loops &amp; Repeated Work →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

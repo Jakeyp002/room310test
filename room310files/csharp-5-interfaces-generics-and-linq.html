@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Design abstractions with interfaces, write reusable generic code, and query in-memory data with expressive LINQ pipelines." />
+    <title>C#: Interfaces, Generics &amp; LINQ · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page csharp-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero csharp-lesson-hero">
+        <a href="csharp-study.html">← All C# lessons</a>
+        <p>C# / Chapter 05</p>
+        <h1>Interfaces, Generics &amp; LINQ</h1>
+        <p>Design abstractions with interfaces, write reusable generic code, and query in-memory data with expressive LINQ pipelines.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Design abstractions with interfaces, write reusable generic code, and query in-memory data with expressive LINQ pipelines. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Define focused interfaces</li><li>Use generic types and constraints</li><li>Compose LINQ operations</li><li>Understand deferred execution</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">05.1</p>
+      <h2>Interfaces as contracts</h2>
+      <p>An interface names a capability without choosing one implementation. Keep interfaces focused so consumers depend only on operations they use. Multiple implementations can serve production, testing, or alternate storage without changing the calling logic.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>public interface IRepository&lt;T&gt;
+{
+    T? FindById(int id);
+    IReadOnlyList&lt;T&gt; GetAll();
+    void Add(T item);
+}</pre><span class="panel-label">Result</span><pre>Any repository implementation must provide lookup, listing, and add behavior.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">05.2</p>
+      <h2>Generic types and constraints</h2>
+      <p>Generics preserve type safety while sharing an algorithm or data structure across types. Constraints state required capabilities such as a base type, interface, reference type, value type, or parameterless constructor. Add constraints only when the implementation actually uses them.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>static T MaxBy&lt;T, TKey&gt;(IEnumerable&lt;T&gt; items, Func&lt;T, TKey&gt; selector)
+    where TKey : IComparable&lt;TKey&gt;
+{
+    return items.MaxBy(selector)
+        ?? throw new InvalidOperationException(&quot;Sequence is empty&quot;);
+}</pre><span class="panel-label">Result</span><pre>The same method can select the greatest student, product, or event by a comparable key.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">05.3</p>
+      <h2>LINQ filtering and projection</h2>
+      <p>LINQ methods such as Where, Select, OrderBy, and GroupBy form readable pipelines over IEnumerable&lt;T&gt;. Each step returns a new sequence description. Name lambda parameters clearly and split a long pipeline into meaningful intermediate queries.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>var honorNames = students
+    .Where(student =&gt; student.Average &gt;= 90)
+    .OrderByDescending(student =&gt; student.Average)
+    .Select(student =&gt; student.Name)
+    .ToList();</pre><span class="panel-label">Result</span><pre>A materialized list of honor students ordered by average.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">05.4</p>
+      <h2>Deferred execution and aggregation</h2>
+      <p>Most LINQ sequence operators use deferred execution: the source is read when the result is enumerated. ToList materializes a snapshot. Aggregates such as Count, Sum, Average, Any, and All execute immediately and require a deliberate policy for empty sequences.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>IEnumerable&lt;int&gt; passing = scores.Where(score =&gt; score &gt;= 70);
+scores.Add(95);
+Console.WriteLine(passing.Count());
+List&lt;int&gt; snapshot = passing.ToList();</pre><span class="panel-label">Result</span><pre>The deferred query sees later source changes; the list snapshot does not.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A5.1</strong><p>Define a focused interface with two implementations and a fake used by a test or demonstration.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A5.2</strong><p>Write generic utilities for swapping, selecting bounds, and grouping items with appropriate constraints.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A5.3</strong><p>Create LINQ reports using Where, Select, OrderBy, GroupBy, and aggregate operators over a realistic dataset.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A5.4</strong><p>Demonstrate deferred execution versus materialization and explain when a stable snapshot is required.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Inventory Reporting Service</h2>
+          <p>Inventory Reporting Service — Depend on an inventory repository interface, query products with LINQ, group by category, calculate stock value, identify reorder needs, and expose immutable report records. Provide both in-memory and file-style repository implementations.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>interface</li><li>contract</li><li>generic</li><li>type parameter</li><li>constraint</li><li>LINQ</li><li>lambda</li><li>deferred execution</li><li>materialization</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="C# lesson navigation">
+        <a href="csharp-4-classes-records-and-object-oriented-design.html"><span>Previous</span>Classes, Records &amp; Object-Oriented Design</a>
+        <a href="csharp-6-files-exceptions-async-and-testing.html"><span>Next</span>Files, Exceptions, Async &amp; Testing →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

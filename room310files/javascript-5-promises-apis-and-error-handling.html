@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Understand asynchronous execution, compose promises, fetch remote data, cancel stale requests, and present loading, success, empty, and error states." />
+    <title>JavaScript: Promises, APIs &amp; Error Handling · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page javascript-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero javascript-lesson-hero">
+        <a href="javascript-study.html">← All JavaScript lessons</a>
+        <p>JavaScript / Chapter 05</p>
+        <h1>Promises, APIs &amp; Error Handling</h1>
+        <p>Understand asynchronous execution, compose promises, fetch remote data, cancel stale requests, and present loading, success, empty, and error states.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Understand asynchronous execution, compose promises, fetch remote data, cancel stale requests, and present loading, success, empty, and error states. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Explain asynchronous execution</li><li>Use promises and async/await</li><li>Fetch and validate HTTP responses</li><li>Design resilient UI states</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">05.1</p>
+      <h2>Asynchronous execution and promises</h2>
+      <p>A promise represents a future completion or failure. then transforms a fulfilled value, catch handles rejection, and finally performs cleanup. Promise chains should return their next promise so errors and results flow through one predictable path.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>wait(500)
+  .then(() =&gt; &quot;Ready&quot;)
+  .then(message =&gt; console.log(message))
+  .catch(error =&gt; console.error(error))
+  .finally(() =&gt; console.log(&quot;Finished&quot;));</pre><span class="panel-label">Result</span><pre>Ready
+Finished</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">05.2</p>
+      <h2>async and await</h2>
+      <p>An async function always returns a promise. await pauses that function—not the whole program—until the promise settles. try/catch gives asynchronous code familiar error handling, and finally is useful for clearing loading indicators.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>async function loadProfile() {
+  setLoading(true);
+  try {
+    const profile = await getProfile();
+    renderProfile(profile);
+  } catch (error) {
+    showError(error.message);
+  } finally {
+    setLoading(false);
+  }
+}</pre><span class="panel-label">Result</span><pre>The interface displays loading, then either profile data or a readable error.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">05.3</p>
+      <h2>fetch and HTTP responses</h2>
+      <p>fetch rejects for network failures but not automatically for HTTP error statuses. Check response.ok before reading the body. JSON parsing is asynchronous, and returned data should be validated before the interface assumes properties exist.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>async function fetchPosts() {
+  const response = await fetch(&quot;https://example.test/api/posts&quot;);
+  if (!response.ok) {
+    throw new Error(`Request failed: ${response.status}`);
+  }
+  const data = await response.json();
+  if (!Array.isArray(data)) throw new TypeError(&quot;Expected an array&quot;);
+  return data;
+}</pre><span class="panel-label">Result</span><pre>A valid response returns posts; network, HTTP, and shape failures become explicit errors.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">05.4</p>
+      <h2>Concurrency and cancellation</h2>
+      <p>Promise.all runs independent operations concurrently and fails when one rejects; Promise.allSettled reports every result. AbortController can cancel a fetch when a new search supersedes it or a component is removed. Prevent stale responses from overwriting newer state.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>let controller;
+async function search(query) {
+  controller?.abort();
+  controller = new AbortController();
+  const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`, {
+    signal: controller.signal
+  });
+  return response.json();
+}</pre><span class="panel-label">Result</span><pre>Starting a new search cancels the previous request.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A5.1</strong><p>Create promise-based delay, timeout, and retry helpers with clear error behavior.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A5.2</strong><p>Fetch a public-style mock endpoint and render loading, success, empty, and failure states.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A5.3</strong><p>Run three independent requests concurrently and display partial results using Promise.allSettled.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A5.4</strong><p>Build a debounced search interface that cancels stale requests and ignores out-of-order responses.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Data Explorer</h2>
+          <p>Data Explorer — Build an interface that fetches records, supports search and filters, handles loading/empty/error states, caches successful responses in memory, and offers retry. Validate response data before rendering and cancel superseded searches.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>asynchronous</li><li>promise</li><li>fulfillment</li><li>rejection</li><li>async</li><li>await</li><li>HTTP status</li><li>JSON</li><li>concurrency</li><li>cancellation</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="JavaScript lesson navigation">
+        <a href="javascript-4-dom-events-and-forms.html"><span>Previous</span>DOM, Events &amp; Forms</a>
+        <a href="javascript-6-modules-classes-storage-and-testing.html"><span>Next</span>Modules, Classes, Storage &amp; Testing →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Connect related tables with reliable join conditions, preserve unmatched rows when needed, model many-to-many relationships, and use subqueries deliberately." />
+    <title>SQL: Joins &amp; Multi-Table Questions · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page sql-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero sql-lesson-hero">
+        <a href="sql-study.html">← All SQL lessons</a>
+        <p>SQL / Chapter 04</p>
+        <h1>Joins &amp; Multi-Table Questions</h1>
+        <p>Connect related tables with reliable join conditions, preserve unmatched rows when needed, model many-to-many relationships, and use subqueries deliberately.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Connect related tables with reliable join conditions, preserve unmatched rows when needed, model many-to-many relationships, and use subqueries deliberately. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Write correct inner and outer joins</li><li>Prevent accidental row multiplication</li><li>Query bridge tables</li><li>Use self joins and subqueries</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">04.1</p>
+      <h2>INNER JOIN</h2>
+      <p>An inner join returns matching row combinations from both tables. The ON clause describes the relationship, normally primary key to foreign key. Qualify columns with table aliases, especially identifiers such as name or id that appear in multiple tables.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT o.order_id, c.full_name, o.total
+FROM orders AS o
+JOIN customers AS c
+  ON c.customer_id = o.customer_id;</pre><span class="panel-label">Result</span><pre>order_id | full_name  | total
+4501     | Ana Ruiz   | 72.40
+4502     | Jon Bell   | 38.00</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">04.2</p>
+      <h2>LEFT JOIN and unmatched rows</h2>
+      <p>A left join keeps every row from the left table and fills right-side columns with NULL when no match exists. It answers questions such as customers with no orders. A right-table filter placed in WHERE can accidentally turn a left join into an inner join, so filter placement matters.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT c.customer_id, c.full_name
+FROM customers AS c
+LEFT JOIN orders AS o
+  ON o.customer_id = c.customer_id
+WHERE o.order_id IS NULL;</pre><span class="panel-label">Result</span><pre>customer_id | full_name
+77          | Leila Ortiz</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">04.3</p>
+      <h2>Many-to-many joins and duplication</h2>
+      <p>Many-to-many relationships use a bridge table containing foreign keys to both related tables. Joining across the bridge creates one row per relationship. Aggregating after such joins requires careful attention to grain so repeated parent values are not counted multiple times.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT s.full_name, co.course_name
+FROM students AS s
+JOIN enrollments AS e ON e.student_id = s.student_id
+JOIN courses AS co ON co.course_id = e.course_id
+ORDER BY s.full_name, co.course_name;</pre><span class="panel-label">Result</span><pre>full_name | course_name
+Ana Ruiz  | Biology
+Ana Ruiz  | Computer Science</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">04.4</p>
+      <h2>Self joins and subqueries</h2>
+      <p>A self join relates rows within one table, such as employees and managers. A subquery supplies a value or set to an outer query. Correlated subqueries run in relation to each outer row and can be expressive, but a join or window function may be clearer and faster.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT employee.full_name, manager.full_name AS manager_name
+FROM employees AS employee
+LEFT JOIN employees AS manager
+  ON manager.employee_id = employee.manager_id;</pre><span class="panel-label">Result</span><pre>full_name   | manager_name
+Mara Chen   | Noah Williams
+Noah Williams | NULL</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A4.1</strong><p>Join orders, customers, and order items to produce a readable invoice-detail dataset.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A4.2</strong><p>Find every parent row with no child records using a left join and NULL test.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A4.3</strong><p>Query a students-courses bridge table and produce both detailed enrollment rows and counts by course.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A4.4</strong><p>Create a self-join organizational chart showing employee, manager, and manager department.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Streaming Catalog Analysis</h2>
+          <p>Streaming Catalog Analysis — Design or use tables for titles, genres, creators, subscribers, and watch events. Write multi-table reports for catalog coverage, unwatched titles, subscriber behavior, creator reach, and genre popularity without double counting.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>join</li><li>join condition</li><li>inner join</li><li>outer join</li><li>bridge table</li><li>many-to-many</li><li>alias</li><li>self join</li><li>subquery</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="SQL lesson navigation">
+        <a href="sql-3-aggregation-group-by-and-case.html"><span>Previous</span>Aggregation, GROUP BY &amp; CASE</a>
+        <a href="sql-5-changing-data-and-database-design.html"><span>Next</span>Changing Data &amp; Database Design →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

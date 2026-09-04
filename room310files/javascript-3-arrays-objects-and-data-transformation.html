@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Represent collections and records, transform arrays declaratively, destructure data, and avoid accidental mutation." />
+    <title>JavaScript: Arrays, Objects &amp; Data Transformation · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page javascript-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero javascript-lesson-hero">
+        <a href="javascript-study.html">← All JavaScript lessons</a>
+        <p>JavaScript / Chapter 03</p>
+        <h1>Arrays, Objects &amp; Data Transformation</h1>
+        <p>Represent collections and records, transform arrays declaratively, destructure data, and avoid accidental mutation.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Represent collections and records, transform arrays declaratively, destructure data, and avoid accidental mutation. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Use array operations</li><li>Transform with map/filter/reduce</li><li>Model records with objects</li><li>Copy and destructure data safely</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">03.1</p>
+      <h2>Arrays and mutation</h2>
+      <p>Arrays are ordered objects with zero-based indexes. push, pop, splice, and sort mutate the original array; concat, slice, map, and filter return new arrays. Know which behavior you need before choosing a method.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>const tasks = [&quot;read&quot;, &quot;practice&quot;];
+tasks.push(&quot;reflect&quot;);
+const firstTwo = tasks.slice(0, 2);
+console.log(tasks, firstTwo);</pre><span class="panel-label">Result</span><pre>[&quot;read&quot;, &quot;practice&quot;, &quot;reflect&quot;]
+[&quot;read&quot;, &quot;practice&quot;]</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">03.2</p>
+      <h2>map, filter, and reduce</h2>
+      <p>map transforms every element, filter keeps matching elements, and reduce combines values into one result. Callback names should describe the current value, and transformations should avoid hidden side effects. A loop may be clearer when several stateful steps interact.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>const prices = [12, 5, 20, 8];
+const discounted = prices
+  .filter(price =&gt; price &gt;= 10)
+  .map(price =&gt; price * 0.9);
+const total = discounted.reduce((sum, price) =&gt; sum + price, 0);
+console.log(total);</pre><span class="panel-label">Result</span><pre>28.8</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">03.3</p>
+      <h2>Objects and property access</h2>
+      <p>Objects group named properties and methods. Dot notation fits known property names; bracket notation supports computed names. Use Object.keys, Object.values, and Object.entries to iterate predictable own enumerable properties.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>const student = {
+  name: &quot;Ana&quot;,
+  scores: [88, 94, 91],
+  average() {
+    return this.scores.reduce((a, b) =&gt; a + b, 0) / this.scores.length;
+  }
+};
+console.log(student.average());</pre><span class="panel-label">Result</span><pre>91</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">03.4</p>
+      <h2>Destructuring, spread, and immutability</h2>
+      <p>Destructuring extracts array positions or object properties into variables. Spread copies enumerable properties or elements into a new collection. These copies are shallow, so nested objects still share references unless they are copied too.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>const original = { name: &quot;Ana&quot;, status: &quot;active&quot; };
+const updated = { ...original, status: &quot;complete&quot; };
+const { name, status } = updated;
+console.log(name, status, original.status);</pre><span class="panel-label">Result</span><pre>Ana complete active</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A3.1</strong><p>Implement array utilities for unique values, chunking, rotation, frequency counts, and stable numeric sorting.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A3.2</strong><p>Transform a product dataset through filter, map, sort, and reduce to create a category summary.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A3.3</strong><p>Model a playlist with objects and write functions to add, remove, search, total duration, and group by artist.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A3.4</strong><p>Update nested application state without changing the original and prove which references were copied.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Personal Finance Analyzer</h2>
+          <p>Personal Finance Analyzer — Represent transactions as objects and produce filtered views, category totals, monthly summaries, largest expenses, and balance changes. Keep source data unchanged and export a final report object.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>array</li><li>mutation</li><li>callback</li><li>map</li><li>filter</li><li>reduce</li><li>object</li><li>method</li><li>destructuring</li><li>spread</li><li>shallow copy</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="JavaScript lesson navigation">
+        <a href="javascript-2-control-flow-and-robust-functions.html"><span>Previous</span>Control Flow &amp; Robust Functions</a>
+        <a href="javascript-4-dom-events-and-forms.html"><span>Next</span>DOM, Events &amp; Forms →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

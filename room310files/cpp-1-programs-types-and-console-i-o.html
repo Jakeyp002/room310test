@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Learn how C++ source becomes an executable, then write programs that store values, calculate results, and communicate through the console." />
+    <title>C++: Programs, Types &amp; Console I/O · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page cpp-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero cpp-lesson-hero">
+        <a href="cpp-study.html">← All C++ lessons</a>
+        <p>C++ / Chapter 01</p>
+        <h1>Programs, Types &amp; Console I/O</h1>
+        <p>Learn how C++ source becomes an executable, then write programs that store values, calculate results, and communicate through the console.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Learn how C++ source becomes an executable, then write programs that store values, calculate results, and communicate through the console. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Explain source, compilation, linking, and execution</li><li>Build a valid main function</li><li>Choose useful fundamental data types</li><li>Read and format console input and output</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">01.1</p>
+      <h2>From source to executable</h2>
+      <p>C++ is a compiled language. A compiler translates source files into object code, and a linker combines that code with libraries to make an executable. Compiler errors happen before the program runs, while runtime errors happen after execution begins. Reading the first useful error message is an essential skill.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>#include &lt;iostream&gt;
+
+int main() {
+    std::cout &lt;&lt; &quot;Hello, C++!\n&quot;;
+    return 0;
+}</pre><span class="panel-label">Result</span><pre>Hello, C++!</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">01.2</p>
+      <h2>The main function and statements</h2>
+      <p>Execution begins in main. Statements normally end with semicolons, braces group statements into a block, and comments explain intent without affecting execution. Keeping one responsibility per statement makes early programs easier to trace and debug.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>int main() {
+    // Each statement performs one clear action.
+    std::cout &lt;&lt; &quot;Room 310\n&quot;;
+    std::cout &lt;&lt; &quot;First program complete.\n&quot;;
+    return 0;
+}</pre><span class="panel-label">Result</span><pre>Room 310
+First program complete.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">01.3</p>
+      <h2>Variables and fundamental types</h2>
+      <p>A variable pairs a name with a type and value. int stores whole numbers, double stores decimal values, char stores one character, bool stores true or false, and std::string stores text. Initialize variables when they are declared so the program never depends on an unknown value.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>#include &lt;string&gt;
+
+int students = 24;
+double average = 91.5;
+char section = 'A';
+bool classOpen = true;
+std::string course = &quot;C++&quot;;</pre><span class="panel-label">Result</span><pre>students = 24
+average = 91.5
+section = A
+classOpen = true
+course = C++</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">01.4</p>
+      <h2>Input, arithmetic, and formatting</h2>
+      <p>std::cin reads typed values and the stream insertion operator sends values to std::cout. Arithmetic follows normal precedence, so parentheses should be used when they clarify a formula. The iomanip library controls decimal precision for money and measurements.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>#include &lt;iomanip&gt;
+#include &lt;iostream&gt;
+
+int main() {
+    double width, height;
+    std::cout &lt;&lt; &quot;Width and height: &quot;;
+    std::cin &gt;&gt; width &gt;&gt; height;
+    double area = width * height;
+    std::cout &lt;&lt; std::fixed &lt;&lt; std::setprecision(2)
+              &lt;&lt; &quot;Area: &quot; &lt;&lt; area &lt;&lt; &quot;\n&quot;;
+}</pre><span class="panel-label">Result</span><pre>Width and height: 4.5 3
+Area: 13.50</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A1.1</strong><p>Create a personal introduction that prints at least six labeled facts and uses comments to identify each section.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A1.2</strong><p>Ask for two decimal numbers and report their sum, difference, product, quotient, and remainder where appropriate.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A1.3</strong><p>Convert a Fahrenheit temperature to Celsius using a named variable for every part of the formula.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A1.4</strong><p>Build a receipt that accepts an item name, quantity, and unit price, then prints subtotal, tax, and total to two decimal places.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Console Toolkit</h2>
+          <p>Console Toolkit — Create a menu-free program that collects a user's name and three numeric measurements, calculates at least four useful results, and prints a carefully formatted report. Include a heading, explanatory comments, sensible variable names, and test evidence for normal and decimal input.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>compiler</li><li>linker</li><li>executable</li><li>statement</li><li>variable</li><li>initialization</li><li>type</li><li>stream</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="C++ lesson navigation">
+        <a href="cpp-study.html"><span>Course home</span>C++</a>
+        <a href="cpp-2-decisions-and-boolean-logic.html"><span>Next</span>Decisions &amp; Boolean Logic →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Understand the .NET execution model and write strongly typed console programs with variables, conversions, calculations, and validated input." />
+    <title>C#: .NET Programs, Types &amp; Input · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page csharp-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero csharp-lesson-hero">
+        <a href="csharp-study.html">← All C# lessons</a>
+        <p>C# / Chapter 01</p>
+        <h1>.NET Programs, Types &amp; Input</h1>
+        <p>Understand the .NET execution model and write strongly typed console programs with variables, conversions, calculations, and validated input.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Understand the .NET execution model and write strongly typed console programs with variables, conversions, calculations, and validated input. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Explain source, IL, and runtime execution</li><li>Use C# types and nullable values</li><li>Format output</li><li>Parse and validate console input</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">01.1</p>
+      <h2>C# and the .NET runtime</h2>
+      <p>C# source is compiled into Intermediate Language and metadata. The .NET runtime loads that code and uses just-in-time compilation for the current platform. A project file records target framework, dependencies, and build settings, while Program.cs contains the application entry point.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>Console.WriteLine(&quot;Hello from C#&quot;);</pre><span class="panel-label">Result</span><pre>Hello from C#</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">01.2</p>
+      <h2>Variables, types, and inference</h2>
+      <p>C# is statically typed. int, double, decimal, bool, char, string, and DateTime model common values. var asks the compiler to infer a type from an initializer; it does not make the variable dynamically typed. Use decimal for base-10 financial calculations.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>string course = &quot;C#&quot;;
+int lessons = 6;
+decimal price = 19.95m;
+bool available = true;
+var message = $&quot;{course}: {lessons} lessons, {price:C}&quot;;
+Console.WriteLine(message);</pre><span class="panel-label">Result</span><pre>C#: 6 lessons, $19.95</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">01.3</p>
+      <h2>Nullable values and conversion</h2>
+      <p>Value types normally require a value, while a nullable value type such as int? may also be null. Use explicit conversion methods and TryParse for uncertain text. The null-coalescing operator ?? supplies a fallback without confusing missing data with zero.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>Console.Write(&quot;Age: &quot;);
+string? raw = Console.ReadLine();
+if (int.TryParse(raw, out int age) &amp;&amp; age &gt;= 0)
+{
+    Console.WriteLine($&quot;Next year: {age + 1}&quot;);
+}
+else
+{
+    Console.WriteLine(&quot;Enter a valid nonnegative age.&quot;);
+}</pre><span class="panel-label">Result</span><pre>Age: 16
+Next year: 17</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">01.4</p>
+      <h2>Operators and formatted output</h2>
+      <p>Arithmetic, comparison, logical, and assignment operators resemble Java and C++. Integer division drops the fractional part, so convert or use a decimal operand when a decimal result is required. Interpolated strings combine expressions with optional format specifiers.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>double earned = 43;
+double possible = 50;
+double percent = earned / possible;
+Console.WriteLine($&quot;Score: {percent:P1}&quot;);</pre><span class="panel-label">Result</span><pre>Score: 86.0%</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A1.1</strong><p>Create a profile report using at least seven suitable types and interpolated output.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A1.2</strong><p>Build a safe two-number calculator using TryParse and protected division.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A1.3</strong><p>Calculate subtotal, tax, discount, and total with decimal and currency formatting.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A1.4</strong><p>Parse a date and report the day of week and days remaining, handling invalid input.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Console Intake Report</h2>
+          <p>Console Intake Report — Collect a person's contact and measurement data, validate every field, calculate at least four derived values, and print a formatted report. Use nullable annotations intentionally and never allow malformed input to crash the program.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>.NET</li><li>runtime</li><li>IL</li><li>static type</li><li>var</li><li>nullable</li><li>TryParse</li><li>interpolation</li><li>format specifier</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="C# lesson navigation">
+        <a href="csharp-study.html"><span>Course home</span>C#</a>
+        <a href="csharp-2-conditionals-patterns-and-loops.html"><span>Next</span>Conditionals, Patterns &amp; Loops →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

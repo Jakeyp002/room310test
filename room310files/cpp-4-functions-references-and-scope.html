@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Decompose programs into reusable functions with clear contracts, parameters, return values, references, overloads, and controlled scope." />
+    <title>C++: Functions, References &amp; Scope · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page cpp-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero cpp-lesson-hero">
+        <a href="cpp-study.html">← All C++ lessons</a>
+        <p>C++ / Chapter 04</p>
+        <h1>Functions, References &amp; Scope</h1>
+        <p>Decompose programs into reusable functions with clear contracts, parameters, return values, references, overloads, and controlled scope.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Decompose programs into reusable functions with clear contracts, parameters, return values, references, overloads, and controlled scope. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Declare and define functions</li><li>Pass values and references</li><li>Return meaningful results</li><li>Use overloads and scope responsibly</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">04.1</p>
+      <h2>Function contracts</h2>
+      <p>A function should perform one named task. Its signature states the return type, name, and parameter types. A declaration lets the compiler know the signature before use; the definition contains the body. Preconditions describe valid input and postconditions describe the promised result.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>double rectangleArea(double width, double height);
+
+int main() {
+    std::cout &lt;&lt; rectangleArea(4.0, 2.5);
+}
+
+double rectangleArea(double width, double height) {
+    return width * height;
+}</pre><span class="panel-label">Result</span><pre>10</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">04.2</p>
+      <h2>Value and reference parameters</h2>
+      <p>Pass-by-value gives the function a copy, so changes remain local. A reference parameter aliases the caller's variable and can intentionally modify it. const references avoid copying large objects while promising not to change them.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>void swapValues(int&amp; left, int&amp; right) {
+    int temporary = left;
+    left = right;
+    right = temporary;
+}
+
+int a = 3, b = 9;
+swapValues(a, b);</pre><span class="panel-label">Result</span><pre>a = 9, b = 3</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">04.3</p>
+      <h2>Return values and early returns</h2>
+      <p>A non-void function must return a value on every reachable path. A return can end a function early when an invalid case or completed result is found. Prefer returning a result over changing global state because returned data is easier to test and reuse.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>bool isPrime(int number) {
+    if (number &lt; 2) return false;
+    for (int divisor = 2; divisor * divisor &lt;= number; ++divisor) {
+        if (number % divisor == 0) return false;
+    }
+    return true;
+}</pre><span class="panel-label">Result</span><pre>isPrime(29) -&gt; true
+isPrime(30) -&gt; false</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">04.4</p>
+      <h2>Overloading and scope</h2>
+      <p>Overloaded functions share a name but have different parameter lists. The compiler selects a matching version at compile time. Local variables exist only inside their block; global variables should be rare because hidden shared state makes behavior difficult to predict.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>int larger(int a, int b) { return a &gt; b ? a : b; }
+double larger(double a, double b) { return a &gt; b ? a : b; }
+
+std::cout &lt;&lt; larger(4, 9) &lt;&lt; &quot; &quot; &lt;&lt; larger(3.2, 1.8);</pre><span class="panel-label">Result</span><pre>9 3.2</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A4.1</strong><p>Write conversion functions for miles/kilometers and Fahrenheit/Celsius, then build a menu that calls them.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A4.2</strong><p>Create reusable functions for minimum, maximum, sum, and average of three numbers without duplicating calculations.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A4.3</strong><p>Build a password checker returning separate results for length, uppercase, lowercase, digit, and symbol rules.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A4.4</strong><p>Refactor a previous loop project so input, validation, calculation, and reporting are separate functions.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Modular Statistics Console</h2>
+          <p>Modular Statistics Console — Read a collection of scores and call separate functions to validate input, calculate mean, median, range, and letter distribution, then format a report. Document every function's contract and test functions independently.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>signature</li><li>declaration</li><li>definition</li><li>parameter</li><li>argument</li><li>reference</li><li>return type</li><li>scope</li><li>overload</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="C++ lesson navigation">
+        <a href="cpp-3-loops-and-repeated-work.html"><span>Previous</span>Loops &amp; Repeated Work</a>
+        <a href="cpp-5-arrays-vectors-and-strings.html"><span>Next</span>Arrays, Vectors &amp; Strings →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

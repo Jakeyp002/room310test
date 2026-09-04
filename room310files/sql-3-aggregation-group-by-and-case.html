@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Summarize many rows into useful measures using aggregate functions, groups, group filters, conditional logic, and careful treatment of NULL." />
+    <title>SQL: Aggregation, GROUP BY &amp; CASE · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page sql-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero sql-lesson-hero">
+        <a href="sql-study.html">← All SQL lessons</a>
+        <p>SQL / Chapter 03</p>
+        <h1>Aggregation, GROUP BY &amp; CASE</h1>
+        <p>Summarize many rows into useful measures using aggregate functions, groups, group filters, conditional logic, and careful treatment of NULL.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Summarize many rows into useful measures using aggregate functions, groups, group filters, conditional logic, and careful treatment of NULL. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Use aggregate functions</li><li>Group at the correct grain</li><li>Filter groups with HAVING</li><li>Build conditional measures with CASE</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">03.1</p>
+      <h2>Aggregate functions</h2>
+      <p>COUNT, SUM, AVG, MIN, and MAX calculate one result from a set of rows. COUNT(*) counts rows, while COUNT(column) ignores NULL in that column. AVG also ignores NULL, which matters when missing values should instead count as zero or trigger a data-quality warning.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT
+    COUNT(*) AS order_count,
+    SUM(total) AS revenue,
+    AVG(total) AS average_order,
+    MAX(total) AS largest_order
+FROM orders;</pre><span class="panel-label">Result</span><pre>order_count | revenue | average_order | largest_order
+125         | 9320.50 | 74.56         | 410.00</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">03.2</p>
+      <h2>GROUP BY and query grain</h2>
+      <p>GROUP BY creates one result row per unique group. Every selected item must either be grouped or aggregated. The grain describes what one output row represents; stating it first prevents accidental double counting.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT category, COUNT(*) AS product_count, AVG(price) AS average_price
+FROM products
+GROUP BY category
+ORDER BY product_count DESC;</pre><span class="panel-label">Result</span><pre>category | product_count | average_price
+Books    | 42            | 18.74
+Games    | 19            | 31.20</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">03.3</p>
+      <h2>WHERE versus HAVING</h2>
+      <p>WHERE filters individual rows before grouping. HAVING filters completed groups after aggregates are calculated. Use WHERE whenever a condition does not depend on an aggregate because reducing rows earlier is clearer and often more efficient.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT customer_id, SUM(total) AS lifetime_value
+FROM orders
+WHERE status = 'paid'
+GROUP BY customer_id
+HAVING SUM(total) &gt;= 500;</pre><span class="panel-label">Result</span><pre>customer_id | lifetime_value
+18          | 742.15
+44          | 1250.00</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">03.4</p>
+      <h2>CASE and conditional aggregation</h2>
+      <p>CASE creates categories or conditional values inside a query. Summing a CASE expression counts or totals rows that meet a rule. Include an ELSE branch so unexpected values produce an intentional result instead of silent NULL.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT
+    department,
+    COUNT(*) AS employees,
+    SUM(CASE WHEN remote = TRUE THEN 1 ELSE 0 END) AS remote_count
+FROM employees
+GROUP BY department;</pre><span class="panel-label">Result</span><pre>department | employees | remote_count
+Design     | 12        | 8
+Operations | 20        | 5</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A3.1</strong><p>Create a one-row dashboard of counts, totals, averages, minimums, and maximums for an orders table.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A3.2</strong><p>Produce grouped reports at three different grains and write a sentence defining what one row represents in each.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A3.3</strong><p>Use WHERE and HAVING together to find strong categories within a recent date range.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A3.4</strong><p>Build a CASE-based report that places values into named bands and calculates counts and percentages for each band.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>School Performance Dashboard</h2>
+          <p>School Performance Dashboard — From student, course, and assessment data, create reports for class size, score distribution, averages, passing rates, missing work, and improvement bands. Include at least one conditional aggregate and document how NULL scores are treated.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>aggregate</li><li>grain</li><li>group</li><li>COUNT</li><li>SUM</li><li>AVG</li><li>HAVING</li><li>CASE</li><li>conditional aggregation</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="SQL lesson navigation">
+        <a href="sql-2-filtering-sorting-and-null.html"><span>Previous</span>Filtering, Sorting &amp; NULL</a>
+        <a href="sql-4-joins-and-multi-table-questions.html"><span>Next</span>Joins &amp; Multi-Table Questions →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

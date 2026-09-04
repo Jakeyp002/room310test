@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Return exactly the rows you need using predicates, ranges, pattern matching, NULL rules, ordering, and limited results." />
+    <title>SQL: Filtering, Sorting &amp; NULL · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page sql-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero sql-lesson-hero">
+        <a href="sql-study.html">← All SQL lessons</a>
+        <p>SQL / Chapter 02</p>
+        <h1>Filtering, Sorting &amp; NULL</h1>
+        <p>Return exactly the rows you need using predicates, ranges, pattern matching, NULL rules, ordering, and limited results.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Return exactly the rows you need using predicates, ranges, pattern matching, NULL rules, ordering, and limited results. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Write WHERE predicates</li><li>Combine conditions correctly</li><li>Handle NULL explicitly</li><li>Sort and limit results predictably</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">02.1</p>
+      <h2>WHERE and comparison predicates</h2>
+      <p>WHERE keeps rows whose predicate evaluates to true. Use =, &lt;&gt;, &lt;, &lt;=, &gt;, and &gt;= for comparisons. Text and date literals use quotes, while numbers normally do not. Filters should reflect the question in plain language before being translated into SQL.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT title, price
+FROM books
+WHERE price &lt;= 20.00;</pre><span class="panel-label">Result</span><pre>title                 | price
+The Long Way Home     | 18.50
+Small Systems         | 16.00</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">02.2</p>
+      <h2>AND, OR, IN, and BETWEEN</h2>
+      <p>AND requires every condition, while OR allows alternatives. SQL evaluates AND before OR, so parentheses should make mixed logic explicit. IN matches a set of listed values; BETWEEN includes both endpoints and is useful for numeric and date ranges.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT order_id, status, total
+FROM orders
+WHERE status IN ('paid', 'shipped')
+  AND total BETWEEN 50 AND 200;</pre><span class="panel-label">Result</span><pre>order_id | status  | total
+4501     | paid    | 72.40
+4510     | shipped | 188.00</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">02.3</p>
+      <h2>NULL and three-valued logic</h2>
+      <p>NULL means missing or unknown, not zero or an empty string. Comparisons with NULL do not produce true, so use IS NULL and IS NOT NULL. COALESCE can substitute the first non-NULL value when presenting a result.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT full_name, COALESCE(phone, 'No phone') AS phone_display
+FROM contacts
+WHERE email IS NOT NULL;</pre><span class="panel-label">Result</span><pre>full_name   | phone_display
+Mara Singh  | No phone
+Jon Bell    | 555-0138</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">02.4</p>
+      <h2>LIKE, ORDER BY, and limiting</h2>
+      <p>LIKE matches text patterns: % represents any sequence and _ represents one character. ORDER BY may use multiple columns with ASC or DESC. A limited query should include an order so the selected top rows are deterministic.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT full_name, points
+FROM members
+WHERE full_name LIKE 'A%'
+ORDER BY points DESC, full_name ASC
+FETCH FIRST 5 ROWS ONLY;</pre><span class="panel-label">Result</span><pre>full_name    | points
+Amara Okafor | 920
+Ana Ruiz     | 845</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A2.1</strong><p>Write filters for a library dataset using comparisons, ranges, IN, and mixed AND/OR logic with parentheses.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A2.2</strong><p>Find incomplete customer records using NULL tests and create display columns with COALESCE.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A2.3</strong><p>Create pattern-matching queries for names, codes, and email domains, including one-character wildcards.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A2.4</strong><p>Produce deterministic top-five and bottom-five reports using multi-column sorting and a row limit.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Data Quality Audit</h2>
+          <p>Data Quality Audit — Analyze a messy contacts table. Write separate queries for missing required data, suspicious ranges, inconsistent categories, duplicates, and invalid-looking patterns. Finish with a prioritized cleanup report explaining what each query detects.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>predicate</li><li>filter</li><li>operator precedence</li><li>range</li><li>pattern</li><li>wildcard</li><li>NULL</li><li>three-valued logic</li><li>deterministic</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="SQL lesson navigation">
+        <a href="sql-1-relational-data-and-select.html"><span>Previous</span>Relational Data &amp; SELECT</a>
+        <a href="sql-3-aggregation-group-by-and-case.html"><span>Next</span>Aggregation, GROUP BY &amp; CASE →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

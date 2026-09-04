@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Control execution with boolean logic, switch expressions, loops, pattern matching, and careful boundary handling." />
+    <title>C#: Conditionals, Patterns &amp; Loops · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page csharp-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero csharp-lesson-hero">
+        <a href="csharp-study.html">← All C# lessons</a>
+        <p>C# / Chapter 02</p>
+        <h1>Conditionals, Patterns &amp; Loops</h1>
+        <p>Control execution with boolean logic, switch expressions, loops, pattern matching, and careful boundary handling.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Control execution with boolean logic, switch expressions, loops, pattern matching, and careful boundary handling. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Write branches and compound conditions</li><li>Use switch expressions</li><li>Choose loop structures</li><li>Apply pattern matching and validation</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">02.1</p>
+      <h2>if/else and boolean logic</h2>
+      <p>Conditions use comparisons and logical operators &amp;&amp;, ||, and !. Place the most specific conditions first and use braces consistently. Nullable booleans require an explicit policy because true, false, and unknown are distinct states.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>int score = 84;
+string grade;
+if (score &gt;= 90) grade = &quot;A&quot;;
+else if (score &gt;= 80) grade = &quot;B&quot;;
+else if (score &gt;= 70) grade = &quot;C&quot;;
+else grade = &quot;Revise&quot;;
+Console.WriteLine(grade);</pre><span class="panel-label">Result</span><pre>B</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">02.2</p>
+      <h2>switch expressions and patterns</h2>
+      <p>A switch expression maps an input to a result. Patterns can match constants, types, relational ranges, and property shapes. Arms are checked in order and the discard pattern _ provides a deliberate fallback.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>int temperature = 72;
+string label = temperature switch
+{
+    &lt; 32 =&gt; &quot;Freezing&quot;,
+    &lt; 60 =&gt; &quot;Cool&quot;,
+    &lt;= 80 =&gt; &quot;Comfortable&quot;,
+    _ =&gt; &quot;Hot&quot;
+};
+Console.WriteLine(label);</pre><span class="panel-label">Result</span><pre>Comfortable</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">02.3</p>
+      <h2>for, while, and foreach</h2>
+      <p>for fits indexed repetition, while fits condition-controlled work, and foreach reads every item in an enumerable sequence. A loop should make termination obvious. foreach variables are read-only bindings, though referenced objects may still be mutable.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>int total = 0;
+foreach (int value in new[] { 4, 8, 3, 5 })
+{
+    total += value;
+}
+Console.WriteLine(total);</pre><span class="panel-label">Result</span><pre>20</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">02.4</p>
+      <h2>Nested loops and validation</h2>
+      <p>Nested loops create grids and compare combinations; their work multiplies, so limits matter. Input loops should explain the rule and repeat until valid. break and continue are useful for small exceptional paths but should not hide the main loop logic.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>int number;
+do
+{
+    Console.Write(&quot;Enter 1-10: &quot;);
+}
+while (!int.TryParse(Console.ReadLine(), out number) || number is &lt; 1 or &gt; 10);
+Console.WriteLine($&quot;Accepted {number}&quot;);</pre><span class="panel-label">Result</span><pre>Enter 1-10: 14
+Enter 1-10: 7
+Accepted 7</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A2.1</strong><p>Classify a date or numeric value with a switch expression and include complete boundary tests.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A2.2</strong><p>Build a validated repeating menu with at least five operations and a clear quit path.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A2.3</strong><p>Analyze a sequence using foreach to calculate totals, extremes, category counts, and percentage results.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A2.4</strong><p>Use nested loops to generate a multiplication grid and a second aligned text pattern.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Tournament Tracker</h2>
+          <p>Tournament Tracker — Accept player names and round scores, validate ranges, calculate standings after each round, resolve ties using a documented rule, and allow a new tournament without restarting.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>branch</li><li>logical operator</li><li>switch expression</li><li>pattern</li><li>relational pattern</li><li>loop</li><li>enumerable</li><li>boundary</li><li>validation</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="C# lesson navigation">
+        <a href="csharp-1-net-programs-types-and-input.html"><span>Previous</span>.NET Programs, Types &amp; Input</a>
+        <a href="csharp-3-methods-arrays-and-collections.html"><span>Next</span>Methods, Arrays &amp; Collections →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

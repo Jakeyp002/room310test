@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Run JavaScript in the browser, model values with clear variables, use operators and coercion carefully, and organize behavior into reusable functions." />
+    <title>JavaScript: Values, Variables &amp; Functions · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page javascript-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero javascript-lesson-hero">
+        <a href="javascript-study.html">← All JavaScript lessons</a>
+        <p>JavaScript / Chapter 01</p>
+        <h1>Values, Variables &amp; Functions</h1>
+        <p>Run JavaScript in the browser, model values with clear variables, use operators and coercion carefully, and organize behavior into reusable functions.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Run JavaScript in the browser, model values with clear variables, use operators and coercion carefully, and organize behavior into reusable functions. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Use the browser console and script files</li><li>Distinguish JavaScript value types</li><li>Choose const and let</li><li>Write and call functions</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">01.1</p>
+      <h2>Runtime and console</h2>
+      <p>JavaScript runs inside browsers and other runtimes such as Node.js. A script executes from top to bottom, and the developer console displays output and errors. Separate JavaScript files from HTML and load them with defer so the document is available before code runs.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>&lt;script src=&quot;app.js&quot; defer&gt;&lt;/script&gt;
+
+// app.js
+console.log(&quot;Room310 ready&quot;);</pre><span class="panel-label">Result</span><pre>Room310 ready</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">01.2</p>
+      <h2>Values, types, and variables</h2>
+      <p>JavaScript has primitive values including string, number, boolean, undefined, null, bigint, and symbol, plus objects. const prevents reassignment and should be the default; let is appropriate when the binding must change. typeof helps inspect most values, though typeof null is a historical exception.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>const course = &quot;JavaScript&quot;;
+let completedLessons = 2;
+const active = true;
+
+console.log(typeof course, typeof completedLessons, typeof active);</pre><span class="panel-label">Result</span><pre>string number boolean</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">01.3</p>
+      <h2>Operators, equality, and conversion</h2>
+      <p>Arithmetic and comparison operators create new values. Strict equality === compares without automatic type conversion and should normally replace loose equality ==. Convert deliberately with Number, String, and Boolean, and use Number.isNaN when numeric input may be invalid.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>const rawAge = &quot;16&quot;;
+const age = Number(rawAge);
+console.log(age + 1);
+console.log(rawAge === age);</pre><span class="panel-label">Result</span><pre>17
+false</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">01.4</p>
+      <h2>Function declarations and expressions</h2>
+      <p>Functions name reusable behavior and create local scope. Parameters receive inputs, return sends a result to the caller, and a function should avoid surprising changes outside itself. Arrow functions are concise expressions but do not replace every declaration, especially when this behavior matters.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>function calculateArea(width, height) {
+  return width * height;
+}
+
+const square = number =&gt; number * number;
+console.log(calculateArea(4, 3), square(5));</pre><span class="panel-label">Result</span><pre>12 25</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A1.1</strong><p>Create a profile script that stores and prints at least eight values using suitable types and const or let.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A1.2</strong><p>Write conversion functions for temperature, distance, and currency-like rates with validated numeric input.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A1.3</strong><p>Build functions that calculate subtotal, discount, tax, and final total without modifying global variables.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A1.4</strong><p>Investigate five expressions involving strings, numbers, null, and undefined; predict types and results before running them.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Console Utility Collection</h2>
+          <p>Console Utility Collection — Build a browser-console application with at least six small functions, a text menu simulated through prompts, numeric validation, and a final formatted report. Document inputs, returns, and edge cases for every function.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>runtime</li><li>primitive</li><li>object</li><li>const</li><li>let</li><li>strict equality</li><li>coercion</li><li>parameter</li><li>return</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="JavaScript lesson navigation">
+        <a href="javascript-study.html"><span>Course home</span>JavaScript</a>
+        <a href="javascript-2-control-flow-and-robust-functions.html"><span>Next</span>Control Flow &amp; Robust Functions →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+.env
+data/
+__pycache__/
+*.py[cod]
+.DS_Store
+.runtime/
+room310files.zip

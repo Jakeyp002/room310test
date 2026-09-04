@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Games Admin Sign In · Room310</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+  </head>
+  <body class="games-admin-page">
+    <header class="header solid-header">
+      <a class="logo" href="/index.html">ROOM<span>310</span></a>
+      <nav aria-label="Admin navigation"><a href="/games.html">Public games</a></nav>
+    </header>
+    <main class="admin-login-shell">
+      <section class="admin-login-card" aria-labelledby="login-title">
+        <div class="admin-eyebrow"><span>Games administration</span><span>v0.3</span></div>
+        <h1 id="login-title">Sign in.</h1>
+        <p>Only approved Room310 game managers can continue.</p>
+        <form id="admin-login-form">
+          <label>Username<input name="username" autocomplete="username" required minlength="3" maxlength="40" /></label>
+          <label>Password<input name="password" type="password" autocomplete="current-password" required minlength="12" maxlength="500" /></label>
+          <button type="submit">Sign in <span aria-hidden="true">→</span></button>
+          <p class="admin-form-message" id="login-message" role="status"></p>
+        </form>
+      </section>
+    </main>
+    <script src="/admin-login.js?v=0.3"></script>
+  </body>
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Persist structured data, handle failures intentionally, perform asynchronous I/O, and verify behavior with automated tests." />
+    <title>C#: Files, Exceptions, Async &amp; Testing · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page csharp-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero csharp-lesson-hero">
+        <a href="csharp-study.html">← All C# lessons</a>
+        <p>C# / Chapter 06</p>
+        <h1>Files, Exceptions, Async &amp; Testing</h1>
+        <p>Persist structured data, handle failures intentionally, perform asynchronous I/O, and verify behavior with automated tests.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Persist structured data, handle failures intentionally, perform asynchronous I/O, and verify behavior with automated tests. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Read and write files safely</li><li>Design exception boundaries</li><li>Use async and await</li><li>Write unit tests with controlled dependencies</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">06.1</p>
+      <h2>Files and JSON serialization</h2>
+      <p>File methods read and write text, while System.Text.Json converts objects to and from JSON. Async file methods avoid blocking during I/O. Validate deserialized data because syntactically valid JSON may still violate application rules.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>using System.Text.Json;
+
+var settings = new AppSettings(&quot;dark&quot;, 14);
+string json = JsonSerializer.Serialize(settings);
+await File.WriteAllTextAsync(&quot;settings.json&quot;, json);
+
+public record AppSettings(string Theme, int FontSize);</pre><span class="panel-label">Result</span><pre>settings.json contains a JSON representation of the record.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">06.2</p>
+      <h2>Exception handling and cleanup</h2>
+      <p>Catch exceptions only where the program can add context, recover, retry, or translate them for a user. Avoid empty catch blocks. using declarations dispose resources even when an exception occurs, and finally is reserved for cleanup not already handled by IDisposable.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>try
+{
+    string text = await File.ReadAllTextAsync(path);
+    return JsonSerializer.Deserialize&lt;AppSettings&gt;(text)
+        ?? throw new InvalidDataException(&quot;Settings were empty&quot;);
+}
+catch (FileNotFoundException)
+{
+    return new AppSettings(&quot;light&quot;, 16);
+}</pre><span class="panel-label">Result</span><pre>A missing file receives safe defaults; malformed content remains a visible error.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">06.3</p>
+      <h2>async, await, and cancellation</h2>
+      <p>Task represents asynchronous work. An async method should usually return Task or Task&lt;T&gt;, not void. CancellationToken cooperatively communicates that work is no longer needed; pass it through every asynchronous operation that supports cancellation.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>static async Task&lt;string&gt; DownloadAsync(HttpClient client, Uri uri, CancellationToken token)
+{
+    using HttpResponseMessage response = await client.GetAsync(uri, token);
+    response.EnsureSuccessStatusCode();
+    return await response.Content.ReadAsStringAsync(token);
+}</pre><span class="panel-label">Result</span><pre>The caller can await the text or cancel the request.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">06.4</p>
+      <h2>Unit testing and fakes</h2>
+      <p>A unit test arranges inputs, acts once, and asserts observable behavior. Pure methods need direct tests; classes with external dependencies should receive interfaces so tests can supply fakes. Test normal cases, boundaries, invalid input, and failure behavior without depending on real files or networks.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>[Fact]
+public void Deposit_AddsPositiveAmount()
+{
+    var account = new BankAccount(&quot;Ana&quot;, 50m);
+    account.Deposit(25m);
+    Assert.Equal(75m, account.Balance);
+}</pre><span class="panel-label">Result</span><pre>The test passes when Deposit preserves the account contract.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A6.1</strong><p>Save and load a versioned JSON settings file with defaults for missing files and validation for malformed values.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A6.2</strong><p>Create custom domain exceptions and decide which layer catches, translates, logs, or rethrows each.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A6.3</strong><p>Implement an asynchronous data service that supports cancellation and reports progress or loading state.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A6.4</strong><p>Write a test suite for a domain class using normal, boundary, invalid, and dependency-failure cases.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Resilient Study Tracker</h2>
+          <p>Resilient Study Tracker — Build a layered console application that stores courses and sessions as JSON, uses asynchronous file operations, supports cancellation for long reports, validates deserialized data, and includes automated tests with an in-memory repository.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>serialization</li><li>JSON</li><li>exception boundary</li><li>IDisposable</li><li>Task</li><li>async</li><li>await</li><li>CancellationToken</li><li>unit test</li><li>fake</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="C# lesson navigation">
+        <a href="csharp-5-interfaces-generics-and-linq.html"><span>Previous</span>Interfaces, Generics &amp; LINQ</a>
+        <a href="csharp-study.html"><span>Finished</span>Back to C# →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

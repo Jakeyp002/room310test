@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Supplemental decorator examples, explanations, and linked reference material." />
+    <title>Decorator Notes · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page advanced-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page">
+      <div class="lesson-hero advanced-lesson-hero">
+        <a href="python-study.html#advanced">← All advanced lessons</a>
+        <p>Advanced Python / A06+</p>
+        <h1>Decorator Notes</h1>
+        <p>Supplemental decorator examples, explanations, and linked reference material.</p>
+      </div>
+      <article class="lesson-content"><p>Advanced Python - Decorators</p><p>Article: <a href="https://realpython.com/primer-on-python-decorators/">HERE</a></p><div class="code-panel"><p>def my_decorator(func):</p><p>    def wrapper():</p><p>        print("Something is happening before the function is called.")</p></div><p>        func()</p><div class="code-panel"><p>        print("Something is happening after the function is called.")</p><p>    return wrapper</p><p>def say_whee():</p><p>    print("Whee!")</p><p>say_whee = my_decorator(say_whee)</p></div><p>Can you guess what happens when you call say_whee()? Try it:</p><div class="code-panel"><p>&gt;&gt;&gt;</p><p>&gt;&gt;&gt; say_whee()</p></div><p>Something is happening before the function is called.</p><p>Whee!</p><p>Something is happening after the function is called.</p><p>To understand what’s going on here, look back at the previous examples. We are literally just applying everything you have learned so far.</p><p>The so-called decoration happens at the following line:</p><div class="code-panel"><p>say_whee = my_decorator(say_whee)</p></div><p>In effect, the name say_whee now points to the wrapper() inner function. Remember that you return wrapper as a function when you call my_decorator(say_whee):</p><div class="code-panel"><p>&gt;&gt;&gt;</p><p>&gt;&gt;&gt; say_whee</p></div><p>&lt;function my_decorator.&lt;locals&gt;.wrapper at 0x7f3c5dfd42f0&gt;</p><p>However, wrapper() has a reference to the original say_whee() as func, and calls that function between the two calls to <a href="https://realpython.com/courses/python-print/">print()</a>.</p><div class="code-panel"><p>Put simply: <strong>decorators wrap a function, modifying its behavior</strong>.</p><p>Python allows you to use decorators in a simpler way with the @ symbol, sometimes called the <a href="https://www.python.org/dev/peps/pep-0318/#background">“pie” syntax</a>. The following example does the exact same thing as the first decorator example:</p><p>def my_decorator(func):</p><p>    def wrapper():</p><p>        print("Something is happening before the function is called.")</p></div><p>        func()</p><div class="code-panel"><p>        print("Something is happening after the function is called.")</p><p>    return wrapper</p></div><p>@my_decorator</p><div class="code-panel"><p>def say_whee():</p><p>    print("Whee!")</p><p><strong>So, @my_decorator is just an easier way of saying say_whee = my_decorator(say_whee). It’s how you apply a decorator to a function.</strong></p></div><p>Let’s move the decorator to its own <a href="https://realpython.com/python-modules-packages/">module</a> that can be used in many other functions.</p><p>Create a file called decorators.py with the following content:</p><div class="code-panel"><p>def do_twice(func):</p><p>    def wrapper_do_twice():</p></div><p>        func()</p><p>        func()</p><div class="code-panel"><p>    return wrapper_do_twice</p></div><p>Note: You can name your inner function whatever you want, and a generic name like wrapper() is usually okay. You’ll see a lot of decorators in this article. To keep them apart, we’ll name the inner function with the same name as the decorator but with a wrapper_ prefix.</p><p>You can now use this new decorator in other files by doing a regular <a href="https://realpython.com/absolute-vs-relative-python-imports/">import</a>:</p><div class="code-panel"><p>from decorators import do_twice</p></div><p>@do_twice</p><div class="code-panel"><p>def say_whee():</p><p>    print("Whee!")</p></div><p>When you run this example, you should see that the original say_whee() is executed twice:</p><div class="code-panel"><p>&gt;&gt;&gt;</p><p>&gt;&gt;&gt; say_whee()</p></div><p>Whee!</p><p>Whee!</p><h3><a id="_wj0i9iiil0z5"></a><strong>Decorating Functions With Arguments</strong></h3><p>The solution is to use <a href="https://realpython.com/python-kwargs-and-args/">*args and **kwargs</a> in the inner wrapper function. Then it will accept an arbitrary number of positional and keyword arguments. Rewrite decorators.py as follows:</p><div class="code-panel"><p>def do_twice(func):</p><p>    def wrapper_do_twice(*args, **kwargs):</p></div><p>        func(*args, **kwargs)</p><p>        func(*args, **kwargs)</p><div class="code-panel"><p>    return wrapper_do_twice</p></div><p>The wrapper_do_twice() inner function now accepts any number of arguments and passes them on to the function it decorates. Now both your say_whee() and greet() examples works:</p><div class="code-panel"><p>&gt;&gt;&gt;</p><p>&gt;&gt;&gt; say_whee()</p></div><p>Whee!</p><p>Whee!</p><div class="code-panel"><p>&gt;&gt;&gt; greet("World")</p></div><p>Hello World</p><p>Hello World</p><h3><a id="_3wrrv9te1aws"></a>Returning Values From Decorated Functions</h3><p>To fix this, you need to make sure the wrapper function returns the return value of the decorated function. Change your decorators.py file:</p><div class="code-panel"><p>def do_twice(func):</p><p>    def wrapper_do_twice(*args, **kwargs):</p></div><p>        func(*args, **kwargs)</p><div class="code-panel"><p>        return func(*args, **kwargs)</p><p>    return wrapper_do_twice</p></div><p>The return value from the last execution of the function is returned:</p><div class="code-panel"><p>&gt;&gt;&gt;</p><p>&gt;&gt;&gt; return_greeting("Adam")</p></div><p>Creating greeting</p><p>Creating greeting</p><p>'Hi Adam'</p><div class="code-panel"><p><strong>(only went up to Fancy Decorators in the article)</strong></p></div></article>
+      <nav class="lesson-pagination" aria-label="Advanced lesson navigation">
+        <a href="advanced-decorators-course.html"><span>Previous</span>Decorators</a>
+        <a href="advanced-descriptors.html"><span>Next</span>Descriptors →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>    <script src="python-lab.js?v=0.8"></script>
+  </body>
+</html>

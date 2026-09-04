@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Connect JavaScript to documents, select and update elements, respond to events, validate forms, and build accessible interactive interfaces." />
+    <title>JavaScript: DOM, Events &amp; Forms · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page javascript-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero javascript-lesson-hero">
+        <a href="javascript-study.html">← All JavaScript lessons</a>
+        <p>JavaScript / Chapter 04</p>
+        <h1>DOM, Events &amp; Forms</h1>
+        <p>Connect JavaScript to documents, select and update elements, respond to events, validate forms, and build accessible interactive interfaces.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Connect JavaScript to documents, select and update elements, respond to events, validate forms, and build accessible interactive interfaces. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Select and create DOM nodes</li><li>Handle events</li><li>Validate and submit forms</li><li>Maintain accessible interface state</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">04.1</p>
+      <h2>Selecting and changing elements</h2>
+      <p>The DOM represents a document as nodes. querySelector returns the first matching element and querySelectorAll returns a static collection. Prefer textContent for plain text, classList for styling state, and createElement for new structure instead of building untrusted HTML strings.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>const heading = document.querySelector(&quot;h1&quot;);
+heading.textContent = &quot;Room310 Study&quot;;
+heading.classList.add(&quot;ready&quot;);
+
+const note = document.createElement(&quot;p&quot;);
+note.textContent = &quot;Lesson loaded.&quot;;
+document.querySelector(&quot;main&quot;).append(note);</pre><span class="panel-label">Result</span><pre>The heading and document update without replacing the page.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">04.2</p>
+      <h2>Events and delegation</h2>
+      <p>addEventListener connects an event to a handler. The event object describes the target, keyboard input, pointer position, or form action. Event delegation attaches one handler to a stable ancestor and uses closest to respond to matching descendants.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>document.querySelector(&quot;.task-list&quot;).addEventListener(&quot;click&quot;, event =&gt; {
+  const button = event.target.closest(&quot;button[data-remove]&quot;);
+  if (!button) return;
+  button.closest(&quot;li&quot;).remove();
+});</pre><span class="panel-label">Result</span><pre>Clicking any remove button deletes its list item, including items added later.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">04.3</p>
+      <h2>Forms and validation</h2>
+      <p>A submit handler should prevent the default navigation when JavaScript manages the form. FormData reads named fields. Validate required formats and cross-field rules, show messages near the affected control, and keep server-side validation for any real application.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>form.addEventListener(&quot;submit&quot;, event =&gt; {
+  event.preventDefault();
+  const data = new FormData(form);
+  const title = String(data.get(&quot;title&quot;) ?? &quot;&quot;).trim();
+  if (!title) {
+    showError(&quot;title&quot;, &quot;Enter a title.&quot;);
+    return;
+  }
+  addTask(title);
+  form.reset();
+});</pre><span class="panel-label">Result</span><pre>Blank titles show an error; valid titles are added and the form resets.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">04.4</p>
+      <h2>Rendering state accessibly</h2>
+      <p>Interactive interfaces should derive visible output from a clear state object or array. Buttons need accessible names, focus should move intentionally after major changes, and status updates can use an aria-live region. Keyboard and pointer users should receive equivalent behavior.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>const state = { tasks: [] };
+function render() {
+  list.replaceChildren(...state.tasks.map(task =&gt; {
+    const item = document.createElement(&quot;li&quot;);
+    item.textContent = task.title;
+    return item;
+  }));
+  status.textContent = `${state.tasks.length} tasks`;
+}</pre><span class="panel-label">Result</span><pre>The list and live status always reflect the current state.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A4.1</strong><p>Create controls that change page theme, font size, and spacing while keeping button states accessible.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A4.2</strong><p>Build an interactive list with event delegation for complete, edit, and remove actions.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A4.3</strong><p>Create a registration form with inline validation, summary errors, and keyboard-friendly focus behavior.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A4.4</strong><p>Render a searchable, sortable table from an array of objects without using innerHTML.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Accessible Task Board</h2>
+          <p>Accessible Task Board — Build add, edit, complete, filter, and delete behavior from a central state array. Use semantic HTML, delegated events, form validation, keyboard-accessible controls, and an aria-live status summary.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>DOM</li><li>node</li><li>selector</li><li>event</li><li>handler</li><li>delegation</li><li>FormData</li><li>validation</li><li>focus</li><li>aria-live</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="JavaScript lesson navigation">
+        <a href="javascript-3-arrays-objects-and-data-transformation.html"><span>Previous</span>Arrays, Objects &amp; Data Transformation</a>
+        <a href="javascript-5-promises-apis-and-error-handling.html"><span>Next</span>Promises, APIs &amp; Error Handling →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

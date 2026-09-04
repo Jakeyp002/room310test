@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Direct execution with conditions and loops, handle uncertain input, and build functions that are predictable across normal and edge cases." />
+    <title>JavaScript: Control Flow &amp; Robust Functions · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page javascript-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero javascript-lesson-hero">
+        <a href="javascript-study.html">← All JavaScript lessons</a>
+        <p>JavaScript / Chapter 02</p>
+        <h1>Control Flow &amp; Robust Functions</h1>
+        <p>Direct execution with conditions and loops, handle uncertain input, and build functions that are predictable across normal and edge cases.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Direct execution with conditions and loops, handle uncertain input, and build functions that are predictable across normal and edge cases. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Use conditional branches</li><li>Choose loops and iteration helpers</li><li>Validate and guard inputs</li><li>Understand scope and closures</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">02.1</p>
+      <h2>Conditionals and truthiness</h2>
+      <p>if/else selects a path based on truthiness. Falsy values include false, 0, an empty string, null, undefined, and NaN. Use explicit comparisons when zero or an empty string is valid data so truthiness does not collapse meaningful cases.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>const score = 88;
+let grade;
+if (score &gt;= 90) grade = &quot;A&quot;;
+else if (score &gt;= 80) grade = &quot;B&quot;;
+else grade = &quot;Keep practicing&quot;;
+console.log(grade);</pre><span class="panel-label">Result</span><pre>B</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">02.2</p>
+      <h2>Loops and iteration</h2>
+      <p>for, while, and for...of handle repeated work. for...of reads iterable values such as arrays and strings; for...in enumerates property keys and is not the normal choice for arrays. Ensure loop conditions change and state the intended first and last iterations.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>let total = 0;
+for (const value of [4, 7, 2, 9]) {
+  total += value;
+}
+console.log(total);</pre><span class="panel-label">Result</span><pre>22</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">02.3</p>
+      <h2>Guard clauses and errors</h2>
+      <p>A guard clause handles an invalid or completed case near the top of a function. Throwing an Error communicates that a function cannot satisfy its contract. Callers may catch expected failures and show an appropriate message instead of allowing silent bad data.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>function divide(a, b) {
+  if (!Number.isFinite(a) || !Number.isFinite(b)) {
+    throw new TypeError(&quot;Both values must be finite numbers&quot;);
+  }
+  if (b === 0) throw new RangeError(&quot;Cannot divide by zero&quot;);
+  return a / b;
+}</pre><span class="panel-label">Result</span><pre>divide(10, 2) -&gt; 5
+divide(10, 0) -&gt; RangeError</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">02.4</p>
+      <h2>Scope and closures</h2>
+      <p>let and const have block scope. A closure is a function bundled with access to the variables from the scope where it was created. Closures support private state, factories, and event handlers, but captured values should remain purposeful and easy to reason about.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>function makeCounter() {
+  let count = 0;
+  return () =&gt; ++count;
+}
+
+const next = makeCounter();
+console.log(next(), next(), next());</pre><span class="panel-label">Result</span><pre>1 2 3</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A2.1</strong><p>Build a score classifier that validates input and returns a structured result with grade and message.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A2.2</strong><p>Analyze an array with for...of to produce sum, average, minimum, maximum, and counts by category.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A2.3</strong><p>Create safe parse and divide functions that throw specific errors and a caller that catches and displays them.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A2.4</strong><p>Build a closure-based tracker that supports increment, decrement, reset, and reading current state.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Quiz Engine</h2>
+          <p>Quiz Engine — Store questions, validate answers, track score, give immediate feedback, and allow replay. Separate question presentation, answer normalization, scoring, and final reporting into testable functions.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>truthy</li><li>falsy</li><li>branch</li><li>iteration</li><li>guard clause</li><li>exception</li><li>block scope</li><li>closure</li><li>factory</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="JavaScript lesson navigation">
+        <a href="javascript-1-values-variables-and-functions.html"><span>Previous</span>Values, Variables &amp; Functions</a>
+        <a href="javascript-3-arrays-objects-and-data-transformation.html"><span>Next</span>Arrays, Objects &amp; Data Transformation →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Model valid objects with classes and records, encapsulate state, use inheritance carefully, and compose focused behavior." />
+    <title>C#: Classes, Records &amp; Object-Oriented Design · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page csharp-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero csharp-lesson-hero">
+        <a href="csharp-study.html">← All C# lessons</a>
+        <p>C# / Chapter 04</p>
+        <h1>Classes, Records &amp; Object-Oriented Design</h1>
+        <p>Model valid objects with classes and records, encapsulate state, use inheritance carefully, and compose focused behavior.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Model valid objects with classes and records, encapsulate state, use inheritance carefully, and compose focused behavior. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Design encapsulated classes</li><li>Use constructors and properties</li><li>Choose records for value-like data</li><li>Prefer composition over unnecessary inheritance</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">04.1</p>
+      <h2>Classes, properties, and invariants</h2>
+      <p>A class groups state with behavior that keeps that state valid. Properties expose controlled access and can calculate values without storing duplicate data. Constructors should reject impossible states so every created object starts valid.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>public class BankAccount
+{
+    public string Owner { get; }
+    public decimal Balance { get; private set; }
+
+    public BankAccount(string owner, decimal openingBalance)
+    {
+        if (string.IsNullOrWhiteSpace(owner)) throw new ArgumentException(&quot;Owner required&quot;);
+        if (openingBalance &lt; 0) throw new ArgumentOutOfRangeException(nameof(openingBalance));
+        Owner = owner;
+        Balance = openingBalance;
+    }
+
+    public void Deposit(decimal amount)
+    {
+        if (amount &lt;= 0) throw new ArgumentOutOfRangeException(nameof(amount));
+        Balance += amount;
+    }
+}</pre><span class="panel-label">Result</span><pre>A BankAccount can never start with a blank owner or negative balance.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">04.2</p>
+      <h2>Records and value equality</h2>
+      <p>A record is concise for data whose identity is its values. Records provide value-based equality and with expressions for nondestructive updates. Use classes when evolving identity and protected operations matter more than value equality.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>public record Student(int Id, string Name, string Email);
+
+var original = new Student(12, &quot;Ana&quot;, &quot;ana@example.com&quot;);
+var updated = original with { Email = &quot;ana@school.edu&quot; };
+Console.WriteLine(original == updated);</pre><span class="panel-label">Result</span><pre>False</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">04.3</p>
+      <h2>Inheritance and polymorphism</h2>
+      <p>Inheritance models a genuine is-a relationship and allows derived objects to be used through a base abstraction. virtual and override enable runtime polymorphism. Base classes should have clear contracts; avoid inheritance used only to share a few helper methods.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>public abstract class Shape
+{
+    public abstract double Area { get; }
+}
+
+public sealed class Circle(double radius) : Shape
+{
+    public override double Area =&gt; Math.PI * radius * radius;
+}
+
+Shape shape = new Circle(2);
+Console.WriteLine(shape.Area);</pre><span class="panel-label">Result</span><pre>12.566370614359172</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">04.4</p>
+      <h2>Composition and dependency injection</h2>
+      <p>Composition builds an object from collaborators with focused responsibilities. Passing collaborators through a constructor makes dependencies explicit and replaceable in tests. Depending on abstractions prevents a class from controlling infrastructure it does not own.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>public interface IMessageSender
+{
+    void Send(string message);
+}
+
+public class ReminderService(IMessageSender sender)
+{
+    public void Remind(string task) =&gt; sender.Send($&quot;Reminder: {task}&quot;);
+}</pre><span class="panel-label">Result</span><pre>ReminderService can use email, SMS, or a test sender without changing its logic.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A4.1</strong><p>Design a validated Rectangle class with calculated properties and controlled resize operations.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A4.2</strong><p>Create immutable records for address and contact data and use with expressions for updates.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A4.3</strong><p>Model two shape types behind a base abstraction and calculate total area polymorphically.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A4.4</strong><p>Refactor a class that creates its own file or message service so the dependency is passed through its constructor.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Library Domain Model</h2>
+          <p>Library Domain Model — Create Book, Member, Loan, and Library types with valid constructors, controlled checkout and return operations, overdue calculations, and useful reports. Use records for value-like identifiers or snapshots and composition for time or notification services.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>class</li><li>object</li><li>property</li><li>invariant</li><li>record</li><li>value equality</li><li>inheritance</li><li>polymorphism</li><li>composition</li><li>dependency injection</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="C# lesson navigation">
+        <a href="csharp-3-methods-arrays-and-collections.html"><span>Previous</span>Methods, Arrays &amp; Collections</a>
+        <a href="csharp-5-interfaces-generics-and-linq.html"><span>Next</span>Interfaces, Generics &amp; LINQ →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

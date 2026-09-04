@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Understand tables, rows, columns, keys, and types, then retrieve and shape data with clear SELECT statements." />
+    <title>SQL: Relational Data &amp; SELECT · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page sql-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero sql-lesson-hero">
+        <a href="sql-study.html">← All SQL lessons</a>
+        <p>SQL / Chapter 01</p>
+        <h1>Relational Data &amp; SELECT</h1>
+        <p>Understand tables, rows, columns, keys, and types, then retrieve and shape data with clear SELECT statements.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Understand tables, rows, columns, keys, and types, then retrieve and shape data with clear SELECT statements. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Explain the relational model</li><li>Identify primary and foreign keys</li><li>Select columns and expressions</li><li>Use aliases and remove duplicates</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">01.1</p>
+      <h2>Tables, rows, columns, and keys</h2>
+      <p>A relational database stores facts in tables. Each row represents one record and each column represents one attribute with a declared type. A primary key uniquely identifies a row; a foreign key refers to a row in another table and records a relationship.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>CREATE TABLE students (
+    student_id INTEGER PRIMARY KEY,
+    full_name  VARCHAR(100) NOT NULL,
+    grade_level INTEGER,
+    active BOOLEAN DEFAULT TRUE
+);</pre><span class="panel-label">Result</span><pre>A students table with a unique student_id and required full_name.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">01.2</p>
+      <h2>Basic SELECT and projection</h2>
+      <p>SELECT chooses expressions and FROM chooses their source table. Listing only needed columns makes results easier to understand and can reduce work. SELECT * is useful while exploring but should not be the default in saved queries.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT student_id, full_name, grade_level
+FROM students;</pre><span class="panel-label">Result</span><pre>student_id | full_name     | grade_level
+-----------+---------------+------------
+101        | Ana Ruiz      | 11
+102        | Marcus Chen   | 12</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">01.3</p>
+      <h2>Expressions and aliases</h2>
+      <p>A result column can be calculated from stored values. AS assigns a readable name to an expression without changing the table. String, date, and arithmetic functions differ slightly among database systems, so the course uses portable SQL where possible.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT
+    product_name,
+    unit_price,
+    quantity,
+    unit_price * quantity AS line_total
+FROM order_items;</pre><span class="panel-label">Result</span><pre>product_name | unit_price | quantity | line_total
+Notebook     | 4.50       | 3        | 13.50</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">01.4</p>
+      <h2>DISTINCT and result sets</h2>
+      <p>Queries return result sets rather than modifying source data. DISTINCT removes duplicate combinations from selected columns, which is useful for discovering categories but can hide a poor query if used automatically. Always decide whether duplicates carry meaning before removing them.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>SELECT DISTINCT city, state_code
+FROM customers
+ORDER BY state_code, city;</pre><span class="panel-label">Result</span><pre>city       | state_code
+Albany     | NY
+Brooklyn   | NY
+Newark     | NJ</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A1.1</strong><p>Given a school schema, identify entities, candidate primary keys, and relationships, explaining each choice.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A1.2</strong><p>Write ten SELECT queries that retrieve specific columns and create readable aliases for calculated expressions.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A1.3</strong><p>Create a products table with sensible types, a primary key, required fields, and a default availability value.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A1.4</strong><p>Explore a provided table and produce a data dictionary describing every column and possible data-quality concern.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Community Events Database</h2>
+          <p>Community Events Database — Design and create tables for events, venues, organizers, and categories. Insert a small realistic dataset and write a report query that presents event name, date, venue, capacity, and remaining seats with readable aliases.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>relation</li><li>table</li><li>row</li><li>column</li><li>schema</li><li>primary key</li><li>foreign key</li><li>projection</li><li>result set</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="SQL lesson navigation">
+        <a href="sql-study.html"><span>Course home</span>SQL</a>
+        <a href="sql-2-filtering-sorting-and-null.html"><span>Next</span>Filtering, Sorting &amp; NULL →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

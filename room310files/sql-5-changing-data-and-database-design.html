@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Insert, update, and delete safely; enforce integrity with constraints; normalize designs; and group related changes into transactions." />
+    <title>SQL: Changing Data &amp; Database Design · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page sql-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero sql-lesson-hero">
+        <a href="sql-study.html">← All SQL lessons</a>
+        <p>SQL / Chapter 05</p>
+        <h1>Changing Data &amp; Database Design</h1>
+        <p>Insert, update, and delete safely; enforce integrity with constraints; normalize designs; and group related changes into transactions.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Insert, update, and delete safely; enforce integrity with constraints; normalize designs; and group related changes into transactions. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Use INSERT, UPDATE, and DELETE safely</li><li>Apply constraints and relationships</li><li>Normalize repeated data</li><li>Explain transaction guarantees</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">05.1</p>
+      <h2>INSERT, UPDATE, and DELETE</h2>
+      <p>INSERT creates rows, UPDATE changes matching rows, and DELETE removes matching rows. An UPDATE or DELETE without WHERE may affect every row, so preview the target with SELECT and use a transaction. Explicit column lists make inserts resilient to schema changes.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>BEGIN;
+
+UPDATE inventory
+SET quantity = quantity - 1
+WHERE product_id = 42
+  AND quantity &gt; 0;
+
+COMMIT;</pre><span class="panel-label">Result</span><pre>The product quantity decreases by one only when stock is available.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">05.2</p>
+      <h2>Constraints and integrity</h2>
+      <p>NOT NULL requires a value, UNIQUE prevents duplicates, CHECK enforces a rule, PRIMARY KEY identifies rows, and FOREIGN KEY enforces relationships. Constraints protect data regardless of which application writes it and should express rules the database can reliably know.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>CREATE TABLE enrollments (
+    student_id INTEGER REFERENCES students(student_id),
+    course_id INTEGER REFERENCES courses(course_id),
+    enrolled_on DATE NOT NULL,
+    status VARCHAR(20) CHECK (status IN ('active', 'dropped', 'complete')),
+    PRIMARY KEY (student_id, course_id)
+);</pre><span class="panel-label">Result</span><pre>Duplicate student-course pairs and unsupported status values are rejected.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">05.3</p>
+      <h2>Normalization</h2>
+      <p>Normalization separates facts so each is stored in one appropriate place. First normal form removes repeating groups, second normal form removes dependence on part of a composite key, and third normal form removes dependence on non-key columns. Denormalization is an intentional performance choice, not a shortcut around design.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>-- Instead of repeating customer details on every order:
+customers(customer_id, full_name, email)
+orders(order_id, customer_id, ordered_at)
+
+-- orders.customer_id references customers.customer_id</pre><span class="panel-label">Result</span><pre>One customer update changes the single source of truth.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">05.4</p>
+      <h2>Transactions and ACID</h2>
+      <p>A transaction treats related statements as one unit. Atomicity means all or none, consistency preserves rules, isolation controls concurrent interaction, and durability keeps committed results. Roll back when a required step fails or validation reveals an unexpected row count.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>BEGIN;
+UPDATE accounts SET balance = balance - 50 WHERE account_id = 10;
+UPDATE accounts SET balance = balance + 50 WHERE account_id = 20;
+-- Verify both updates succeeded.
+COMMIT;</pre><span class="panel-label">Result</span><pre>A $50 transfer is committed as one unit instead of two unrelated changes.</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A5.1</strong><p>Write safe INSERT statements for a related three-table dataset using explicit columns and valid foreign keys.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A5.2</strong><p>Create preview SELECT statements and matching transactional UPDATE and DELETE statements for a cleanup task.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A5.3</strong><p>Normalize a spreadsheet-style table through third normal form and explain every new key and relationship.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A5.4</strong><p>Design constraints for a reservation system, including date, capacity, uniqueness, and relationship rules.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Transactional Store Schema</h2>
+          <p>Transactional Store Schema — Design customers, products, orders, and order_items through third normal form. Create constraints, insert test data, and write a transaction that creates an order and reduces inventory, rolling back when stock is insufficient.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>DML</li><li>constraint</li><li>integrity</li><li>normalization</li><li>dependency</li><li>transaction</li><li>ACID</li><li>commit</li><li>rollback</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="SQL lesson navigation">
+        <a href="sql-4-joins-and-multi-table-questions.html"><span>Previous</span>Joins &amp; Multi-Table Questions</a>
+        <a href="sql-6-ctes-windows-views-and-performance.html"><span>Next</span>CTEs, Windows, Views &amp; Performance →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

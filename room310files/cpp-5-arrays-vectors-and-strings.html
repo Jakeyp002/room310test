@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Store collections, traverse them safely, use dynamic vectors, process text, and apply standard algorithms." />
+    <title>C++: Arrays, Vectors &amp; Strings · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page cpp-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero cpp-lesson-hero">
+        <a href="cpp-study.html">← All C++ lessons</a>
+        <p>C++ / Chapter 05</p>
+        <h1>Arrays, Vectors &amp; Strings</h1>
+        <p>Store collections, traverse them safely, use dynamic vectors, process text, and apply standard algorithms.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Store collections, traverse them safely, use dynamic vectors, process text, and apply standard algorithms. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Use indexed arrays safely</li><li>Choose arrays or vectors</li><li>Traverse with range-based loops</li><li>Transform and search strings and collections</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">05.1</p>
+      <h2>Fixed-size arrays and indexes</h2>
+      <p>An array stores a fixed number of same-type values contiguously. Indexes begin at zero and the final valid index is size minus one. Accessing outside the array is undefined behavior, so every index must be proven valid.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>#include &lt;array&gt;
+
+std::array&lt;int, 5&gt; scores{88, 94, 72, 100, 85};
+for (std::size_t i = 0; i &lt; scores.size(); ++i) {
+    std::cout &lt;&lt; i &lt;&lt; &quot;: &quot; &lt;&lt; scores[i] &lt;&lt; &quot;\n&quot;;
+}</pre><span class="panel-label">Result</span><pre>0: 88
+1: 94
+2: 72
+3: 100
+4: 85</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">05.2</p>
+      <h2>Vectors and dynamic size</h2>
+      <p>std::vector manages a sequence whose size can change. push_back adds an element, size reports the current count, and at performs checked access. Vectors should be the default sequence container when a fixed size is not a meaningful part of the problem.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>#include &lt;vector&gt;
+
+std::vector&lt;std::string&gt; tasks;
+tasks.push_back(&quot;Read&quot;);
+tasks.push_back(&quot;Practice&quot;);
+tasks.push_back(&quot;Reflect&quot;);
+std::cout &lt;&lt; tasks.at(1);</pre><span class="panel-label">Result</span><pre>Practice</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">05.3</p>
+      <h2>Traversal, search, and transformation</h2>
+      <p>Range-based for loops visit every element without manual indexes. Use a reference when modifying elements and a const reference when reading expensive objects. Algorithms such as sort, find, count, and reverse express common operations clearly.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>#include &lt;algorithm&gt;
+#include &lt;vector&gt;
+
+std::vector&lt;int&gt; values{7, 2, 9, 2};
+std::sort(values.begin(), values.end());
+for (int value : values) std::cout &lt;&lt; value &lt;&lt; &quot; &quot;;</pre><span class="panel-label">Result</span><pre>2 2 7 9</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">05.4</p>
+      <h2>String processing</h2>
+      <p>std::string is a sequence of characters with useful operations for size, searching, slicing, and replacement. Strings can be traversed like other containers. getline reads a full line including spaces, while std::cin with &gt;&gt; stops at whitespace.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>std::string phrase = &quot;room three ten&quot;;
+int spaces = 0;
+for (char character : phrase) {
+    if (character == ' ') ++spaces;
+}
+std::cout &lt;&lt; &quot;Words: &quot; &lt;&lt; spaces + 1;</pre><span class="panel-label">Result</span><pre>Words: 3</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A5.1</strong><p>Read ten temperatures into an array and report values above and below the average.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A5.2</strong><p>Build a vector-based to-do list supporting add, remove, list, search, and clear operations.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A5.3</strong><p>Analyze a sentence for vowels, consonants, digits, spaces, word count, and longest word.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A5.4</strong><p>Sort a vector of names case-sensitively, search for a requested name, and report duplicate counts.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Gradebook</h2>
+          <p>Gradebook — Maintain student names and multiple scores using vectors. Support adding students, recording scores, calculating individual and class statistics, sorting rankings, and searching by name. Separate storage logic from user-interface functions.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>array</li><li>index</li><li>undefined behavior</li><li>vector</li><li>iterator</li><li>range-based loop</li><li>algorithm</li><li>string</li><li>contiguous</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="C++ lesson navigation">
+        <a href="cpp-4-functions-references-and-scope.html"><span>Previous</span>Functions, References &amp; Scope</a>
+        <a href="cpp-6-classes-pointers-and-resource-safety.html"><span>Next</span>Classes, Pointers &amp; Resource Safety →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>

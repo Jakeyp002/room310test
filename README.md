@@ -1,0 +1,133 @@
+# Room310
+
+Room310 is a dependency-free HTML/CSS/JavaScript learning site served by a small Python server. Version 0.4 includes a database-backed Games catalog and a protected management area without changing the rest of the frontend stack.
+
+## Requirements
+
+- macOS or another Unix-like system with Python 3.11 or newer
+- Java, C++, Node, SQLite, and the project-local .NET runtime only if you use the lesson compilers
+- No Python packages are required for the Games backend; it uses Python's built-in SQLite, HTTP, password-hashing, ZIP, and file-handling modules
+
+## Local setup
+
+1. Optionally copy `.env.example` to `.env` and edit its non-secret settings.
+2. If using `.env`, load it into the current shell before each command:
+
+   ```sh
+   set -a
+   source .env
+   set +a
+   ```
+
+3. Create the first approved administrator:
+
+   ```sh
+   python3 run_server.py create-admin your-username
+   ```
+
+   The password is entered through a hidden terminal prompt and must be at least 12 characters. Passwords are stored as salted scrypt hashes, never as plaintext.
+
+4. Start both the main site and isolated hosted-game server:
+
+   ```sh
+   python3 run_server.py
+   ```
+
+5. Open:
+
+   - Public site: `http://127.0.0.1:8000/games.html`
+   - Games admin: `http://127.0.0.1:8000/admin/games`
+   - Isolated game assets: `http://127.0.0.1:8001`
+
+The SQLite schema and private storage folders are created automatically inside `ROOM310_DATA_DIR` (default: `./data`). The `data/` directory and `.env` are ignored by Git.
+
+## Users and approval
+
+Create another account as unapproved by default:
+
+```sh
+python3 run_server.py create-user teammate-username
+```
+
+Approve it after confirming who owns the account:
+
+```sh
+python3 run_server.py approve-user teammate-username
+```
+
+Review or revoke access:
+
+```sh
+python3 run_server.py list-users
+python3 run_server.py revoke-user teammate-username
+```
+
+Revoking a user immediately removes their active sessions. Both `admin` and `editor` roles can manage games once approved. Accounts, approvals, and all write authorization are checked server-side.
+
+## Managing games
+
+Sign in at `/admin/games`, then select **Add game**.
+
+### External game
+
+1. Enter the title, description, year, and optional thumbnail.
+2. Choose **External URL** and provide an `http://` or `https://` URL.
+3. Save as a draft or publish it.
+
+Embedded credentials, non-HTTP protocols, control characters, and malformed URLs are rejected.
+
+### Hosted static game
+
+1. Choose **Hosted ZIP bundle**.
+2. Upload a ZIP whose root contains `index.html`. A ZIP containing one enclosing folder is also accepted.
+3. Add the thumbnail and save. A hosted game cannot be published until its bundle passes validation.
+
+Hosted uploads are limited to 20 MB compressed, 80 MB expanded, and 1,000 files. Only static web asset types are accepted. Absolute paths, `..` traversal, duplicate paths, symlinks, encrypted files, unsupported extensions, and missing entry pages are rejected. Files are stored under `data/game-bundles/[slug]`, never in `room310files`, so an upload cannot overwrite the website.
+
+Replacing a bundle installs the new validated bundle atomically. Deleting a game requires browser confirmation and removes its private thumbnail and bundle.
+
+## Hosted-game isolation and limitations
+
+Uploaded HTML and JavaScript are untrusted. They are served from `ROOM310_ASSET_ORIGIN`, which must be a different origin from `ROOM310_PUBLIC_ORIGIN`, and displayed in a restricted iframe at `/games/play/[slug]/`. The iframe does not receive `allow-same-origin`, top-navigation, downloads, or popup permissions. The asset server has no admin/API routes and sets no cookies.
+
+This hosted option is intentionally for self-contained static games. Its content security policy allows scripts, styles, media, fonts, WebAssembly, and same-asset-origin fetches, but blocks connections to other origins. Games requiring accounts, remote APIs, popups, downloads, server code, or looser browser permissions should be reviewed and hosted externally instead.
+
+Draft bundles and thumbnails are not exposed by public routes. The asset server checks the database publication status on every request.
+
+## Database and backups
+
+SQLite creates `data/room310.sqlite3` plus temporary WAL files while the server runs. Stop the server before copying the database and the `data/game-thumbnails` and `data/game-bundles` folders for a simple consistent backup. Do not publish or serve the `data/` directory as static files.
+
+## Environment variables
+
+| Variable | Purpose |
+| --- | --- |
+| `ROOM310_HOST` / `ROOM310_PORT` | Main server bind address and port |
+| `ROOM310_PUBLIC_ORIGIN` | Exact browser-facing main origin used for origin and frame checks |
+| `ROOM310_DATA_DIR` | Private SQLite, thumbnail, and game-bundle storage |
+| `ROOM310_ASSET_HOST` / `ROOM310_ASSET_PORT` | Isolated game asset server bind address and port |
+| `ROOM310_ASSET_ORIGIN` | Browser-facing asset origin used by sandboxed game frames |
+| `ROOM310_SESSION_HOURS` | Login lifetime, clamped to 1-168 hours |
+| `ROOM310_SECURE_COOKIES` | Set to `1` behind HTTPS so authentication cookies are Secure |
+
+There are no frontend API keys, database credentials, default passwords, or hard-coded admin accounts.
+
+## Tests
+
+Run the full backend suite:
+
+```sh
+python3 -m unittest discover -s tests -v
+```
+
+The tests use a temporary database and storage directory. They cover anonymous and unapproved-user rejection, approved-admin CRUD, draft visibility, external URL validation, slug collisions, thumbnail validation, ZIP traversal rejection, hosted upload publication, and published asset access.
+
+## Deployment notes
+
+- Put the main server behind HTTPS and set `ROOM310_SECURE_COOKIES=1`.
+- Set `ROOM310_PUBLIC_ORIGIN` to the exact HTTPS site origin.
+- Expose the asset server through a separate origin such as `https://games-assets.example.org`; do not proxy it below the main site's domain/path. Set `ROOM310_ASSET_ORIGIN` to that origin.
+- Keep `ROOM310_DATA_DIR` on persistent private storage, outside the web root, with backups.
+- Run the service as a low-privilege OS account and place upload/storage quotas around the data directory.
+- A single Python process is appropriate for a small school/team deployment. For multiple app processes or high traffic, move sessions/metadata to a shared database and bundles to dedicated object storage before scaling out.
+- The built-in server does not terminate TLS. Use a maintained reverse proxy for HTTPS, request-size limits, access logs, and rate limiting in an Internet-facing deployment.

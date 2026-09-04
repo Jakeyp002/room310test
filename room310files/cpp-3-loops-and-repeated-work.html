@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Repeat tasks safely with while, do-while, and for loops; trace loop state; build nested patterns; and control iteration deliberately." />
+    <title>C++: Loops &amp; Repeated Work · Room310 Study</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="curriculum-page authored-course-page cpp-page">
+  <header class="header solid-header">
+    <a class="logo" href="index.html">ROOM<span>310</span></a>
+    <nav aria-label="Main navigation">
+        <a aria-current="page" href="study.html">Study</a>
+        <a href="games.html">Games</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+  </header>
+    <main class="lesson-page authored-lesson">
+      <div class="lesson-hero cpp-lesson-hero">
+        <a href="cpp-study.html">← All C++ lessons</a>
+        <p>C++ / Chapter 03</p>
+        <h1>Loops &amp; Repeated Work</h1>
+        <p>Repeat tasks safely with while, do-while, and for loops; trace loop state; build nested patterns; and control iteration deliberately.</p>
+      </div>
+      <article class="lesson-content">
+        <section class="chapter-roadmap">
+          <h2>Chapter roadmap</h2>
+          <p>Repeat tasks safely with while, do-while, and for loops; trace loop state; build nested patterns; and control iteration deliberately. Work through the concepts in order, type every example yourself, and keep a short debugging log that records predictions, errors, fixes, and what each fix taught you.</p>
+          <h3>Learning objectives</h3>
+          <ul><li>Select an appropriate loop</li><li>Trace initialization, condition, and update</li><li>Use break and continue sparingly</li><li>Build nested loops and accumulators</li></ul>
+        </section>
+        
+    <section class="authored-concept">
+      <p class="concept-number">03.1</p>
+      <h2>while and sentinel loops</h2>
+      <p>A while loop checks its condition before every iteration. It fits tasks whose repetition count is unknown, such as reading values until a sentinel appears. The loop must make progress toward termination; otherwise it becomes infinite.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>int value;
+int sum = 0;
+std::cin &gt;&gt; value;
+while (value != -1) {
+    sum += value;
+    std::cin &gt;&gt; value;
+}
+std::cout &lt;&lt; &quot;Sum: &quot; &lt;&lt; sum;</pre><span class="panel-label">Result</span><pre>5 8 2 -1
+Sum: 15</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">03.2</p>
+      <h2>do-while and menu repetition</h2>
+      <p>A do-while loop runs its body once before checking the condition. It is useful for menus and prompts that must appear at least once. Keep the condition close to the user decision so the exit behavior is obvious.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>char again;
+do {
+    std::cout &lt;&lt; &quot;Running task...\n&quot;;
+    std::cout &lt;&lt; &quot;Again? (y/n): &quot;;
+    std::cin &gt;&gt; again;
+} while (again == 'y');</pre><span class="panel-label">Result</span><pre>Running task...
+Again? (y/n): n</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">03.3</p>
+      <h2>for loops, counters, and accumulators</h2>
+      <p>A for loop places initialization, condition, and update in one header. Counters track how many times something occurs; accumulators combine values such as totals, products, minimums, and maximums. Off-by-one errors are prevented by writing the intended first and last values before coding.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>int total = 0;
+for (int n = 1; n &lt;= 5; ++n) {
+    total += n;
+}
+std::cout &lt;&lt; total;</pre><span class="panel-label">Result</span><pre>15</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+    <section class="authored-concept">
+      <p class="concept-number">03.4</p>
+      <h2>Nested loops and control statements</h2>
+      <p>A nested loop completes all inner iterations for each outer iteration. This structure creates grids, tables, and patterns. break exits the nearest loop and continue skips to its next iteration; both are clearest when used for a small, obvious rule.</p>
+      <p>Before running the example, trace each expression and write down the expected state or result. Then run it, compare the actual result, and change one input or rule to confirm that you understand which part controls the behavior.</p>
+      <div class="code-panel authored-code-panel"><span class="panel-label">Example</span><pre>for (int row = 1; row &lt;= 4; ++row) {
+    for (int col = 1; col &lt;= row; ++col) {
+        std::cout &lt;&lt; &quot;*&quot;;
+    }
+    std::cout &lt;&lt; &quot;\n&quot;;
+}</pre><span class="panel-label">Result</span><pre>*
+**
+***
+****</pre></div>
+      <div class="practice-box"><strong>Check your understanding</strong><p>Explain the example in plain language, identify one boundary or failure case, and revise it so the output changes in a predictable way.</p></div>
+    </section>
+        <section class="assignment-section">
+          <h2>Chapter assignments</h2>
+          <p>Complete these in order. Later assignments assume that earlier skills are working. Do not only test the sample values; design tests that challenge boundaries, missing values, incorrect types, empty collections, and other likely failures.</p>
+          <ol class="curriculum-assignments"><li><strong>A3.1</strong><p>Print multiples of 3 from 3 through 300 and report their count and sum.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A3.2</strong><p>Read positive prices until -1, then report count, total, average, lowest, and highest price.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A3.3</strong><p>Build a validated menu that repeats until the user chooses quit and counts how often each option was selected.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li><li><strong>A3.4</strong><p>Use nested loops to print a labeled multiplication table from 1 through 12.</p><p>Submit readable source code, a brief design note, and evidence from at least three tests including one boundary or invalid case.</p></li></ol>
+        </section>
+        <section class="chapter-project">
+          <p class="concept-number">Chapter project</p>
+          <h2>Number Guessing Tournament</h2>
+          <p>Number Guessing Tournament — Generate a secret number, accept validated guesses, report higher or lower, count attempts, and allow repeated rounds. Maintain wins, total guesses, and best score across the session.</p>
+          <h3>Required process</h3>
+          <ol><li>Write a short specification listing inputs, outputs, rules, and failure cases.</li><li>Break the work into small functions, queries, modules, or classes appropriate to the language.</li><li>Build the smallest working version before adding optional features.</li><li>Test normal, boundary, empty, and invalid cases and record the results.</li><li>Refactor names and duplication, then write a concise user guide.</li></ol>
+        </section>
+        <section class="key-terms"><h2>Key terms</h2><ul><li>iteration</li><li>sentinel</li><li>counter</li><li>accumulator</li><li>infinite loop</li><li>off-by-one</li><li>nested loop</li><li>iteration variable</li></ul></section>
+      </article>
+      <nav class="lesson-pagination" aria-label="C++ lesson navigation">
+        <a href="cpp-2-decisions-and-boolean-logic.html"><span>Previous</span>Decisions &amp; Boolean Logic</a>
+        <a href="cpp-4-functions-references-and-scope.html"><span>Next</span>Functions, References &amp; Scope →</a>
+      </nav>
+    </main>    <script src="site-polish.js?v=1.0"></script>
+  </body>
+</html>
