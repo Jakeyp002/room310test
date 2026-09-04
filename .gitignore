@@ -1,4 +1,7 @@
 .env
+node_modules/
+dist/
+supabase/.temp/
 data/
 __pycache__/
 *.py[cod]

@@ -1,6 +1,15 @@
 (() => {
   "use strict";
 
+  const logo = document.querySelector(".header .logo");
+  if (logo && !document.querySelector(".site-version-badge")) {
+    const version = document.createElement("span");
+    version.className = "site-version-badge";
+    version.textContent = "v0.5";
+    version.setAttribute("aria-label", "Room310 version 0.5");
+    logo.after(version);
+  }
+
   const needsCourseLab = document.body.matches(".java-page, .cpp-page, .sql-page, .javascript-page, .csharp-page");
   const needsAssignmentWorkspace = document.body.classList.contains("curriculum-page");
   const loadCourseLab = () => {

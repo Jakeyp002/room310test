@@ -1,14 +1,36 @@
 # Room310
 
-Room310 is a dependency-free HTML/CSS/JavaScript learning site served by a small Python server. Version 0.4 includes a database-backed Games catalog and a protected management area without changing the rest of the frontend stack.
+Room310 is an HTML/CSS/JavaScript learning site. Version 0.5 adds a Netlify build, Supabase authentication, a row-level-secured Games catalog, and private game asset storage while preserving the local Python learning server.
 
 ## Requirements
 
-- macOS or another Unix-like system with Python 3.11 or newer
-- Java, C++, Node, SQLite, and the project-local .NET runtime only if you use the lesson compilers
-- No Python packages are required for the Games backend; it uses Python's built-in SQLite, HTTP, password-hashing, ZIP, and file-handling modules
+- Node.js 22 or newer for the Netlify production build
+- A Supabase project and Netlify site for production
+- Python 3.11 or newer for the optional local learning server
+- Java, C++, Node, SQLite, and the project-local .NET runtime only if you use the local lesson compilers
 
-## Local setup
+## Netlify and Supabase production setup
+
+The production site is built from `room310files/` into `dist/`. Supabase supplies authentication, the Games database, and private thumbnail/ZIP storage.
+
+1. Install the pinned JavaScript dependencies with `npm ci`.
+2. Apply the SQL migrations in `supabase/migrations/` to the Supabase project. The current Room310 project has already been migrated.
+3. In Netlify, add these environment variables for all deploy contexts:
+
+   | Variable | Value |
+   | --- | --- |
+   | `SUPABASE_URL` | The Supabase project URL |
+   | `SUPABASE_PUBLISHABLE_KEY` | An active publishable key (preferred) or legacy anon key |
+
+4. Run `npm run build`. Never put a Supabase secret or `service_role` key in Netlify's frontend build variables.
+5. In Supabase Authentication, create the first user with `jacob.bradford.aleo@gmail.com`. The database trigger approves that address as the initial administrator; other new users remain unapproved editors.
+6. Open `/admin/login`, sign in, and add an external game. Only published external games appear on `/games.html` in v0.5.
+
+Hosted ZIPs can be stored privately in v0.5, but cannot be published until a separate restricted game origin is deployed. This prevents untrusted uploaded JavaScript from sharing the website or admin origin.
+
+## Optional local Python server
+
+The earlier SQLite backend remains available for local development and for lesson compilers that require installed language runtimes. It is separate from the production Supabase data.
 
 1. Optionally copy `.env.example` to `.env` and edit its non-secret settings.
 2. If using `.env`, load it into the current shell before each command:
@@ -110,11 +132,18 @@ SQLite creates `data/room310.sqlite3` plus temporary WAL files while the server 
 | `ROOM310_SESSION_HOURS` | Login lifetime, clamped to 1-168 hours |
 | `ROOM310_SECURE_COOKIES` | Set to `1` behind HTTPS so authentication cookies are Secure |
 
-There are no frontend API keys, database credentials, default passwords, or hard-coded admin accounts.
+The Supabase publishable key is intentionally browser-visible and limited by Row Level Security. There are no frontend database passwords, secret keys, default passwords, or hard-coded password credentials.
 
 ## Tests
 
-Run the full backend suite:
+Run the JavaScript unit tests and production build:
+
+```sh
+npm test
+npm run build
+```
+
+Run the legacy local-backend suite:
 
 ```sh
 python3 -m unittest discover -s tests -v
@@ -122,7 +151,7 @@ python3 -m unittest discover -s tests -v
 
 The tests use a temporary database and storage directory. They cover anonymous and unapproved-user rejection, approved-admin CRUD, draft visibility, external URL validation, slug collisions, thumbnail validation, ZIP traversal rejection, hosted upload publication, and published asset access.
 
-## Deployment notes
+## Legacy local-server deployment notes
 
 - Put the main server behind HTTPS and set `ROOM310_SECURE_COOKIES=1`.
 - Set `ROOM310_PUBLIC_ORIGIN` to the exact HTTPS site origin.

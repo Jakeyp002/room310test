@@ -322,7 +322,7 @@ def execute(language: str, code: str, user_input: str) -> dict:
 class Room310Handler(SimpleHTTPRequestHandler):
     """Main site, course runner, public catalog, and authenticated admin API."""
 
-    server_version = "Room310/0.4"
+    server_version = "Room310/0.5"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(SITE_ROOT), **kwargs)
@@ -617,7 +617,7 @@ iframe{{display:block;width:100%;height:100%;border:0;background:#000}}
 class GameAssetHandler(BaseHTTPRequestHandler):
     """Published hosted-game files on an origin that never receives admin cookies."""
 
-    server_version = "Room310GameAssets/0.4"
+    server_version = "Room310GameAssets/0.5"
 
     def _serve(self, include_body: bool) -> None:
         try:

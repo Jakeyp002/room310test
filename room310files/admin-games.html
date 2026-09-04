@@ -15,8 +15,8 @@
     </header>
     <main class="games-admin-shell">
       <section class="games-admin-heading">
-        <div><small>Games administration / v0.3</small><h1>Manage games.</h1></div>
-        <div><p>Add external games or upload a static web-game ZIP. Drafts remain private until you publish them.</p><button type="button" id="new-game">+ Add game</button></div>
+        <div><small>Games administration / v0.5</small><h1>Manage games.</h1></div>
+        <div><p>Add and publish external games, or privately store a static web-game ZIP for the upcoming isolated runner.</p><button type="button" id="new-game">+ Add game</button></div>
       </section>
 
       <section class="admin-editor" id="game-editor" hidden aria-labelledby="editor-title">
@@ -30,10 +30,10 @@
             <label>Game type<select name="hostType"><option value="external">External URL</option><option value="hosted">Hosted ZIP bundle</option></select></label>
             <label>Status<select name="status"><option value="draft">Draft</option><option value="published">Published</option></select></label>
             <label class="admin-full-field" data-host-field="external">External game URL<input name="externalUrl" type="url" inputmode="url" placeholder="https://example.com/game" /></label>
-            <label class="admin-full-field" data-host-field="hosted" hidden>Hosted game ZIP<input name="bundle" type="file" accept=".zip,application/zip" /><small>Top-level index.html required · 20 MB ZIP / 80 MB expanded maximum</small></label>
+            <label class="admin-full-field" data-host-field="hosted" hidden>Hosted game ZIP<input name="bundle" type="file" accept=".zip,application/zip" /><small>Stored privately as a draft · 20 MB maximum · publishing arrives with the isolated runner</small></label>
             <label class="admin-full-field">Thumbnail image<input name="thumbnail" type="file" accept="image/png,image/jpeg,image/gif,image/webp" /><small>PNG, JPEG, GIF, or WebP · 5 MB maximum</small></label>
           </div>
-          <div class="admin-security-note"><strong>Hosted-game isolation</strong><span>Uploaded code runs on a separate origin inside a restricted frame and cannot read the admin session.</span></div>
+          <div class="admin-security-note"><strong>Hosted-game safety</strong><span>ZIPs are private in v0.5. They cannot be published or run until Room310 has a separate, restricted game origin.</span></div>
           <div class="admin-form-actions"><button type="button" id="cancel-edit-bottom">Cancel</button><button type="submit" class="primary-action">Save game</button></div>
           <p class="admin-form-message" id="game-form-message" role="status"></p>
         </form>
@@ -44,6 +44,7 @@
         <div id="admin-games-list" class="admin-games-list" aria-live="polite"><p>Loading games…</p></div>
       </section>
     </main>
-    <script src="/admin-games.js?v=0.3"></script>
+    <script src="/supabase-config.js?v=0.5"></script>
+    <script src="/admin-games.js?v=0.5"></script>
   </body>
 </html>

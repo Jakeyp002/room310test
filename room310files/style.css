@@ -1189,7 +1189,18 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
   .assignment-workspace-inline-launch small { display: none; }
 }
 
-/* Games catalog and protected administration — v0.3 */
+/* Global release marker — v0.5 */
+.site-version-badge {
+  align-self: center;
+  margin-right: auto;
+  padding: 5px 7px;
+  border: 1px solid currentColor;
+  font: 700 9px/1 "Courier New", monospace;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Games catalog and protected administration — v0.5 */
 .games-hero-meta { display: flex; justify-content: space-between; gap: 20px; }
 .games-list.games-list-populated {
   display: grid;
@@ -1255,6 +1266,9 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
 .admin-form-actions .primary-action { background: var(--accent); }
 .games-admin-page button:disabled { cursor: wait; opacity: 0.55; }
 .admin-form-message { min-height: 22px; margin: 0; color: #9c2b1d; font-size: 13px; line-height: 1.4; }
+.admin-form-message[data-state="success"] { color: #2c6b3b; }
+.admin-form-message[data-state="working"],
+.admin-form-message[data-state="info"] { color: #56544d; }
 .games-admin-shell { padding: 140px 28px 80px; }
 .games-admin-heading { min-height: 470px; display: grid; grid-template-columns: 2fr 1fr; gap: 28px; align-items: end; padding-bottom: 28px; border-bottom: 8px solid #ff795f; }
 .games-admin-heading h1 { margin: 25px 0 0; font-size: clamp(78px, 11vw, 165px); line-height: 0.78; letter-spacing: -0.08em; }
