@@ -139,7 +139,7 @@ export async function handler(event) {
   try {
     const response = await fetch(WANDBOX_URL, {
       method: "POST",
-      headers: { "content-type": "application/json", "user-agent": "Room310-v0.6 educational-runner" },
+      headers: { "content-type": "application/json", "user-agent": "Room310-v0.7 educational-runner" },
       body: JSON.stringify({
         compiler: RUNTIMES[language],
         code: prepareCode(language, code),

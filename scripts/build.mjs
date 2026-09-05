@@ -5,7 +5,7 @@ const projectUrl = process.env.SUPABASE_URL || "https://khbmuaitysznyxxefhou.sup
 const publishableKey = process.env.SUPABASE_PUBLISHABLE_KEY || "";
 
 if (process.env.NETLIFY === "true" && !publishableKey) {
-  throw new Error("SUPABASE_PUBLISHABLE_KEY must be configured in Netlify before deploying Room310 v0.6.");
+  throw new Error("SUPABASE_PUBLISHABLE_KEY must be configured in Netlify before deploying Room310 v0.7.");
 }
 
 await rm("dist", { force: true, recursive: true });

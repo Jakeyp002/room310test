@@ -23,7 +23,7 @@ from pathlib import Path, PurePosixPath
 from urllib.parse import urlsplit
 
 
-APP_VERSION = "0.6"
+APP_VERSION = "0.7"
 SESSION_COOKIE = "room310_session"
 CSRF_COOKIE = "room310_csrf"
 MAX_JSON_BYTES = 128 * 1024

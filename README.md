@@ -1,6 +1,6 @@
 # Room310
 
-Room310 is an HTML/CSS/JavaScript learning site. Version 0.6 adds production code execution, cover-image cropping, compact game cards, Supabase authentication, a row-level-secured Games catalog, and private game asset storage while preserving the local Python learning server.
+Room310 is an HTML/CSS/JavaScript learning site. Version 0.7 adds a direct admin-login entry beside the site badge. It builds on v0.6's production code execution, cover-image cropping, compact game cards, Supabase authentication, row-level-secured Games catalog, and private game asset storage.
 
 ## Requirements
 
@@ -24,9 +24,9 @@ The production site is built from `room310files/` into `dist/`. Supabase supplie
 
 4. Run `npm run build`. Never put a Supabase secret or `service_role` key in Netlify's frontend build variables.
 5. In Supabase Authentication, create the first user with `jacob.bradford.aleo@gmail.com`. The database trigger approves that address as the initial administrator; other new users remain unapproved editors.
-6. Open `/admin/login`, sign in, and add an external game. Only published external games appear on `/games.html` in v0.6.
+6. Open `/admin/login`, sign in, and add an external game. Only published external games appear on `/games.html` in v0.7.
 
-Hosted ZIPs can be stored privately in v0.6, but cannot be published until a separate restricted game origin is deployed. This prevents untrusted uploaded JavaScript from sharing the website or admin origin.
+Hosted ZIPs can be stored privately in v0.7, but cannot be published until a separate restricted game origin is deployed. This prevents untrusted uploaded JavaScript from sharing the website or admin origin.
 
 The production `/api/run` route is a Netlify Function that validates requests and sends code to Wandbox's sandboxed compilers with snippet saving disabled. Python lesson cells still run locally in the browser through Pyodide. Do not submit passwords, API keys, or private information to any compiler cell.
 

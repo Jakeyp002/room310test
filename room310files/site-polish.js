@@ -2,12 +2,22 @@
   "use strict";
 
   const logo = document.querySelector(".header .logo");
-  if (logo && !document.querySelector(".site-version-badge")) {
-    const version = document.createElement("span");
+  let version = document.querySelector(".site-version-badge");
+  if (logo && !version) {
+    version = document.createElement("span");
     version.className = "site-version-badge";
-    version.textContent = "v0.6";
-    version.setAttribute("aria-label", "Room310 version 0.6");
+    version.textContent = "v0.7";
+    version.setAttribute("aria-label", "Room310 version 0.7");
     logo.after(version);
+  }
+
+  if (logo && !document.querySelector(".admin-login-link")) {
+    const adminLogin = document.createElement("a");
+    adminLogin.className = "admin-login-link";
+    adminLogin.href = "/admin/login";
+    adminLogin.textContent = "Admin login";
+    adminLogin.setAttribute("aria-label", "Log in to Room310 administration");
+    (version || logo).after(adminLogin);
   }
 
   const needsCourseLab = document.body.matches(".java-page, .cpp-page, .sql-page, .javascript-page, .csharp-page");

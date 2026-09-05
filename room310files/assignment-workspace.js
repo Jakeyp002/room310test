@@ -83,7 +83,7 @@ Console.WriteLine($"Hello from {course}!");`
   panel.innerHTML = `
     <header class="assignment-workspace-header">
       <div><span class="assignment-workspace-kicker">Room 310 terminal</span><strong>Assignment Workspace</strong></div>
-      <div class="assignment-workspace-header-actions"><span class="assignment-workspace-version">v0.6</span><button type="button" class="assignment-workspace-close" aria-label="Close assignment workspace">×</button></div>
+      <div class="assignment-workspace-header-actions"><span class="assignment-workspace-version">v0.7</span><button type="button" class="assignment-workspace-close" aria-label="Close assignment workspace">×</button></div>
     </header>
     <div class="assignment-workspace-toolbar">
       <label>Language<select class="assignment-workspace-language" aria-label="Programming language"></select></label>
