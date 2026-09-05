@@ -2,7 +2,7 @@
   "use strict";
 
   if (!document.body.classList.contains("curriculum-page") || document.documentElement.dataset.assignmentWorkspace) return;
-  document.documentElement.dataset.assignmentWorkspace = "v0.3";
+  document.documentElement.dataset.assignmentWorkspace = "v0.9";
 
   const languages = {
     python: {
@@ -60,8 +60,9 @@ Console.WriteLine($"Hello from {course}!");`
   const storageKey = `room310-assignment-v0.2:${location.pathname}`;
   let saved = {};
   try { saved = JSON.parse(localStorage.getItem(storageKey) || "{}"); } catch { saved = {}; }
-  const drafts = { ...Object.fromEntries(Object.entries(languages).map(([key, value]) => [key, value.starter])), ...(saved.drafts || {}) };
-  let currentLanguage = languages[saved.language] ? saved.language : defaultLanguage;
+  if (!saved || typeof saved !== "object" || Array.isArray(saved)) saved = {};
+  const drafts = Object.fromEntries(Object.entries(languages).map(([key, value]) => [key, typeof saved.drafts?.[key] === "string" ? saved.drafts[key] : value.starter]));
+  let currentLanguage = Object.hasOwn(languages, saved.language) ? saved.language : defaultLanguage;
   let controller = null;
   let lastOpener = null;
 
@@ -83,7 +84,7 @@ Console.WriteLine($"Hello from {course}!");`
   panel.innerHTML = `
     <header class="assignment-workspace-header">
       <div><span class="assignment-workspace-kicker">Room 310 terminal</span><strong>Assignment Workspace</strong></div>
-      <div class="assignment-workspace-header-actions"><span class="assignment-workspace-version">v0.7</span><button type="button" class="assignment-workspace-close" aria-label="Close assignment workspace">×</button></div>
+      <div class="assignment-workspace-header-actions"><span class="assignment-workspace-version">v0.9</span><button type="button" class="assignment-workspace-close" aria-label="Close assignment workspace">×</button></div>
     </header>
     <div class="assignment-workspace-toolbar">
       <label>Language<select class="assignment-workspace-language" aria-label="Programming language"></select></label>
@@ -117,7 +118,7 @@ Console.WriteLine($"Hello from {course}!");`
   Object.entries(languages).forEach(([value, language]) => select.add(new Option(language.label, value)));
   select.value = currentLanguage;
   editor.value = drafts[currentLanguage];
-  input.value = saved.input || "";
+  input.value = typeof saved.input === "string" ? saved.input : "";
   filename.textContent = filenames[currentLanguage];
 
   const assignmentTarget = document.querySelector(".assignment-section, .chapter-project") || [...document.querySelectorAll(".lesson-content h1, .lesson-content h2, .lesson-content h3")].find((heading) => /\b(assignments?|projects?|challenge|exercises?)\b/i.test(heading.textContent));
@@ -141,7 +142,7 @@ Console.WriteLine($"Hello from {course}!");`
   };
 
   const closeWorkspace = () => {
-    if (controller) controller.abort();
+    if (controller) stopRun();
     panel.hidden = true;
     document.body.classList.remove("assignment-workspace-open");
     launcher.setAttribute("aria-expanded", "false");
@@ -150,9 +151,19 @@ Console.WriteLine($"Hello from {course}!");`
 
   const setRunning = (running) => {
     panel.dataset.state = running ? "running" : "idle";
-    runButton.disabled = running;
-    runButton.innerHTML = running ? `<span class="assignment-workspace-spinner" aria-hidden="true"></span> Running…` : `<span aria-hidden="true">▶</span> Run`;
+    select.disabled = running;
+    panel.querySelector(".assignment-workspace-reset").disabled = running;
+    runButton.innerHTML = running ? `<span aria-hidden="true">■</span> Stop` : `<span aria-hidden="true">▶</span> Run`;
     if (running) status.textContent = `Running ${languages[currentLanguage].label}…`;
+  };
+
+  const stopRun = () => {
+    controller?.abort();
+    controller = null;
+    setRunning(false);
+    output.textContent = "Stopped waiting for this run. You can edit the code and run again. Remote execution may continue until its sandbox time limit.";
+    status.textContent = "Stopped";
+    output.parentElement.removeAttribute("data-result");
   };
 
   const cleanDiagnostic = (text) => text
@@ -170,7 +181,8 @@ Console.WriteLine($"Hello from {course}!");`
     } catch {
       throw new Error(`The runner returned an unreadable response (${response.status}). Please try again.`);
     }
-    if (!response.ok) throw new Error(result.error || `The runner could not start (${response.status}).`);
+    if (!response.ok) throw new Error(result?.error || `The runner could not start (${response.status}).`);
+    if (!result || !Number.isInteger(result.exitCode) || typeof result.stdout !== "string" || typeof result.stderr !== "string") throw new Error("The runner returned an incomplete result. Please try again.");
     return result;
   };
 
@@ -183,7 +195,9 @@ Console.WriteLine($"Hello from {course}!");`
       status.textContent = "Code needed";
       return;
     }
-    controller = new AbortController();
+    const requestController = new AbortController();
+    controller = requestController;
+    const timer = setTimeout(() => requestController.abort(new DOMException("The run took too long. Check your connection or code, then try again.", "TimeoutError")), 45_000);
     setRunning(true);
     output.textContent = "Starting the secure runner…";
     try {
@@ -191,23 +205,29 @@ Console.WriteLine($"Hello from {course}!");`
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ language: currentLanguage, code: editor.value, input: input.value }),
-        signal: controller.signal
+        signal: requestController.signal
       });
       const result = await readRunnerResponse(response);
+      if (controller !== requestController) return;
       const stdout = cleanDiagnostic(result.stdout || "");
       const stderr = cleanDiagnostic(result.stderr || "");
       output.textContent = stdout && stderr ? `${stdout}\n\n${result.exitCode === 0 ? "Notes" : "Error"}:\n${stderr}` : stdout || stderr || "Program finished with no output.";
+      if (result.runner === "backup") output.textContent = `Backup runner: ${result.runtime || languages[currentLanguage].label}\n\n${output.textContent}`;
       status.textContent = result.exitCode === 0 ? "Finished" : result.phase === "compile" ? "Fix a compile error" : "Fix an error";
       output.parentElement.dataset.result = result.exitCode === 0 ? "success" : "error";
     } catch (error) {
+      if (controller !== requestController) return;
       if (error.name !== "AbortError") {
         output.textContent = `Could not run the code. ${error.message}`;
         status.textContent = "Runner unavailable";
         output.parentElement.dataset.result = "error";
       }
     } finally {
-      controller = null;
-      setRunning(false);
+      clearTimeout(timer);
+      if (controller === requestController) {
+        controller = null;
+        setRunning(false);
+      }
     }
   };
 
@@ -234,7 +254,7 @@ Console.WriteLine($"Hello from {course}!");`
   });
   launcher.addEventListener("click", () => openWorkspace(launcher));
   panel.querySelector(".assignment-workspace-close").addEventListener("click", closeWorkspace);
-  panel.querySelector(".assignment-workspace-run").addEventListener("click", run);
+  runButton.addEventListener("click", () => controller ? stopRun() : run());
   panel.querySelector(".assignment-workspace-clear").addEventListener("click", () => { output.textContent = "Output cleared. Press Run when you are ready."; output.parentElement.removeAttribute("data-result"); });
   panel.querySelector(".assignment-workspace-reset").addEventListener("click", () => {
     drafts[currentLanguage] = languages[currentLanguage].starter;

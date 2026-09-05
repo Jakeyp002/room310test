@@ -1,4 +1,5 @@
 const WANDBOX_URL = "https://wandbox.org/api/compile.json";
+const EXPLORER_URL = "https://godbolt.org/api/compiler";
 const MAX_CODE = 40_000;
 const MAX_INPUT = 12_000;
 const MAX_OUTPUT = 160_000;
@@ -10,6 +11,15 @@ const RUNTIMES = {
   javascript: "nodejs-20.17.0",
   sql: "sqlite-3.46.1",
   csharp: "mono-6.12.0.199"
+};
+
+const BACKUP_RUNTIMES = {
+  python: { compiler: "python312", language: "python", label: "Python 3.12" },
+  java: { compiler: "java2100", language: "java", label: "Java 21" },
+  cpp: { compiler: "g132", language: "c++", label: "C++ / GCC 13.2" },
+  javascript: { compiler: "v8113", language: "javascript", label: "JavaScript / V8 (Node.js modules are unavailable in backup mode)" },
+  sql: { compiler: "python312", language: "python", label: "SQLite" },
+  csharp: { compiler: "dotnet80csharpcoreclr", language: "csharp", label: "C# / .NET 8" }
 };
 
 const SQL_SEED = String.raw`
@@ -115,6 +125,91 @@ export function normalizeResult(result) {
   };
 }
 
+export function prepareBackupCode(language, source) {
+  if (language !== "sql") return prepareCode(language, source);
+  // SQLite itself executes the SQL. Python is only the driver's sandboxed host.
+  const sql = prepareCode("sql", source).replace(/^\.headers on\n\.mode box\n\.nullvalue NULL\n/, "");
+  return `import json, sqlite3, sys
+connection = sqlite3.connect(":memory:", isolation_level=None)
+source = json.loads(${JSON.stringify(JSON.stringify(sql))})
+def execute(statement):
+    cursor = connection.execute(statement)
+    if cursor.description:
+        print(" | ".join(column[0] for column in cursor.description))
+        for index, row in enumerate(cursor):
+            if index >= 1000:
+                print("[Output limited to 1,000 rows]")
+                break
+            print(" | ".join("NULL" if value is None else str(value) for value in row))
+try:
+    statement = ""
+    for character in source:
+        statement += character
+        if character == ";" and sqlite3.complete_statement(statement):
+            execute(statement)
+            statement = ""
+    if statement.strip():
+        execute(statement)
+except sqlite3.Error as error:
+    print("SQLite error: " + str(error), file=sys.stderr)
+    sys.exit(1)
+finally:
+    connection.close()
+`;
+}
+
+const outputLines = (lines) => (Array.isArray(lines) ? lines.map(line => typeof line?.text === "string" ? line.text : "").join("\n") : "").replace(/\u001b\[[0-?]*[ -/]*[@-~]/g, "").slice(0, MAX_OUTPUT);
+
+export function normalizeBackupResult(result) {
+  if (!result || typeof result !== "object" || !Number.isInteger(result.code)) throw new Error("The backup runner returned an invalid result.");
+  const build = result.buildResult;
+  if (!result.didExecute && !(build && Number.isInteger(build.code) && build.code !== 0) && result.code === 0) throw new Error("The backup runner did not execute the program.");
+  const buildFailed = Boolean(build && build.code !== 0);
+  return {
+    stdout: outputLines(result.stdout),
+    stderr: [outputLines(build?.stderr), outputLines(result.stderr)].filter(Boolean).join("\n").slice(0, MAX_OUTPUT),
+    exitCode: buildFailed ? build.code : result.code,
+    timedOut: Boolean(result.timedOut || build?.timedOut),
+    phase: buildFailed ? "compile" : "run"
+  };
+}
+
+async function runWandbox(language, code, input) {
+  const response = await fetch(WANDBOX_URL, {
+    method: "POST",
+    headers: { "content-type": "application/json", "user-agent": "Room310-v0.9 educational-runner" },
+    body: JSON.stringify({ compiler: RUNTIMES[language], code: prepareCode(language, code), stdin: input, save: false }),
+    signal: AbortSignal.timeout(8_000)
+  });
+  if (!response.ok) throw new Error("Primary compiler service unavailable.");
+  const result = JSON.parse(await response.text());
+  if (!result || typeof result !== "object" || !["string", "number"].includes(typeof result.status) || !Number.isFinite(Number(result.status))) throw new Error("Primary compiler returned an unreadable response.");
+  return normalizeResult(result);
+}
+
+async function runBackup(language, code, input) {
+  const runtime = BACKUP_RUNTIMES[language];
+  const response = await fetch(`${EXPLORER_URL}/${runtime.compiler}/compile`, {
+    method: "POST",
+    headers: { "content-type": "application/json", accept: "application/json" },
+    body: JSON.stringify({
+      source: prepareBackupCode(language, code),
+      lang: runtime.language,
+      allowStoreCodeDebug: false,
+      options: {
+        userArguments: language === "cpp" ? "-std=c++17" : "",
+        compilerOptions: { executorRequest: true },
+        filters: { execute: true },
+        executeParameters: { args: [], stdin: input }
+      }
+    }),
+    signal: AbortSignal.timeout(30_000)
+  });
+  if (!response.ok) throw new Error("Backup compiler service unavailable.");
+  const result = normalizeBackupResult(JSON.parse(await response.text()));
+  return { ...result, runner: "backup", runtime: runtime.label };
+}
+
 export async function handler(event) {
   if (event.httpMethod === "OPTIONS") return json(204, {});
   if (event.httpMethod !== "POST") return json(405, { error: "Use POST to run code." });
@@ -126,44 +221,29 @@ export async function handler(event) {
     return json(400, { error: "The runner received invalid JSON." });
   }
 
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return json(400, { error: "The runner received invalid JSON. Send a code request object." });
+
   const language = typeof payload.language === "string" ? payload.language.toLowerCase() : "";
   const code = typeof payload.code === "string" ? payload.code : "";
   const input = typeof payload.input === "string" ? payload.input : "";
-  if (!RUNTIMES[language]) return json(400, { error: "Choose a supported programming language." });
+  if (!Object.hasOwn(RUNTIMES, language)) return json(400, { error: "Choose a supported programming language." });
   if (!code.trim()) return json(400, { error: "Write some code first, then press Run." });
   if (code.length > MAX_CODE) return json(413, { error: "Code is limited to 40,000 characters per run." });
   if (input.length > MAX_INPUT) return json(413, { error: "Program input is limited to 12,000 characters per run." });
 
-  const abortController = new AbortController();
-  const timer = setTimeout(() => abortController.abort(), 25_000);
   try {
-    const response = await fetch(WANDBOX_URL, {
-      method: "POST",
-      headers: { "content-type": "application/json", "user-agent": "Room310-v0.7 educational-runner" },
-      body: JSON.stringify({
-        compiler: RUNTIMES[language],
-        code: prepareCode(language, code),
-        stdin: input,
-        save: false
-      }),
-      signal: abortController.signal
-    });
-    const text = await response.text();
-    if (!response.ok) return json(502, { error: `The compiler service is temporarily unavailable (${response.status}).` });
-    let result;
+    return json(200, await runWandbox(language, code, input));
+  } catch {
+    // Only infrastructure failures fall back. A student's compile/runtime error
+    // is returned normally and must never cause a second execution.
     try {
-      result = JSON.parse(text);
-    } catch {
-      return json(502, { error: "The compiler service returned an unreadable response. Please try again." });
+      return json(200, await runBackup(language, code, input));
+    } catch (error) {
+      const detail = ["AbortError", "TimeoutError"].includes(error?.name)
+        ? "The run took too long and was stopped. Check for an infinite loop or missing input, then run again."
+        : "Both compiler services are unavailable or returned an unreadable response. Your draft is safe; please try again shortly.";
+      return json(502, { error: detail });
     }
-    return json(200, normalizeResult(result));
-  } catch (error) {
-    const detail = error?.name === "AbortError"
-      ? "The run took too long and was stopped. Check for an infinite loop or missing input."
-      : "The compiler service could not be reached. Please try again shortly.";
-    return json(502, { error: detail });
-  } finally {
-    clearTimeout(timer);
   }
 }
 

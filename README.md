@@ -1,6 +1,6 @@
 # Room310
 
-Room310 is an HTML/CSS/JavaScript learning site. Version 0.8 adds a Graphs library and protected Desmos graph editor with automatic or custom cover images. Existing-password sign-in no longer imposes a password-creation length rule. Games, coursework, and code execution remain available.
+Room310 is an HTML/CSS/JavaScript learning site. Version 0.9 restores assignment execution during compiler-service outages with automatic fallback, recoverable errors, and a Stop control. It retains v0.8's Graphs library, Desmos editor, and simplified existing-password sign-in.
 
 ## Requirements
 
@@ -28,7 +28,13 @@ The production site is built from `room310files/` into `dist/`. Supabase supplie
 
 Hosted ZIPs can be stored privately, but cannot be published until a separate restricted game origin is deployed. This prevents untrusted uploaded JavaScript from sharing the website or admin origin.
 
-The production `/api/run` route is a Netlify Function that validates requests and sends code to Wandbox's sandboxed compilers with snippet saving disabled. Python lesson cells still run locally in the browser through Pyodide. Do not submit passwords, API keys, or private information to any compiler cell.
+The production `/api/run` route is a Netlify Function that validates requests and sends code to Wandbox's sandboxed compilers with snippet saving disabled. If Wandbox has an infrastructure failure, Compiler Explorer executes the request with code-debug storage disabled. Student compile/runtime errors do not trigger a second execution. Each service request is time-limited, and malformed responses always produce JSON errors. This automatic fallback also protects the non-Python lesson cells that share the endpoint.
+
+The backup uses Python 3.12, Java 21, GCC 13.2, .NET 8, V8 JavaScript, and SQLite (via a Python driver in the remote sandbox). V8 backup mode supports ordinary JavaScript and `readline()` input, but not Node.js-specific modules such as `fs` or `require()`. The workspace names the backup runtime in its output. SQL retains the lesson practice tables; query output is capped at 1,000 rows. Free external services do not provide guaranteed availability.
+
+Python lesson cells still run locally in the browser through Pyodide. Do not submit passwords, API keys, or private information to any compiler cell. The workspace's Stop button cancels waiting locally and immediately allows another run; remote execution still ends at the sandbox's time limit. Existing drafts keep the same browser storage keys.
+
+Run `npm test` for unit and regression checks. After `npm run build`, `node tests/browser/workspace.mjs` tests all six languages against real compilers, input, errors, retries, draft persistence, cancellation, and mobile layout. Supply `PLAYWRIGHT_MODULE` if Playwright is not installed locally, and `BASE_URL=https://projectroom310.com` to repeat the checks against production.
 
 ## Adding Desmos graphs
 

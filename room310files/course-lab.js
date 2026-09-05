@@ -88,6 +88,7 @@
     const combined = cleanDiagnostic([result.stdout, result.stderr].filter(Boolean).join(result.stdout && result.stderr ? "\n" : ""));
     const failed = result.exitCode !== 0 || result.error;
     output.textContent = combined || (failed ? (result.error || "The compiler stopped unexpectedly. Run the cell once more.") : "Done — this cell did not print anything.");
+    if (result.runner === "backup") output.textContent = `Backup runner: ${result.runtime || config.name}\n\n${output.textContent}`;
     outputWrap.hidden = false;
     setState(cell, failed ? "error" : "complete", failed ? (result.phase === "compile" ? "Fix the code" : "Check the error") : "Finished");
   }

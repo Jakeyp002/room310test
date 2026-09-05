@@ -6,8 +6,8 @@
   if (logo && !version) {
     version = document.createElement("span");
     version.className = "site-version-badge";
-    version.textContent = "v0.8";
-    version.setAttribute("aria-label", "Room310 version 0.8");
+    version.textContent = "v0.9";
+    version.setAttribute("aria-label", "Room310 version 0.9");
     logo.after(version);
   }
 
@@ -25,7 +25,7 @@
   const loadCourseLab = () => {
     if (!needsCourseLab || document.documentElement.dataset.courseRunner || document.querySelector('script[src^="course-lab.js"]')) return;
     const script = document.createElement("script");
-    script.src = "course-lab.js?v=1.3";
+    script.src = "course-lab.js?v=0.9";
     document.body.append(script);
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", loadCourseLab, { once: true });
@@ -34,7 +34,7 @@
   const loadAssignmentWorkspace = () => {
     if (!needsAssignmentWorkspace || document.documentElement.dataset.assignmentWorkspace || document.querySelector('script[src^="assignment-workspace.js"]')) return;
     const script = document.createElement("script");
-    script.src = "assignment-workspace.js?v=0.3";
+    script.src = "assignment-workspace.js?v=0.9";
     document.body.append(script);
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", loadAssignmentWorkspace, { once: true });
