@@ -2,7 +2,7 @@
   "use strict";
 
   if (!document.body.classList.contains("curriculum-page") || document.documentElement.dataset.assignmentWorkspace) return;
-  document.documentElement.dataset.assignmentWorkspace = "v0.2";
+  document.documentElement.dataset.assignmentWorkspace = "v0.3";
 
   const languages = {
     python: {
@@ -83,7 +83,7 @@ Console.WriteLine($"Hello from {course}!");`
   panel.innerHTML = `
     <header class="assignment-workspace-header">
       <div><span class="assignment-workspace-kicker">Room 310 terminal</span><strong>Assignment Workspace</strong></div>
-      <div class="assignment-workspace-header-actions"><span class="assignment-workspace-version">v0.2</span><button type="button" class="assignment-workspace-close" aria-label="Close assignment workspace">×</button></div>
+      <div class="assignment-workspace-header-actions"><span class="assignment-workspace-version">v0.6</span><button type="button" class="assignment-workspace-close" aria-label="Close assignment workspace">×</button></div>
     </header>
     <div class="assignment-workspace-toolbar">
       <label>Language<select class="assignment-workspace-language" aria-label="Programming language"></select></label>
@@ -102,7 +102,7 @@ Console.WriteLine($"Hello from {course}!");`
     </details>
     <div class="assignment-workspace-output-wrap">
       <div class="assignment-workspace-output-bar"><span>Output</span><button type="button" class="assignment-workspace-clear">Clear</button></div>
-      <pre class="assignment-workspace-output" aria-live="polite">Your program's output will appear here.</pre>
+      <pre class="assignment-workspace-output" aria-live="polite">Your program's output will appear here. Runs use an external sandbox, so never paste passwords or private information.</pre>
     </div>`;
 
   const select = panel.querySelector(".assignment-workspace-language");
@@ -161,6 +161,19 @@ Console.WriteLine($"Hello from {course}!");`
     .replace(/\/var\/folders\/[^\s:]+\/T\/room310-cell-[^\s/:]+\//g, "")
     .trim();
 
+  const readRunnerResponse = async (response) => {
+    const text = await response.text();
+    if (!text.trim()) throw new Error(`The runner returned an empty response (${response.status}). Please try again.`);
+    let result;
+    try {
+      result = JSON.parse(text);
+    } catch {
+      throw new Error(`The runner returned an unreadable response (${response.status}). Please try again.`);
+    }
+    if (!response.ok) throw new Error(result.error || `The runner could not start (${response.status}).`);
+    return result;
+  };
+
   const run = async () => {
     if (controller) return;
     drafts[currentLanguage] = editor.value;
@@ -172,7 +185,7 @@ Console.WriteLine($"Hello from {course}!");`
     }
     controller = new AbortController();
     setRunning(true);
-    output.textContent = "Starting the local runner…";
+    output.textContent = "Starting the secure runner…";
     try {
       const response = await fetch("/api/run", {
         method: "POST",
@@ -180,8 +193,7 @@ Console.WriteLine($"Hello from {course}!");`
         body: JSON.stringify({ language: currentLanguage, code: editor.value, input: input.value }),
         signal: controller.signal
       });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "The runner could not start.");
+      const result = await readRunnerResponse(response);
       const stdout = cleanDiagnostic(result.stdout || "");
       const stderr = cleanDiagnostic(result.stderr || "");
       output.textContent = stdout && stderr ? `${stdout}\n\n${result.exitCode === 0 ? "Notes" : "Error"}:\n${stderr}` : stdout || stderr || "Program finished with no output.";

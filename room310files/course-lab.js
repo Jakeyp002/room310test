@@ -92,6 +92,19 @@
     setState(cell, failed ? "error" : "complete", failed ? (result.phase === "compile" ? "Fix the code" : "Check the error") : "Finished");
   }
 
+  async function readRunnerResponse(response) {
+    const text = await response.text();
+    if (!text.trim()) throw new Error(`The runner returned an empty response (${response.status}). Please try again.`);
+    let result;
+    try {
+      result = JSON.parse(text);
+    } catch {
+      throw new Error(`The runner returned an unreadable response (${response.status}). Please try again.`);
+    }
+    if (!response.ok) throw new Error(result.error || `The runner could not start (${response.status}).`);
+    return result;
+  }
+
   async function runCell(cell) {
     if (activeCell) return;
     activeCell = cell;
@@ -109,15 +122,14 @@
           input: cell.querySelector(".python-cell-input")?.value || "",
         }),
       });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "The local runner could not start.");
+      const result = await readRunnerResponse(response);
       finish(cell, result);
     } catch (error) {
       if (error.name === "AbortError") {
         finish(cell, { stdout: "Stopped. You can edit the code and run it again.", stderr: "", exitCode: 0 });
         setState(cell, "stopped", "Stopped");
       } else {
-        finish(cell, { stdout: "", stderr: error.message.includes("fetch") ? "The local compiler server is not running. Start Room310 with run_server.py, then try again." : error.message, exitCode: 1 });
+        finish(cell, { stdout: "", stderr: error.message || "The compiler service could not be reached. Please try again.", exitCode: 1 });
       }
     } finally {
       activeCell = null;
@@ -182,7 +194,7 @@
     const intro = document.createElement("aside");
     intro.className = "python-lab-note course-lab-note";
     intro.style.setProperty("--runner-accent", config.color);
-    intro.innerHTML = `<div><span class="python-lab-mark" aria-hidden="true">▶</span></div><div><strong>${config.name} Lab</strong><p>Edit a cell, then press <b>Run cell</b>. Use <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Enter</kbd> as a shortcut. Each run starts fresh.</p></div>`;
+    intro.innerHTML = `<div><span class="python-lab-mark" aria-hidden="true">▶</span></div><div><strong>${config.name} Lab</strong><p>Edit a cell, then press <b>Run cell</b>. Use <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Enter</kbd> as a shortcut. Each run starts fresh in an external sandbox, so never paste passwords or private information.</p></div>`;
     article.prepend(intro);
 
     const cells = candidates.map(({ panel, source }, index) => {

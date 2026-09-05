@@ -2,8 +2,17 @@
   command = "npm run build"
   publish = "dist"
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 [build.environment]
   NODE_VERSION = "24"
+
+[[redirects]]
+  from = "/api/run"
+  to = "/.netlify/functions/run"
+  status = 200
 
 [[redirects]]
   from = "/admin/login"

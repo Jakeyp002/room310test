@@ -1,5 +1,6 @@
 import { configurationMessage, getManager, isConfigured, messageFor, supabase } from "./supabase-client.js";
 import { gameFromRow, slugify, thumbnailExtension } from "./game-utils.js";
+import { coverTransform } from "./image-crop-utils.js";
 
 const list = document.querySelector("#admin-games-list");
 const editor = document.querySelector("#game-editor");
@@ -9,6 +10,16 @@ const hostType = form.elements.hostType;
 const statusSelect = form.elements.status;
 let games = [];
 let editing = null;
+let croppedThumbnail = null;
+let thumbnailPreviewUrl = "";
+
+const cropper = document.querySelector("#thumbnail-cropper");
+const cropCanvas = cropper.querySelector("canvas");
+const cropContext = cropCanvas.getContext("2d", { alpha: false });
+const cropZoom = cropper.querySelector("#crop-zoom");
+const cropPreview = document.querySelector("#thumbnail-crop-preview");
+const thumbnailInput = form.elements.thumbnail;
+const cropState = { image: null, offsetX: 0, offsetY: 0, zoom: 1, dragging: false, pointerX: 0, pointerY: 0 };
 
 function showFormMessage(text, state = "error") {
   message.textContent = text;
@@ -18,6 +29,137 @@ function showFormMessage(text, state = "error") {
 function uniquePath(id, prefix, extension) {
   return `${id}/${prefix}-${crypto.randomUUID()}.${extension}`;
 }
+
+function clearThumbnailDraft() {
+  croppedThumbnail = null;
+  thumbnailInput.value = "";
+  cropPreview.hidden = true;
+  cropPreview.removeAttribute("src");
+  if (thumbnailPreviewUrl) URL.revokeObjectURL(thumbnailPreviewUrl);
+  thumbnailPreviewUrl = "";
+}
+
+function drawCrop() {
+  if (!cropState.image) return;
+  const transform = coverTransform(
+    cropState.image.naturalWidth,
+    cropState.image.naturalHeight,
+    cropCanvas.width,
+    cropCanvas.height,
+    cropState.zoom,
+    cropState.offsetX,
+    cropState.offsetY
+  );
+  cropState.offsetX = transform.offsetX;
+  cropState.offsetY = transform.offsetY;
+  cropContext.fillStyle = "#171714";
+  cropContext.fillRect(0, 0, cropCanvas.width, cropCanvas.height);
+  cropContext.drawImage(cropState.image, transform.x, transform.y, transform.width, transform.height);
+}
+
+function loadCropImage(file) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    const url = URL.createObjectURL(file);
+    image.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(image);
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("That image could not be opened. Try a different file."));
+    };
+    image.src = url;
+  });
+}
+
+async function openCropper(file) {
+  const extension = thumbnailExtension(file);
+  if (!extension) throw new Error("Choose a PNG, JPEG, GIF, or WebP thumbnail.");
+  if (file.size > 5 * 1024 * 1024) throw new Error("The thumbnail must be 5 MB or smaller.");
+  const image = await loadCropImage(file);
+  if (image.naturalWidth * image.naturalHeight > 40_000_000) throw new Error("That image is too large to crop safely. Choose an image under 40 megapixels.");
+  cropState.image = image;
+  cropState.offsetX = 0;
+  cropState.offsetY = 0;
+  cropState.zoom = 1;
+  cropZoom.value = "1";
+  drawCrop();
+  cropper.showModal();
+}
+
+thumbnailInput.addEventListener("change", async () => {
+  const file = thumbnailInput.files[0];
+  if (!file) return;
+  try {
+    await openCropper(file);
+  } catch (error) {
+    clearThumbnailDraft();
+    showFormMessage(error.message);
+  }
+});
+
+cropZoom.addEventListener("input", () => {
+  cropState.zoom = Number(cropZoom.value);
+  drawCrop();
+});
+
+cropCanvas.addEventListener("pointerdown", (event) => {
+  cropState.dragging = true;
+  cropState.pointerX = event.clientX;
+  cropState.pointerY = event.clientY;
+  cropCanvas.setPointerCapture(event.pointerId);
+});
+
+cropCanvas.addEventListener("pointermove", (event) => {
+  if (!cropState.dragging) return;
+  const bounds = cropCanvas.getBoundingClientRect();
+  cropState.offsetX += (event.clientX - cropState.pointerX) * (cropCanvas.width / bounds.width);
+  cropState.offsetY += (event.clientY - cropState.pointerY) * (cropCanvas.height / bounds.height);
+  cropState.pointerX = event.clientX;
+  cropState.pointerY = event.clientY;
+  drawCrop();
+});
+
+cropCanvas.addEventListener("pointerup", (event) => {
+  cropState.dragging = false;
+  cropCanvas.releasePointerCapture(event.pointerId);
+});
+
+cropper.querySelector("#crop-reset").addEventListener("click", () => {
+  cropState.offsetX = 0;
+  cropState.offsetY = 0;
+  cropState.zoom = 1;
+  cropZoom.value = "1";
+  drawCrop();
+});
+
+function cancelCrop() {
+  cropper.close();
+  clearThumbnailDraft();
+}
+
+cropper.querySelector("#crop-cancel").addEventListener("click", cancelCrop);
+cropper.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  cancelCrop();
+});
+
+cropper.querySelector("#crop-apply").addEventListener("click", () => {
+  cropCanvas.toBlob((blob) => {
+    if (!blob) {
+      showFormMessage("The crop could not be created. Try another image.");
+      return;
+    }
+    croppedThumbnail = new File([blob], "room310-game-cover.jpg", { type: "image/jpeg", lastModified: Date.now() });
+    if (thumbnailPreviewUrl) URL.revokeObjectURL(thumbnailPreviewUrl);
+    thumbnailPreviewUrl = URL.createObjectURL(croppedThumbnail);
+    cropPreview.src = thumbnailPreviewUrl;
+    cropPreview.hidden = false;
+    showFormMessage("Cover crop ready. Save the game to upload it.", "success");
+    cropper.close();
+  }, "image/jpeg", 0.9);
+});
 
 async function removeObject(bucket, path) {
   if (!path) return;
@@ -62,6 +204,7 @@ function closeEditor() {
   editor.hidden = true;
   editing = null;
   form.reset();
+  clearThumbnailDraft();
   showFormMessage("");
   toggleHostFields();
 }
@@ -69,6 +212,7 @@ function closeEditor() {
 function openEditor(game = null) {
   editing = game;
   form.reset();
+  clearThumbnailDraft();
   form.elements.gameId.value = game?.id || "";
   form.elements.title.value = game?.title || "";
   form.elements.description.value = game?.description || "";
@@ -248,7 +392,7 @@ form.addEventListener("submit", async (event) => {
     if (error) throw error;
 
     let row = data;
-    const thumbnail = form.elements.thumbnail.files[0];
+    const thumbnail = croppedThumbnail;
     const bundle = form.elements.bundle.files[0];
     if (thumbnail) {
       showFormMessage("Uploading thumbnail…", "working");

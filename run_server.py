@@ -68,7 +68,7 @@ PRAGMA foreign_keys = ON;
 CREATE TABLE students (student_id INTEGER PRIMARY KEY, full_name TEXT NOT NULL, grade_level INTEGER, active INTEGER DEFAULT 1);
 INSERT INTO students VALUES (101,'Ana Ruiz',11,1),(102,'Marcus Chen',12,1),(103,'Leila Ortiz',10,1);
 CREATE TABLE customers (customer_id INTEGER PRIMARY KEY, full_name TEXT, email TEXT, city TEXT, state_code TEXT, active INTEGER DEFAULT 1);
-INSERT INTO customers VALUES (18,'Ana Ruiz','ana@example.com','Albany','NY',1),(44,'Jon Bell','jon@example.com','Brooklyn','NY',1),(77,'Leila Ortiz','leila@example.com','Newark','NJ',1),(81,'Amara Okafor','amara@example.com','Boston','MA',1);
+INSERT INTO customers VALUES (18,'Ana Ruiz','ana@example.com','Albany','NY',1),(44,'Jon Bell','jon@example.com','Brooklyn','NY',1),(77,'Leila Ortiz','leila@example.com','Newark','NJ',1),(81,'Jacob Aleo','jacob@example.com','Boston','MA',1);
 CREATE TABLE orders (order_id INTEGER PRIMARY KEY, customer_id INTEGER, status TEXT, total REAL, ordered_at TEXT);
 INSERT INTO orders VALUES (4501,18,'paid',72.40,'2026-08-01'),(4502,44,'pending',38.00,'2026-08-02'),(4510,44,'shipped',188.00,'2026-08-03'),(4511,44,'paid',1250.00,'2026-08-04'),(4512,81,'paid',1822.75,'2026-08-05');
 CREATE TABLE order_items (product_name TEXT, unit_price REAL, quantity INTEGER);
@@ -78,7 +78,7 @@ INSERT INTO books VALUES ('The Long Way Home',18.50),('Small Systems',16.00),('E
 CREATE TABLE contacts (full_name TEXT, phone TEXT, email TEXT);
 INSERT INTO contacts VALUES ('Mara Singh',NULL,'mara@example.com'),('Jon Bell','555-0138','jon@example.com'),('No Email','555-0199',NULL);
 CREATE TABLE members (full_name TEXT, points INTEGER);
-INSERT INTO members VALUES ('Amara Okafor',920),('Ana Ruiz',845),('Marcus Chen',710);
+INSERT INTO members VALUES ('Jacob Aleo',920),('Ana Ruiz',845),('Marcus Chen',710);
 CREATE TABLE products (product_id INTEGER PRIMARY KEY, product_name TEXT, category TEXT, price REAL);
 INSERT INTO products VALUES (1,'Notebook','Books',18.50),(2,'Board Game','Games',31.20),(42,'Marker Set','Art',12.00);
 CREATE TABLE employees (employee_id INTEGER PRIMARY KEY, full_name TEXT, department TEXT, salary REAL, remote INTEGER, manager_id INTEGER);
@@ -322,7 +322,7 @@ def execute(language: str, code: str, user_input: str) -> dict:
 class Room310Handler(SimpleHTTPRequestHandler):
     """Main site, course runner, public catalog, and authenticated admin API."""
 
-    server_version = "Room310/0.5"
+    server_version = "Room310/0.6"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(SITE_ROOT), **kwargs)
@@ -617,7 +617,7 @@ iframe{{display:block;width:100%;height:100%;border:0;background:#000}}
 class GameAssetHandler(BaseHTTPRequestHandler):
     """Published hosted-game files on an origin that never receives admin cookies."""
 
-    server_version = "Room310GameAssets/0.5"
+    server_version = "Room310GameAssets/0.6"
 
     def _serve(self, include_body: bool) -> None:
         try:

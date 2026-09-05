@@ -15,7 +15,7 @@
     </header>
     <main class="games-admin-shell">
       <section class="games-admin-heading">
-        <div><small>Games administration / v0.5</small><h1>Manage games.</h1></div>
+        <div><small>Games administration / v0.6</small><h1>Manage games.</h1></div>
         <div><p>Add and publish external games, or privately store a static web-game ZIP for the upcoming isolated runner.</p><button type="button" id="new-game">+ Add game</button></div>
       </section>
 
@@ -31,9 +31,9 @@
             <label>Status<select name="status"><option value="draft">Draft</option><option value="published">Published</option></select></label>
             <label class="admin-full-field" data-host-field="external">External game URL<input name="externalUrl" type="url" inputmode="url" placeholder="https://example.com/game" /></label>
             <label class="admin-full-field" data-host-field="hosted" hidden>Hosted game ZIP<input name="bundle" type="file" accept=".zip,application/zip" /><small>Stored privately as a draft · 20 MB maximum · publishing arrives with the isolated runner</small></label>
-            <label class="admin-full-field">Thumbnail image<input name="thumbnail" type="file" accept="image/png,image/jpeg,image/gif,image/webp" /><small>PNG, JPEG, GIF, or WebP · 5 MB maximum</small></label>
+            <label class="admin-full-field admin-thumbnail-field">Cover image<input name="thumbnail" type="file" accept="image/png,image/jpeg,image/gif,image/webp" /><small>Choose an image, then crop and position it · PNG, JPEG, GIF, or WebP · 5 MB maximum</small><img id="thumbnail-crop-preview" hidden alt="Cropped cover preview" /></label>
           </div>
-          <div class="admin-security-note"><strong>Hosted-game safety</strong><span>ZIPs are private in v0.5. They cannot be published or run until Room310 has a separate, restricted game origin.</span></div>
+          <div class="admin-security-note"><strong>Hosted-game safety</strong><span>ZIPs are private in v0.6. They cannot be published or run until Room310 has a separate, restricted game origin.</span></div>
           <div class="admin-form-actions"><button type="button" id="cancel-edit-bottom">Cancel</button><button type="submit" class="primary-action">Save game</button></div>
           <p class="admin-form-message" id="game-form-message" role="status"></p>
         </form>
@@ -44,7 +44,12 @@
         <div id="admin-games-list" class="admin-games-list" aria-live="polite"><p>Loading games…</p></div>
       </section>
     </main>
-    <script src="/supabase-config.js?v=0.5"></script>
-    <script src="/admin-games.js?v=0.5"></script>
+    <dialog class="thumbnail-cropper" id="thumbnail-cropper" aria-labelledby="crop-title">
+      <div class="thumbnail-cropper-header"><div><small>Cover editor / 16:9</small><h2 id="crop-title">Crop your cover.</h2></div><button type="button" id="crop-cancel" aria-label="Cancel cover crop">×</button></div>
+      <div class="thumbnail-cropper-stage"><canvas width="1280" height="720" aria-label="Cover crop preview"></canvas><p>Drag the image to position it inside the frame.</p></div>
+      <div class="thumbnail-cropper-controls"><label for="crop-zoom">Zoom<input id="crop-zoom" type="range" min="1" max="3" value="1" step="0.01" /></label><div><button type="button" id="crop-reset">Reset</button><button type="button" id="crop-apply" class="primary-action">Use this crop</button></div></div>
+    </dialog>
+    <script src="/supabase-config.js?v=0.6"></script>
+    <script src="/admin-games.js?v=0.6"></script>
   </body>
 </html>
