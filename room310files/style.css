@@ -1191,7 +1191,72 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
   .assignment-workspace-inline-launch small { display: none; }
 }
 
-/* Global release marker and admin entry — v0.7 */
+/* Graph library and embedded workspace — v0.8 */
+.graphs-heading { display: flex; align-items: end; justify-content: space-between; gap: 32px; margin-bottom: 36px; }
+.graphs-heading h1 { margin: 18px 0 0; font-size: clamp(48px, 7vw, 96px); line-height: .9; letter-spacing: -.065em; }
+.graphs-heading > p { max-width: 330px; margin: 0; font-size: 17px; line-height: 1.5; }
+.graphs-collection .games-list:not(.games-list-populated) { min-height: 230px; }
+.graphs-collection .games-list:not(.games-list-populated) h2 { max-width: 700px; font-size: clamp(32px, 5vw, 64px); }
+.public-graph-card .public-game-cover { background: white; color: var(--ink); }
+.public-graph-card .public-game-cover img { object-fit: contain; }
+.public-graph-card h2, .admin-graph-card h3, #graph-title { overflow-wrap: anywhere; }
+.graph-view-page { height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+.graph-view-page .header { position: relative; flex-shrink: 0; }
+.graph-view-shell { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 14px; padding: 22px 28px 14px; }
+.graph-view-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.graph-view-heading > div { min-width: 0; }
+.graph-back-link { font: 11px "Courier New", monospace; text-transform: uppercase; text-decoration: underline; text-underline-offset: 4px; }
+#graph-title { margin: 12px 0 5px; font-size: clamp(24px, 3vw, 40px); line-height: 1; letter-spacing: -.04em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+#graph-description { max-width: 1000px; margin: 0; font-size: 14px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.graph-stage { flex: 1; min-height: 0; border: 1px solid var(--ink); background: white; }
+.graph-stage iframe, .admin-graph-preview iframe { width: 100%; height: 100%; display: block; border: 0; }
+.graph-view-page [hidden], .graphs-admin-page [hidden] { display: none !important; }
+#graph-notice { margin: 0; padding: 12px; border: 1px solid var(--line); font-size: 14px; }
+#graph-hint { margin: 0; font-size: 12px; line-height: 1.4; }
+#graph-reload, .graphs-admin-page button:not(#admin-logout), .admin-graph-actions a { padding: 12px 14px; border: 1px solid var(--ink); background: var(--paper); color: var(--ink); font: 700 11px "Courier New", monospace; text-transform: uppercase; cursor: pointer; }
+#graph-reload { flex-shrink: 0; }
+.graphs-admin-page .primary-action { background: var(--accent) !important; }
+.admin-content-tabs { gap: 0; margin-bottom: 30px; border-bottom: 1px solid var(--ink); }
+.admin-content-tabs a { padding: 13px 22px; border: 1px solid transparent; }
+.admin-content-tabs a[aria-current="page"] { border-color: var(--ink); border-bottom-color: var(--paper); background: var(--paper); margin-bottom: -1px; }
+.graphs-admin-heading { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 28px; }
+.graphs-admin-heading h1 { margin: 16px 0 0; font-size: clamp(44px, 6vw, 80px); letter-spacing: -.06em; line-height: .95; }
+.graphs-admin-heading p { max-width: 380px; font-size: 16px; line-height: 1.4; }
+.graph-import-guide { padding: 20px; margin-bottom: 28px; border: 1px solid var(--ink); background: var(--paper); }
+.graph-import-guide summary { cursor: pointer; font-weight: 700; }
+.graph-import-guide summary span { float: right; font: 11px "Courier New", monospace; }
+.graph-import-guide ol { max-width: 860px; padding-left: 22px; line-height: 1.6; }
+.graph-import-guide li + li { margin-top: 10px; }
+.graph-import-guide p { max-width: 900px; font-size: 13px; line-height: 1.5; }
+.graph-import-guide a { text-decoration: underline; text-underline-offset: 3px; }
+.graph-import-row { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: end; }
+.graph-import-row button { min-height: 50px; }
+.graphs-admin-page .admin-form-message { margin: 12px 0; color: var(--ink); }
+.graphs-admin-page .admin-form-message.is-error { color: #9c2b1d; }
+.graph-cover-preview { display: flex; align-items: center; gap: 18px; margin-top: 20px; font-size: 13px; }
+.graph-cover-preview img { width: 220px; max-width: 50%; aspect-ratio: 16 / 9; object-fit: contain; background: white; border: 1px solid var(--line); }
+.admin-graph-preview { height: 400px; margin-top: 24px; border: 1px solid var(--ink); }
+.admin-graph-card { display: grid; grid-template-columns: 160px 1fr auto; gap: 20px; align-items: center; padding: 18px; background: var(--paper); border: 1px solid var(--ink); }
+.admin-graph-card > img { width: 160px; aspect-ratio: 16 / 9; object-fit: contain; background: white; }
+.admin-graph-card:not(:has(> img)) { grid-template-columns: 1fr auto; }
+.admin-graph-card h3 { margin: 8px 0; font-size: 25px; letter-spacing: -.04em; }
+.admin-graph-card p { margin: 0; font-size: 14px; line-height: 1.4; }
+.admin-graph-actions { display: flex; flex-wrap: wrap; gap: 8px; max-width: 250px; }
+@media (max-width: 700px) {
+  .header nav a:nth-child(3) { display: inline; }
+  .graphs-heading, .graphs-admin-heading { align-items: start; flex-direction: column; gap: 16px; }
+  .graph-view-shell { padding: 14px 12px 10px; gap: 10px; }
+  .graph-view-heading { gap: 10px; }
+  #graph-reload { font-size: 9px; padding: 10px; }
+  #graph-description { -webkit-line-clamp: 1; }
+  #graph-hint { font-size: 10px; }
+  .graph-import-row, .admin-graph-card, .admin-graph-card:not(:has(> img)) { grid-template-columns: 1fr; }
+  .admin-graph-actions { max-width: none; }
+  .graph-import-guide summary span { display: none; }
+  .admin-graph-preview { height: 350px; }
+}
+
+/* Global release marker and admin entry — v0.8 */
 .site-version-badge {
   align-self: center;
   margin-left: 8px;

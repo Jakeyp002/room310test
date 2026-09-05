@@ -14,8 +14,9 @@
       <nav aria-label="Admin navigation"><a href="/games.html">Public games</a><button id="admin-logout" type="button">Sign out</button></nav>
     </header>
     <main class="games-admin-shell">
+      <nav class="admin-content-tabs" aria-label="Manage content"><a href="/admin/games" aria-current="page">Games</a><a href="/admin/graphs">Graphs</a></nav>
       <section class="games-admin-heading">
-        <div><small>Games administration / v0.7</small><h1>Manage games.</h1></div>
+        <div><small>Games administration / v0.8</small><h1>Manage games.</h1></div>
         <div><p>Add and publish external games, or privately store a static web-game ZIP for the upcoming isolated runner.</p><button type="button" id="new-game">+ Add game</button></div>
       </section>
 
@@ -33,7 +34,7 @@
             <label class="admin-full-field" data-host-field="hosted" hidden>Hosted game ZIP<input name="bundle" type="file" accept=".zip,application/zip" /><small>Stored privately as a draft · 20 MB maximum · publishing arrives with the isolated runner</small></label>
             <label class="admin-full-field admin-thumbnail-field">Cover image<input name="thumbnail" type="file" accept="image/png,image/jpeg,image/gif,image/webp" /><small>Choose an image, then crop and position it · PNG, JPEG, GIF, or WebP · 5 MB maximum</small><img id="thumbnail-crop-preview" hidden alt="Cropped cover preview" /></label>
           </div>
-          <div class="admin-security-note"><strong>Hosted-game safety</strong><span>ZIPs are private in v0.7. They cannot be published or run until Room310 has a separate, restricted game origin.</span></div>
+          <div class="admin-security-note"><strong>Hosted-game safety</strong><span>ZIPs are private in v0.8. They cannot be published or run until Room310 has a separate, restricted game origin.</span></div>
           <div class="admin-form-actions"><button type="button" id="cancel-edit-bottom">Cancel</button><button type="submit" class="primary-action">Save game</button></div>
           <p class="admin-form-message" id="game-form-message" role="status"></p>
         </form>

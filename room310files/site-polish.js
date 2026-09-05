@@ -6,8 +6,8 @@
   if (logo && !version) {
     version = document.createElement("span");
     version.className = "site-version-badge";
-    version.textContent = "v0.7";
-    version.setAttribute("aria-label", "Room310 version 0.7");
+    version.textContent = "v0.8";
+    version.setAttribute("aria-label", "Room310 version 0.8");
     logo.after(version);
   }
 

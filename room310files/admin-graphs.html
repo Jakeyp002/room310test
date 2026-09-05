@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="robots" content="noindex, nofollow" /><title>Manage Graphs · Room310</title><link rel="stylesheet" href="/style.css" /><link rel="icon" href="/Door.png" /></head>
+  <body class="games-admin-page graphs-admin-page">
+    <header class="header solid-header admin-header"><a class="logo" href="/">ROOM<span>310</span></a><nav aria-label="Admin navigation"><a href="/graphs">Public graphs</a><button id="admin-logout" type="button">Sign out</button></nav></header>
+    <main class="games-admin-shell">
+      <nav class="admin-content-tabs" aria-label="Manage content"><a href="/admin/games">Games</a><a href="/admin/graphs" aria-current="page">Graphs</a></nav>
+      <section class="graphs-admin-heading"><div><small>Graphs administration / v0.8</small><h1>Manage graphs.</h1></div><div><p>Bring a Desmos graph into Room310. Its preview becomes the cover automatically.</p><button type="button" id="new-graph" class="primary-action" disabled>+ Add graph</button></div></section>
+      <details class="graph-import-guide"><summary>How to add a Desmos graph <span>Start here ↗</span></summary><ol><li>Open your graph in the <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener noreferrer">Desmos Graphing Calculator</a> and click <strong>Share</strong>.</li><li>Choose <strong>Save and Share This Graph</strong> for a link that follows your saved edits, or <strong>Share a Snapshot</strong> for a fixed version.</li><li>Copy the share link. In Room310, click <strong>Add graph</strong>, paste the link, then click <strong>Import graph</strong>. Desmos's iframe embed code also works—no coding required.</li><li>Add a title and description. Keep the automatic picture of your graph, or choose <strong>Custom image</strong> to upload a cover.</li><li>Choose <strong>Published</strong> and save. Your card opens a graph page on Room310. Choose <strong>Draft</strong> to keep it private while you work.</li></ol><p>After changing a saved graph in Desmos, save it there and re-import its link here to refresh the cover. Embedded graphs still need access to Desmos. <a href="https://help.desmos.com/hc/en-us/articles/4405901719309-Saving-and-Sharing-Graphs" target="_blank" rel="noopener noreferrer">Desmos sharing help ↗</a></p></details>
+      <section class="admin-editor" id="graph-editor" hidden aria-labelledby="editor-title">
+        <div class="admin-editor-heading"><div><small id="editor-mode">New graph</small><h2 id="editor-title">Graph details</h2></div><button type="button" id="cancel-edit" aria-label="Close editor">×</button></div>
+        <form id="graph-form">
+          <div class="graph-import-row"><label>Desmos share link or embed code<textarea name="source" rows="2" required maxlength="4096" placeholder="https://www.desmos.com/calculator/…"></textarea></label><button type="button" id="import-graph">Import graph</button></div>
+          <p id="import-message" class="admin-form-message" role="status">Paste a link to import the graph and its cover.</p>
+          <div class="admin-form-grid"><label>Title<input name="title" required minlength="2" maxlength="120" /></label><label>Year<input name="year" type="number" min="1900" max="2100" required /></label><label class="admin-full-field">Short description<textarea name="description" maxlength="500" rows="2"></textarea></label><label>Status<select name="status"><option value="draft">Draft</option><option value="published">Published</option></select></label><label>Cover image<select name="coverSource"><option value="automatic">Automatic picture of graph</option><option value="custom">Custom image</option></select></label><label class="admin-full-field" id="custom-cover-field" hidden>Custom cover<input name="thumbnail" type="file" accept="image/png,image/jpeg,image/gif,image/webp" /><small>PNG, JPEG, GIF, or WebP · 5 MB maximum</small></label></div>
+          <div class="graph-cover-preview" id="cover-preview" hidden><img id="cover-image" alt="Graph cover preview" /><p id="cover-caption"></p></div>
+          <div id="admin-graph-preview" class="admin-graph-preview" hidden></div>
+          <div class="admin-form-actions"><button type="button" id="cancel-edit-bottom">Cancel</button><button type="submit" class="primary-action">Save graph</button></div><p class="admin-form-message" id="graph-form-message" role="status"></p>
+        </form>
+      </section>
+      <section aria-labelledby="graphs-list-title"><div class="admin-list-heading"><h2 id="graphs-list-title">All graphs</h2><span id="admin-user"></span></div><div id="admin-graphs-list" class="admin-games-list" aria-live="polite"><p>Loading graphs…</p></div></section>
+    </main>
+    <script src="/supabase-config.js?v=0.8"></script><script src="/admin-graphs.js?v=0.8"></script>
+  </body>
+</html>

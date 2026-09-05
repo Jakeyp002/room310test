@@ -1,7 +1,9 @@
 import { configurationMessage, getManager, isConfigured, messageFor, supabase } from "./supabase-client.js";
+import { safeLoginDestination } from "./graph-utils.js";
 
 const form = document.querySelector("#admin-login-form");
 const message = document.querySelector("#login-message");
+const destination = safeLoginDestination(location.search);
 
 function showMessage(text, state = "error") {
   message.textContent = text;
@@ -14,7 +16,7 @@ if (!isConfigured) {
 } else {
   getManager()
     .then((manager) => {
-      if (manager) location.replace("/admin/games");
+      if (manager) location.replace(destination);
     })
     .catch(() => {});
 
@@ -35,12 +37,12 @@ if (!isConfigured) {
       const manager = await getManager();
       if (!manager) {
         await supabase.auth.signOut();
-        showMessage("Your account is not approved to manage Room310 games.");
+        showMessage("Your account is not approved to manage Room310.");
         return;
       }
 
       showMessage("Signed in. Opening the dashboard…", "success");
-      location.assign("/admin/games");
+      location.assign(destination);
     } catch (error) {
       showMessage(messageFor(error, "Sign in failed. Check your email and password."));
     } finally {

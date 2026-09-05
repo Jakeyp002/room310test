@@ -1,6 +1,6 @@
 # Room310
 
-Room310 is an HTML/CSS/JavaScript learning site. Version 0.7 adds a direct admin-login entry beside the site badge. It builds on v0.6's production code execution, cover-image cropping, compact game cards, Supabase authentication, row-level-secured Games catalog, and private game asset storage.
+Room310 is an HTML/CSS/JavaScript learning site. Version 0.8 adds a Graphs library and protected Desmos graph editor with automatic or custom cover images. Existing-password sign-in no longer imposes a password-creation length rule. Games, coursework, and code execution remain available.
 
 ## Requirements
 
@@ -24,11 +24,23 @@ The production site is built from `room310files/` into `dist/`. Supabase supplie
 
 4. Run `npm run build`. Never put a Supabase secret or `service_role` key in Netlify's frontend build variables.
 5. In Supabase Authentication, create the first user with `jacob.bradford.aleo@gmail.com`. The database trigger approves that address as the initial administrator; other new users remain unapproved editors.
-6. Open `/admin/login`, sign in, and add an external game. Only published external games appear on `/games.html` in v0.7.
+6. Open `/admin/login`, sign in, and choose the Games or Graphs management tab. Only published records appear in the public catalogs.
 
-Hosted ZIPs can be stored privately in v0.7, but cannot be published until a separate restricted game origin is deployed. This prevents untrusted uploaded JavaScript from sharing the website or admin origin.
+Hosted ZIPs can be stored privately, but cannot be published until a separate restricted game origin is deployed. This prevents untrusted uploaded JavaScript from sharing the website or admin origin.
 
 The production `/api/run` route is a Netlify Function that validates requests and sends code to Wandbox's sandboxed compilers with snippet saving disabled. Python lesson cells still run locally in the browser through Pyodide. Do not submit passwords, API keys, or private information to any compiler cell.
+
+## Adding Desmos graphs
+
+1. Sign in at `/admin/login`, then choose the **Graphs** management tab.
+2. Open the **How to add a Desmos graph** tutorial, or click **Add graph**.
+3. Paste a saved Desmos Graphing Calculator share link (or iframe embed code) and choose **Import graph**. No JavaScript or API key is needed.
+4. Review the title, year, description and automatic cover. To replace the cover, select **Custom image** and upload a PNG, JPEG, GIF or WebP up to 5 MB.
+5. Save as a draft, or choose **Published** to show the card on `/graphs`. The graph opens at `/graphs/your-graph-slug` on Room310.
+
+The page is hosted by Room310; the interactive calculator is embedded from Desmos and requires an internet connection to Desmos. It is not an offline, self-hosted copy of the Desmos calculator. Student exploration does not overwrite the published graph. The cover is stored privately in Supabase, with public read access only for published graph covers. Re-import and save after editing the original Desmos graph to update its cover.
+
+`/api/graphs/import` requires an authenticated, approved manager. It only fetches saved Desmos calculator links and Desmos preview PNGs, rejects redirects, and enforces download limits. Database RLS separately protects drafts and writes. Graph migrations are in `supabase/migrations/`; the rollback-only database regression test is `supabase/tests/graphs_rls.sql`.
 
 ## Optional local Python server
 

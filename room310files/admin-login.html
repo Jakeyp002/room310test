@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>Games Admin Sign In · Room310</title>
+    <title>Admin Sign In · Room310</title>
     <link rel="stylesheet" href="/style.css" />
     <link rel="icon" type="image/png" href="/favicon.png" />
   </head>
@@ -15,18 +15,18 @@
     </header>
     <main class="admin-login-shell">
       <section class="admin-login-card" aria-labelledby="login-title">
-        <div class="admin-eyebrow"><span>Games administration</span><span>v0.7</span></div>
+        <div class="admin-eyebrow"><span>Room310 administration</span><span>v0.8</span></div>
         <h1 id="login-title">Sign in.</h1>
-        <p>Only approved Room310 game managers can continue.</p>
+        <p>Sign in with your existing administrator email and password.</p>
         <form id="admin-login-form">
           <label>Email<input name="email" type="email" autocomplete="username" required maxlength="254" /></label>
-          <label>Password<input name="password" type="password" autocomplete="current-password" required minlength="12" maxlength="500" /></label>
+          <label>Password<input name="password" type="password" autocomplete="current-password" required /></label>
           <button type="submit">Sign in <span aria-hidden="true">→</span></button>
           <p class="admin-form-message" id="login-message" role="status"></p>
         </form>
       </section>
     </main>
-    <script src="/supabase-config.js?v=0.6"></script>
-    <script src="/admin-login.js?v=0.6"></script>
+    <script src="/supabase-config.js?v=0.8"></script>
+    <script src="/admin-login.js?v=0.8"></script>
   </body>
 </html>
