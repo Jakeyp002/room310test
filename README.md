@@ -1,6 +1,6 @@
 # Room310
 
-Room310 is an HTML/CSS/JavaScript learning site. Version 0.9 restores assignment execution during compiler-service outages with automatic fallback, recoverable errors, and a Stop control. It retains v0.8's Graphs library, Desmos editor, and simplified existing-password sign-in.
+Room310 is an HTML/CSS/JavaScript learning site. Version 1.1 replaces the Extended Archives draft with an under-construction page and crossed construction tape. Its invitation links directly to the existing owners and staff section at `/index.html#contributors`. This release retains the v0.9 compiler fixes and does not include the unpublished v1.0 admin-request form.
 
 ## Requirements
 

@@ -1,0 +1,43 @@
+/* A single-screen holding page; the tape stays behind the navigation and link. */
+.construction-page { min-height: 100svh; display: flex; flex-direction: column; }
+.construction-page .header { position: relative; flex-shrink: 0; }
+.construction-main {
+  flex: 1;
+  display: grid;
+  grid-template-rows: auto minmax(140px, 1fr) auto;
+  gap: clamp(16px, 3svh, 28px);
+  padding: clamp(20px, 4svh, 40px) 0;
+  overflow: clip;
+}
+.construction-heading { padding: 0 24px; text-align: center; }
+.construction-eyebrow { margin: 0 0 18px; font: 12px/1.4 "Courier New", monospace; text-transform: uppercase; letter-spacing: .09em; }
+.construction-heading h1 { margin: 0; font-size: clamp(42px, min(10vw, 13svh), 120px); line-height: .9; letter-spacing: -.07em; }
+.construction-tapes { position: relative; min-height: 140px; overflow: hidden; pointer-events: none; }
+.construction-tape {
+  position: absolute;
+  top: 50%;
+  left: -10%;
+  width: 120%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(42px, 7svh, 66px);
+  border-block: 7px solid transparent;
+  background: linear-gradient(#f8d63b, #f8d63b) padding-box, repeating-linear-gradient(135deg, #171714 0 12px, #f8d63b 12px 24px) border-box;
+  color: #171714;
+  transform: translateY(-50%) rotate(-10deg);
+  box-shadow: 0 3px 0 #17171433;
+}
+.construction-tape + .construction-tape { transform: translateY(-50%) rotate(10deg); }
+.construction-tape span { padding: 7px 0; white-space: nowrap; font: 700 clamp(14px, 1.6vw, 22px)/1 "Courier New", monospace; letter-spacing: .05em; text-transform: uppercase; }
+.construction-contact { justify-self: center; display: grid; gap: 8px; max-width: calc(100% - 40px); padding: 16px 22px; border: 1px solid var(--ink); text-align: center; }
+.construction-contact > span { font: 14px/1.3 "Courier New", monospace; }
+.construction-contact strong { font-size: clamp(16px, 2.2vw, 25px); line-height: 1.3; letter-spacing: -.025em; }
+.construction-contact:hover { background: var(--accent); }
+.construction-contact:focus-visible { outline: 3px solid var(--ink); outline-offset: 5px; background: var(--accent); }
+@media (max-height: 600px) {
+  .construction-main { gap: 12px; padding: 16px 0; grid-template-rows: auto minmax(96px, 1fr) auto; }
+  .construction-tapes { min-height: 96px; }
+  .construction-eyebrow { margin-bottom: 10px; }
+  .construction-contact { padding: 10px 16px; gap: 5px; }
+}
