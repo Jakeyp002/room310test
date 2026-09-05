@@ -15,6 +15,21 @@
   status = 200
 
 [[redirects]]
+  from = "/api/graphs/import"
+  to = "/.netlify/functions/graph-import"
+  status = 200
+
+[[redirects]]
+  from = "/admin/graphs"
+  to = "/admin-graphs.html"
+  status = 200
+
+[[redirects]]
+  from = "/graphs/*"
+  to = "/graph.html"
+  status = 200
+
+[[redirects]]
   from = "/admin/login"
   to = "/admin-login.html"
   status = 200
