@@ -6,8 +6,8 @@
   if (logo && !version) {
     version = document.createElement("span");
     version.className = "site-version-badge";
-    version.textContent = "v1.2";
-    version.setAttribute("aria-label", "Room310 version 1.2");
+    version.textContent = "v0.13";
+    version.setAttribute("aria-label", "Room310 version 0.13");
     logo.after(version);
   }
 
@@ -21,22 +21,23 @@
   }
 
   const needsCourseLab = document.body.matches(".java-page, .cpp-page, .sql-page, .javascript-page, .csharp-page");
-  const needsAssignmentWorkspace = document.body.classList.contains("curriculum-page");
-  if (needsAssignmentWorkspace) {
+  const isCurriculum = document.body.classList.contains("curriculum-page");
+  const needsAssignmentWorkspace = isCurriculum && document.body.dataset.runtime !== "external-pytorch";
+  if (isCurriculum) {
     const styles = document.createElement("link");
     styles.rel = "stylesheet";
-    styles.href = "/code-tools.css?v=1.2";
+    styles.href = "/code-tools.css?v=0.13";
     styles.addEventListener("load", () => window.Room310Code?.refreshAll());
     document.head.append(styles);
     const codeTools = document.createElement("script");
-    codeTools.src = "/code-tools.js?v=1.2";
+    codeTools.src = "/code-tools.js?v=0.13";
     codeTools.defer = true;
     document.body.append(codeTools);
   }
   const loadCourseLab = () => {
     if (!needsCourseLab || document.documentElement.dataset.courseRunner || document.querySelector('script[src^="course-lab.js"]')) return;
     const script = document.createElement("script");
-    script.src = "course-lab.js?v=1.2";
+    script.src = "course-lab.js?v=0.13";
     document.body.append(script);
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", loadCourseLab, { once: true });
@@ -45,7 +46,7 @@
   const loadAssignmentWorkspace = () => {
     if (!needsAssignmentWorkspace || document.documentElement.dataset.assignmentWorkspace || document.querySelector('script[src^="assignment-workspace.js"]')) return;
     const script = document.createElement("script");
-    script.src = "assignment-workspace.js?v=1.2";
+    script.src = "assignment-workspace.js?v=0.13";
     document.body.append(script);
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", loadAssignmentWorkspace, { once: true });

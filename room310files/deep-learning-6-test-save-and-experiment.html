@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Finish a small classifier with separate training, validation, and test examples, then save and reload its learned weights."><title>Test it, save it, make it yours · Room310</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="deep-learning.css?v=0.13"><link rel="icon" type="image/png" href="favicon.png"></head>
+<body class="curriculum-page authored-course-page python-page deep-learning-page" data-runtime="external-pytorch"><header class="header solid-header"><a class="logo" href="index.html">ROOM<span>310</span></a><nav aria-label="Main navigation"><a aria-current="page" href="study.html">Study</a><a href="games.html">Games</a><a href="/graphs">Graphs</a><a href="index.html#archive">Archive</a><a href="extended-archives.html">Extended Archives</a></nav></header><main class="lesson-page dl-lesson"><header class="lesson-hero dl-lesson-hero"><a href="deep-learning-study.html">← Deep learning course</a><p>Deep learning / Lesson 06 of 06 / 45–60 min</p><h1>Test it, save it, make it yours</h1><p>Finish a small classifier with separate training, validation, and test examples, then save and reload its learned weights.</p></header><article class="lesson-content"><div class="dl-goal"><strong>By the end</strong><p>Complete a reproducible mini-project and distinguish fitting training data from doing well on unseen examples.</p></div><aside class="dl-runtime" aria-label="PyTorch runtime instructions"><strong>These examples need PyTorch.</strong><p>Run the cells in order in Colab or local Python—not the standard Room310 compiler. No GPU needed. Each notebook is self-contained.</p><div class="dl-actions"><a class="dl-button dl-primary" data-colab-link href="https://colab.research.google.com/github/Jakeyp002/room310test/blob/main/room310files/notebooks/deep-learning-6-test-save-and-experiment.ipynb">Open in Colab ↗</a><a class="dl-button" href="notebooks/deep-learning-6-test-save-and-experiment.ipynb" download>Download notebook</a><a class="dl-button" href="downloads/deep-learning-6-test-save-and-experiment.py" download>Download Python file</a></div><p class="dl-small"><a href="deep-learning-3-pytorch-and-tensors.html#step-1">First time? Read the setup guide.</a> Colab opens on Google's site; save your own copy to keep edits.</p></aside><aside class="dl-preview-note" hidden><strong>Local preview · use your local notebook</strong><p>To try this local copy, choose <b>Download notebook</b>, then <b>Open Colab</b> and upload the downloaded .ipynb file using File → Upload notebook. On the live site, the Colab button opens the published notebook directly; it does not include unpublished local edits.</p></aside><nav class="dl-toc" aria-label="Lesson sections"><a href="#step-1">1. Give the network examples it has not seen</a><a href="#step-2">2. Use validation to understand learning</a><a href="#step-3">3. Do a final test and preserve what you learned</a><a href="#assignments">Practice & explain</a></nav><section class="dl-step" id="step-1"><p class="dl-eyebrow">Step 1</p><h2>Give the network examples it has not seen</h2><p>Our final project classifies two-dimensional points: class 1 when their coordinates have opposite signs, otherwise class 0. This is a continuous cousin of XOR. The rule generates our teaching labels; the network does not receive the rule as an input.</p>
+<p>We create 400 synthetic examples, then use a fixed random permutation to split them into <strong>training</strong> (240), <strong>validation</strong> (80), and <strong>test</strong> (80). Training examples drive parameter updates. Validation examples help choose settings such as hidden size or epoch count. Test examples are reserved for the final evaluation.</p>
+<p>These are independent synthetic points from one simple distribution. Success here does not establish performance on photographs, language, or real-world decisions. For real datasets, also watch for duplicate examples and related people, time periods, or sources leaking across splits.</p><div class="code-panel authored-code-panel dl-code" data-static-example><div class="dl-code-bar"><span>PyTorch · run in your notebook</span><button type="button" class="dl-copy" aria-label="Copy code for step 1" hidden>Copy code</button></div><pre tabindex="0" aria-label="Code for step 1"><code class="language-python">import torch
+from torch import nn
+
+torch.manual_seed(7)
+X = torch.rand(400, 2) * 2 - 1
+y = (X[:, 0] * X[:, 1] &lt; 0).float().reshape(-1, 1)
+order = torch.randperm(len(X))
+train_ids, val_ids, test_ids = order[:240], order[240:320], order[320:]
+X_train, y_train = X[train_ids], y[train_ids]
+X_val, y_val = X[val_ids], y[val_ids]
+X_test, y_test = X[test_ids], y[test_ids]
+print(&quot;Split sizes:&quot;, len(X_train), len(X_val), len(X_test))</code></pre></div><aside class="dl-check"><strong>Check your result</strong><p>The split sizes must be 240, 80, and 80. Splitting happens before training, and only X_train/y_train will be passed to the training loss.</p></aside></section>
+<section class="dl-step" id="step-2"><p class="dl-eyebrow">Step 2</p><h2>Use validation to understand learning</h2><p>We use the same model shape as the XOR lesson, with 16 hidden neurons for this larger set. Set the main experimental choices near the top: hidden size, learning rate, and epochs.</p>
+<p>The helper function measures loss and accuracy without updating parameters. Accuracy counts how many thresholded predictions match the targets; loss also reflects the scores behind those decisions.</p>
+<p><strong>Overfitting</strong> happens when fitting the training examples does not translate to unseen data. Falling training loss alongside rising validation loss is a warning sign. This clean toy dataset may not show strong overfitting, and we should not pretend it does. Compare the actual measurements you get.</p><div class="code-panel authored-code-panel dl-code" data-static-example><div class="dl-code-bar"><span>PyTorch · run in your notebook</span><button type="button" class="dl-copy" aria-label="Copy code for step 2" hidden>Copy code</button></div><pre tabindex="0" aria-label="Code for step 2"><code class="language-python">hidden_size = 16
+learning_rate = 0.03
+epochs = 400
+model = nn.Sequential(nn.Linear(2, hidden_size), nn.Tanh(), nn.Linear(hidden_size, 1))
+loss_fn = nn.BCEWithLogitsLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+
+def evaluate(inputs, targets):
+    model.eval()
+    with torch.no_grad():
+        logits = model(inputs)
+        loss = loss_fn(logits, targets).item()
+        predicted = (torch.sigmoid(logits) &gt;= 0.5).float()
+        accuracy = (predicted == targets).float().mean().item()
+    return loss, accuracy
+
+history = []
+for epoch in range(epochs):
+    model.train()
+    optimizer.zero_grad()
+    loss = loss_fn(model(X_train), y_train)
+    loss.backward()
+    optimizer.step()
+    if (epoch + 1) % 100 == 0:
+        train_loss, train_accuracy = evaluate(X_train, y_train)
+        val_loss, val_accuracy = evaluate(X_val, y_val)
+        history.append((epoch + 1, train_loss, val_loss))
+        print(f&quot;Epoch {epoch + 1} | train loss {train_loss:.3f} | &quot;
+              f&quot;val loss {val_loss:.3f} | val accuracy {val_accuracy:.1%}&quot;)</code></pre></div><aside class="dl-check"><strong>Check your result</strong><p>You should see four progress reports. Record the validation results before opening the final test section. If you change a setting, rerun the notebook from the top so the data, initialization, and optimizer start fresh.</p></aside></section>
+<section class="dl-step" id="step-3"><p class="dl-eyebrow">Step 3</p><h2>Do a final test and preserve what you learned</h2><p>Choose your settings using validation first. Then run this section once for a final test report. If you repeatedly tune based on the test result, it is no longer an untouched test.</p>
+<p>We save a <strong>state dictionary</strong> containing learned parameters, plus the hidden size needed to recreate the architecture. A new model loads those parameters and should make the same predictions. This is an inference checkpoint, not a full training-resume checkpoint: resuming Adam training would also require its optimizer state.</p>
+<p>The file is written as <code>room310_tiny_net.pt</code> in your runtime&#39;s working directory. In Colab, download it from the Files sidebar before the runtime resets. Only load model files you trust; our example reloads the file it just created.</p><div class="code-panel authored-code-panel dl-code" data-static-example><div class="dl-code-bar"><span>PyTorch · run in your notebook</span><button type="button" class="dl-copy" aria-label="Copy code for step 3" hidden>Copy code</button></div><pre tabindex="0" aria-label="Code for step 3"><code class="language-python">test_loss, test_accuracy = evaluate(X_test, y_test)
+print(f&quot;Final test | loss {test_loss:.3f} | accuracy {test_accuracy:.1%}&quot;)
+
+torch.save({&quot;hidden_size&quot;: hidden_size, &quot;model_state&quot;: model.state_dict()},
+           &quot;room310_tiny_net.pt&quot;)
+checkpoint = torch.load(&quot;room310_tiny_net.pt&quot;, map_location=&quot;cpu&quot;, weights_only=True)
+restored = nn.Sequential(
+    nn.Linear(2, checkpoint[&quot;hidden_size&quot;]), nn.Tanh(),
+    nn.Linear(checkpoint[&quot;hidden_size&quot;], 1),
+)
+restored.load_state_dict(checkpoint[&quot;model_state&quot;])
+restored.eval()
+with torch.no_grad():
+    assert torch.allclose(model(X_test), restored(X_test))
+    new_points = torch.tensor([[-0.8, 0.7], [0.7, 0.6]])
+    probabilities = torch.sigmoid(restored(new_points))
+print(&quot;Reload check passed. New p(class 1):&quot;, probabilities.flatten().tolist())</code></pre></div><aside class="dl-check"><strong>Check your result</strong><p>The reload assertion should pass. The two new points have true labels 1 and 0. Inspect the model&#39;s scores rather than assuming they must be right. Test accuracy is a measurement, not a guaranteed target.</p></aside></section><section class="assignment-section dl-assignments" id="assignments"><p class="dl-eyebrow">Your turn</p><h2>Practice & explain</h2><p>Use the practice section at the end of this lesson's Colab notebook, or work in your local PyTorch environment. Keep a copy of your changes.</p><div class="dl-task"><h3>6.1 · Your mini-project report</h3><p>Compare hidden sizes 4 and 16 using validation only. For each run, start from the top and record the seed, learning rate, epoch count, final train loss, validation loss, and validation accuracy. Choose one configuration, report its final test accuracy, and save its checkpoint.</p><details><summary>Need a hint?</summary><p>Keep all settings except hidden size the same. If you already used the test set for tuning, say so and generate a fresh independent final test set.</p></details></div><div class="dl-task"><h3>6.2 · Explain what you built</h3><p>Write five sentences: what the inputs and labels represent; what the layers do; how loss and gradients change parameters; how you prevented test leakage; and one limitation of the model. Include two new-point predictions and the saved file.</p><details><summary>Need a hint?</summary><p>Passing a reload check proves the weights were restored, not that the classifier is accurate. Keep those two claims separate.</p></details></div><div class="dl-actions"><a class="dl-button dl-primary" data-colab-link href="https://colab.research.google.com/github/Jakeyp002/room310test/blob/main/room310files/notebooks/deep-learning-6-test-save-and-experiment.ipynb">Open in Colab ↗</a><a class="dl-button" href="notebooks/deep-learning-6-test-save-and-experiment.ipynb" download>Download notebook</a><a class="dl-button" href="downloads/deep-learning-6-test-save-and-experiment.py" download>Download Python file</a></div></section><aside class="dl-takeaway"><strong>The idea to take with you</strong><p>You can now build, train, evaluate, and reload a small PyTorch network—and explain what its results do and do not prove.</p></aside><section class="dl-credit"><h2>Keep exploring</h2><ul class="dl-references"><li><a href="https://docs.pytorch.org/tutorials/beginner/basics/saveloadrun_tutorial.html">PyTorch · saving and loading models ↗</a></li><li><a href="https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html">PyTorch · optimizing model parameters ↗</a></li><li><a href="https://karpathy.ai/zero-to-hero.html">Andrej Karpathy · Neural Networks: Zero to Hero ↗</a></li></ul></section></article><nav class="lesson-pagination" aria-label="Deep learning lesson navigation"><a href="deep-learning-5-build-a-small-network.html"><span>Previous</span>Build your first neural network</a><a href="deep-learning-study.html"><span>Course complete</span>Back to your learning path →</a></nav></main><script src="site-polish.js?v=0.13"></script><script src="deep-learning.js?v=0.13"></script></body></html>

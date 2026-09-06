@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Measure a mistake, estimate a slope, and train a one-neuron model using only Python."><title>How a model learns · Room310</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="deep-learning.css?v=0.13"><link rel="icon" type="image/png" href="favicon.png"></head>
+<body class="curriculum-page authored-course-page python-page deep-learning-page" ><header class="header solid-header"><a class="logo" href="index.html">ROOM<span>310</span></a><nav aria-label="Main navigation"><a aria-current="page" href="study.html">Study</a><a href="games.html">Games</a><a href="/graphs">Graphs</a><a href="index.html#archive">Archive</a><a href="extended-archives.html">Extended Archives</a></nav></header><main class="lesson-page dl-lesson"><header class="lesson-hero dl-lesson-hero"><a href="deep-learning-study.html">← Deep learning course</a><p>Deep learning / Lesson 02 of 06 / 35–45 min</p><h1>How a model learns</h1><p>Measure a mistake, estimate a slope, and train a one-neuron model using only Python.</p></header><article class="lesson-content"><div class="dl-goal"><strong>By the end</strong><p>Train weight and bias yourself, so PyTorch&#39;s training loop will not feel like a magic spell.</p></div><aside class="dl-runtime"><strong>Run these examples right here.</strong><p>Each cell is ready to edit and run with ordinary Python. Prefer a notebook? The downloads include the same lesson and practice tasks.</p><div class="dl-actions"><a class="dl-button dl-primary" data-colab-link href="https://colab.research.google.com/github/Jakeyp002/room310test/blob/main/room310files/notebooks/deep-learning-2-loss-and-learning.ipynb">Open in Colab ↗</a><a class="dl-button" href="notebooks/deep-learning-2-loss-and-learning.ipynb" download>Download notebook</a><a class="dl-button" href="downloads/deep-learning-2-loss-and-learning.py" download>Download Python file</a></div></aside><aside class="dl-preview-note" hidden><strong>Local preview · use your local notebook</strong><p>To try this local copy, choose <b>Download notebook</b>, then <b>Open Colab</b> and upload the downloaded .ipynb file using File → Upload notebook. On the live site, the Colab button opens the published notebook directly; it does not include unpublished local edits.</p></aside><nav class="dl-toc" aria-label="Lesson sections"><a href="#step-1">1. Give a mistake a number</a><a href="#step-2">2. Find which direction is downhill</a><a href="#step-3">3. Repeat the update: a training loop</a><a href="#assignments">Practice & explain</a></nav><section class="dl-step" id="step-1"><p class="dl-eyebrow">Step 1</p><h2>Give a mistake a number</h2><p>A <strong>loss function</strong> measures how far predictions are from targets. For a numerical prediction, one useful loss is squared error: <code>(prediction - target) ** 2</code>. Squaring makes the error nonnegative and penalizes large misses more strongly.</p>
+<p>For several examples, we average those squared errors. This is <strong>mean squared error</strong>, or MSE. A lower loss is better on the examples being measured; it does not automatically mean the model will work on new examples.</p><div class="code-panel authored-code-panel dl-code" data-python-source="prediction = 4.0
+target = 7.0
+loss = (prediction - target) ** 2
+print(&quot;Squared error:&quot;, loss)"><div class="dl-code-bar"><span>Python · try it here</span></div><pre tabindex="0" aria-label="Code for step 1"><code class="language-python">prediction = 4.0
+target = 7.0
+loss = (prediction - target) ** 2
+print(&quot;Squared error:&quot;, loss)</code></pre></div><aside class="dl-check"><strong>Check your result</strong><p>The loss is 9.0, not -3.0. Try prediction = 6.0 and then 8.0. Both are one unit away and have loss 1.0.</p></aside></section>
+<section class="dl-step" id="step-2"><p class="dl-eyebrow">Step 2</p><h2>Find which direction is downhill</h2><p>A <strong>derivative</strong> is a local slope: how much a result changes when one input changes a little. A <strong>gradient</strong> collects these slopes for the parameters. You do not need a calculus course to try a slope numerically: make a tiny nudge, measure the change in loss, and divide by the size of the nudge.</p>
+<p>A positive slope says increasing the parameter raises the loss locally. To head downhill, move in the opposite direction. The <strong>learning rate</strong> controls the size of that move. Too large can overshoot; too small can take a long time.</p><div class="code-panel authored-code-panel dl-code" data-python-source="def loss_at(weight):
+    prediction = weight * 3.0 + 1.0
+    return (prediction - 7.0) ** 2
+
+weight = 0.0
+epsilon = 0.0001
+slope = (loss_at(weight + epsilon) - loss_at(weight - epsilon)) / (2 * epsilon)
+new_weight = weight - 0.05 * slope
+print(&quot;Slope:&quot;, round(slope, 3))
+print(&quot;Loss before:&quot;, loss_at(weight))
+print(&quot;Loss after:&quot;, round(loss_at(new_weight), 3))"><div class="dl-code-bar"><span>Python · try it here</span></div><pre tabindex="0" aria-label="Code for step 2"><code class="language-python">def loss_at(weight):
+    prediction = weight * 3.0 + 1.0
+    return (prediction - 7.0) ** 2
+
+weight = 0.0
+epsilon = 0.0001
+slope = (loss_at(weight + epsilon) - loss_at(weight - epsilon)) / (2 * epsilon)
+new_weight = weight - 0.05 * slope
+print(&quot;Slope:&quot;, round(slope, 3))
+print(&quot;Loss before:&quot;, loss_at(weight))
+print(&quot;Loss after:&quot;, round(loss_at(new_weight), 3))</code></pre></div><aside class="dl-check"><strong>Check your result</strong><p>The slope is approximately -36.0. The weight increases to about 1.8 and the loss falls from 36.0 to about 0.36.</p></aside></section>
+<section class="dl-step" id="step-3"><p class="dl-eyebrow">Step 3</p><h2>Repeat the update: a training loop</h2><p>Here the invented data follows <code>target = 2 * x + 1</code>. We know that rule, but the training calculation only receives input/target pairs.</p>
+<p>For one example, let <code>error = weight * x + bias - target</code>. Its squared-error slope with respect to weight is <code>2 * error * x</code>; with respect to bias it is <code>2 * error</code>. Average each slope across the examples, then update both parameters. This is the <strong>chain rule</strong> in action: a change in weight changes the prediction, which changes the loss.</p>
+<p>One <strong>epoch</strong> is one pass over the training examples. This tiny course uses the whole dataset as one batch, so one epoch is also one update. Larger datasets usually take several batch updates per epoch.</p><div class="code-panel authored-code-panel dl-code" data-python-source="xs = [-2.0, -1.0, 0.0, 1.0, 2.0]
+targets = [2 * x + 1 for x in xs]
+weight, bias = 0.0, 0.0
+learning_rate = 0.1
+
+for epoch in range(60):
+    errors = [weight * x + bias - y for x, y in zip(xs, targets)]
+    loss = sum(error ** 2 for error in errors) / len(xs)
+    grad_weight = sum(2 * error * x for error, x in zip(errors, xs)) / len(xs)
+    grad_bias = sum(2 * error for error in errors) / len(xs)
+    weight -= learning_rate * grad_weight
+    bias -= learning_rate * grad_bias
+    if epoch % 20 == 0:
+        print(f&quot;Epoch {epoch:2d} | loss before update: {loss:.6f}&quot;)
+
+print(f&quot;Learned weight: {weight:.3f}, bias: {bias:.3f}&quot;)
+print(f&quot;Prediction for x=3: {weight * 3 + bias:.3f}&quot;)"><div class="dl-code-bar"><span>Python · try it here</span></div><pre tabindex="0" aria-label="Code for step 3"><code class="language-python">xs = [-2.0, -1.0, 0.0, 1.0, 2.0]
+targets = [2 * x + 1 for x in xs]
+weight, bias = 0.0, 0.0
+learning_rate = 0.1
+
+for epoch in range(60):
+    errors = [weight * x + bias - y for x, y in zip(xs, targets)]
+    loss = sum(error ** 2 for error in errors) / len(xs)
+    grad_weight = sum(2 * error * x for error, x in zip(errors, xs)) / len(xs)
+    grad_bias = sum(2 * error for error in errors) / len(xs)
+    weight -= learning_rate * grad_weight
+    bias -= learning_rate * grad_bias
+    if epoch % 20 == 0:
+        print(f&quot;Epoch {epoch:2d} | loss before update: {loss:.6f}&quot;)
+
+print(f&quot;Learned weight: {weight:.3f}, bias: {bias:.3f}&quot;)
+print(f&quot;Prediction for x=3: {weight * 3 + bias:.3f}&quot;)</code></pre></div><aside class="dl-check"><strong>Check your result</strong><p>Weight should approach 2.000, bias 1.000, and the prediction for 3 should approach 7.000. This result is for our simple invented line, not proof of real-world accuracy.</p></aside></section><section class="assignment-section dl-assignments" id="assignments"><p class="dl-eyebrow">Your turn</p><h2>Practice & explain</h2><p>Use the assignment workspace or edit the cells above. Write your own version before opening a hint.</p><div class="dl-task"><h3>2.1 · Learn a different line</h3><p>Change the targets to -3 * x + 0.5. Train again from weight = bias = 0. Print the learned parameters and a prediction for x = 1. Your prediction should be close to -2.5.</p><details><summary>Need a hint?</summary><p>Change the data rule, not the gradient formulas. The formulas work for either line.</p></details></div><div class="dl-task"><h3>2.2 · Keep an experiment log</h3><p>Compare learning rates 0.01, 0.1, and 0.8 for the original data. Reset the parameters for each run. Record the final loss and explain which rate learns slowly and which is unstable.</p><details><summary>Need a hint?</summary><p>An increasing loss is a useful observation, not a reason to hide the result. Move in smaller steps if updates overshoot.</p></details></div></section><aside class="dl-takeaway"><strong>The idea to take with you</strong><p>Training repeats prediction, loss, gradients, and a small parameter update. PyTorch will calculate the gradients for us.</p></aside><section class="dl-credit"><h2>Keep exploring</h2><ul class="dl-references"><li><a href="https://docs.pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html">PyTorch · automatic differentiation ↗</a></li><li><a href="https://docs.pytorch.org/tutorials/beginner/basics/optimization_tutorial.html">PyTorch · optimizing model parameters ↗</a></li></ul></section></article><nav class="lesson-pagination" aria-label="Deep learning lesson navigation"><a href="deep-learning-1-your-first-neuron.html"><span>Previous</span>Your first neuron</a><a href="deep-learning-3-pytorch-and-tensors.html"><span>Next</span>Meet PyTorch &amp; tensors →</a></nav></main><script src="site-polish.js?v=0.13"></script><script src="python-lab.js?v=0.13"></script><script src="deep-learning.js?v=0.13"></script></body></html>

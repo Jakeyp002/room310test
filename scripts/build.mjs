@@ -1,11 +1,12 @@
 import { cp, mkdir, rm, writeFile } from "node:fs/promises";
 import { build } from "esbuild";
+import "./build-deep-learning.mjs";
 
 const projectUrl = process.env.SUPABASE_URL || "https://khbmuaitysznyxxefhou.supabase.co";
 const publishableKey = process.env.SUPABASE_PUBLISHABLE_KEY || "";
 
 if (process.env.NETLIFY === "true" && !publishableKey) {
-  throw new Error("SUPABASE_PUBLISHABLE_KEY must be configured in Netlify before deploying Room310 v1.2.");
+  throw new Error("SUPABASE_PUBLISHABLE_KEY must be configured in Netlify before deploying Room310 v0.13.");
 }
 
 await rm("dist", { force: true, recursive: true });

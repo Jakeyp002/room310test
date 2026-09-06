@@ -1,9 +1,11 @@
 {
   "name": "room310",
-  "version": "1.2.0",
+  "version": "0.13.0",
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "npm run build && npm run preview",
+    "preview": "node scripts/preview.mjs",
     "build": "node scripts/build.mjs",
     "test": "node --test tests/*.test.mjs"
   },

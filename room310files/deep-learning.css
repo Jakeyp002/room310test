@@ -1,0 +1,93 @@
+.deep-learning-study-page { --dl-accent: #e2f68a; }
+.deep-learning-page { --dl-accent: #e2f68a; }
+.deep-learning-page .token { font: inherit; letter-spacing: inherit; text-transform: none; }
+.dl-index { max-width: 1520px; margin: 0 auto; }
+.dl-hero { display: grid; grid-template-columns: 1.3fr 1fr; align-items: center; gap: 54px; padding: 28px 0 65px; }
+.dl-back, .dl-eyebrow, .dl-card-meta, .dl-card-footer, .dl-network-label { font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace; }
+.dl-back { display: inline-block; margin-bottom: 45px; }
+.dl-eyebrow { text-transform: uppercase; letter-spacing: .05em; }
+.dl-hero h1 { margin: 20px 0 28px; font-size: clamp(52px, 6.8vw, 102px); line-height: .96; letter-spacing: -.065em; }
+.dl-lead { max-width: 620px; font-size: 21px; line-height: 1.55; }
+.dl-actions { display: flex; gap: 10px; flex-wrap: wrap; margin: 24px 0 8px; }
+.dl-button { display: inline-block; border: 1px solid var(--ink); padding: 13px 17px; font: 13px/1.4 ui-monospace, Menlo, Consolas, monospace; text-decoration: none !important; }
+.dl-primary { background: var(--dl-accent, #e2f68a); }
+.dl-button:hover { background: var(--ink); color: var(--paper); }
+.dl-button:focus-visible, .dl-copy:focus-visible, .dl-lesson-card:focus-visible { outline: 3px solid #8f4619; outline-offset: 4px; }
+.dl-network { margin: 0; padding: 24px; border-radius: 5px; background: #20231c; color: #e2f68a; }
+.dl-network-label { border-bottom: 1px solid #505448; padding-bottom: 18px; }
+.dl-network svg { display: block; width: 100%; height: auto; margin: 12px 0; }
+.dl-network figcaption { display: flex; justify-content: space-between; gap: 12px; font: 11px/1.4 ui-monospace, Menlo, monospace; }
+.dl-facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 24px 0; border-block: 1px solid var(--ink); font-size: 14px; }
+.dl-facts strong { display: block; font-size: 24px; margin-bottom: 4px; }
+.dl-intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; padding: 65px 0; }
+.dl-intro-grid h2, .dl-section-heading h2, .dl-finish h2 { font-size: clamp(30px, 3.4vw, 48px); line-height: 1.08; letter-spacing: -.045em; margin: 16px 0 20px; }
+.dl-intro-grid p, .dl-section-heading p, .dl-finish p, .dl-credit p { font-size: 17px; line-height: 1.65; }
+.dl-intro-grid a, .dl-credit a { text-decoration: underline; text-underline-offset: 4px; }
+.dl-note { padding: 28px; border: 1px solid #9caa68; background: #e8ebd9; }
+.dl-note h2 { font-size: 27px; margin-top: 0; }
+.dl-section-heading { display: grid; grid-template-columns: 1.3fr 1fr; gap: 60px; align-items: end; margin-bottom: 24px; }
+.dl-lesson-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.dl-lesson-card { display: flex; flex-direction: column; padding: 28px; border: 1px solid #777b6f; min-width: 0; }
+.dl-lesson-card:hover { background: #e8ebd9; border-color: var(--ink); }
+.dl-card-meta, .dl-card-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+.dl-card-meta { color: #55594a; }
+.dl-lesson-card h3 { margin: 24px 0 10px; font-size: clamp(25px, 2.6vw, 38px); line-height: 1.1; letter-spacing: -.04em; }
+.dl-lesson-card p { font-size: 16px; line-height: 1.6; margin: 0 0 26px; }
+.dl-card-footer { border-top: 1px solid #a5aa98; padding-top: 18px; margin-top: auto; }
+.dl-finish { margin-top: 60px; padding: 35px; background: #e8ebd9; border-left: 5px solid #68832b; }
+.dl-credit { margin-top: 60px; padding-top: 24px; border-top: 1px solid #b6b7ad; }
+.dl-credit h2 { font-size: 22px !important; letter-spacing: -.02em !important; line-height: 1.25 !important; margin: 0 0 16px !important; }
+.dl-references { font-size: 15px; line-height: 1.8; }
+.dl-lesson .lesson-hero { padding-bottom: 48px; }
+.dl-lesson .lesson-hero > a { margin-bottom: 35px; }
+.dl-lesson .lesson-hero h1 { max-width: 1100px; font-size: clamp(46px, 6.5vw, 90px); line-height: .98; }
+.dl-lesson .lesson-hero > p:last-child { font-size: clamp(18px, 2vw, 24px); }
+.dl-lesson .lesson-content { padding-top: 38px; font-size: 18px; line-height: 1.7; }
+.dl-goal { margin-bottom: 30px; border-left: 4px solid #68832b; padding: 8px 22px; }
+.dl-goal p, .dl-takeaway p { margin-bottom: 0; }
+.dl-runtime { padding: 24px; background: #e8ebd9; border: 1px solid #9caa68; margin-bottom: 30px; }
+.dl-runtime > p { margin: 8px 0 12px; }
+.dl-small { font-size: 14px; }
+.dl-preview-note { padding: 20px 24px; background: #f1e4d8; border: 1px solid #b29479; margin: 0 0 30px; font-size: 15px; }
+.dl-preview-note[hidden] { display: none; }
+.dl-preview-note p { margin: 8px 0 0; }
+.dl-toc { display: flex; flex-wrap: wrap; gap: 10px 20px; padding: 18px 0; border-block: 1px solid #b6b7ad; font-size: 14px; }
+.dl-step { margin: 65px 0; scroll-margin-top: 125px; }
+.dl-step > h2, .dl-assignments > h2 { font-size: clamp(28px, 3.6vw, 43px); line-height: 1.12; letter-spacing: -.045em; margin: 8px 0 24px; }
+.dl-step .dl-eyebrow, .dl-assignments .dl-eyebrow { margin-bottom: 10px; }
+.dl-lesson .dl-code { padding: 0; border-radius: 4px; }
+.dl-code-bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 18px; border-bottom: 1px solid #484a3e; color: #e2f68a; font: 12px/1.5 var(--code-font, monospace); white-space: normal; }
+.dl-copy { color: #e2f68a; background: transparent; border: 1px solid #798659; border-radius: 3px; padding: 7px 10px; font: inherit; cursor: pointer; flex-shrink: 0; }
+.dl-copy[hidden] { display: none; }
+.dl-copy:hover { background: #363d27; }
+.dl-code pre { white-space: pre; padding: 20px; }
+.dl-check { padding: 18px 22px; border-left: 3px solid #68832b; background: #e8ebd9; font-size: 16px; }
+.dl-check p { margin: 6px 0 0; }
+.dl-task { padding: 24px 0; border-top: 1px solid #b6b7ad; }
+.dl-task h3 { font-size: 24px; line-height: 1.2; margin: 0 0 14px; letter-spacing: -.02em; }
+.dl-task details { padding: 12px 16px; background: #e8ebd9; }
+.dl-task summary { cursor: pointer; font-size: 15px; font-weight: 600; }
+.dl-task details p { margin: 14px 0 0; font-size: 16px; }
+.dl-takeaway { padding: 26px; background: #e8ebd9; }
+.dl-lesson .lesson-pagination { gap: 28px; }
+.dl-lesson .lesson-pagination a { max-width: 48%; font-size: clamp(18px, 2.4vw, 32px); }
+.dl-curriculum, .dl-assignments { scroll-margin-top: 125px; }
+@media (max-width: 850px) {
+  .dl-hero, .dl-intro-grid, .dl-section-heading { grid-template-columns: 1fr; gap: 28px; }
+  .dl-network { max-width: 520px; width: 100%; justify-self: center; }
+  .dl-back { margin-bottom: 25px; }
+}
+@media (max-width: 600px) {
+  .dl-lesson-grid { grid-template-columns: 1fr; }
+  .dl-facts { grid-template-columns: 1fr 1fr; gap: 22px; }
+  .dl-hero { padding-top: 5px; }
+  .dl-hero h1 { font-size: 51px; }
+  .dl-lead { font-size: 18px; }
+  .dl-lesson .lesson-content { font-size: 17px; }
+  .dl-runtime, .dl-note, .dl-finish, .dl-lesson-card { padding: 20px; }
+  .dl-actions { align-items: stretch; }
+  .dl-actions .dl-button { text-align: center; font-size: 12px; }
+  .dl-code-bar { align-items: flex-start; font-size: 11px; }
+  .dl-code pre { font-size: 14px; }
+  .dl-lesson .lesson-pagination { gap: 18px; }
+}

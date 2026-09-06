@@ -1,6 +1,18 @@
 # Room310
 
-Room310 is an HTML/CSS/JavaScript learning site. Version 1.2 cleans up Python and Java assignment layouts and adds consistent syntax highlighting to every course's notebook cells and assignment workspace. It retains the v1.1 Extended Archives notice and v0.9 compiler fixes, and excludes the unpublished admin-request form.
+Room310 is an HTML/CSS/JavaScript learning site. Version 0.13 adds a six-lesson deep learning and PyTorch course for Python learners. It retains v1.2 assignment formatting and syntax highlighting, the v1.1 Extended Archives notice, and v0.9 compiler fixes. The held admin-request form remains unpublished.
+
+## Deep learning course
+
+Open `/deep-learning-study` from Study or the Python course page. Original lessons teach a neuron, loss and gradients, tensors, autograd, a small XOR network, and a held-out evaluation/checkpoint project. They credit Karpathy's build-first progression and link to primary PyTorch references without copying his course.
+
+Lessons 1–2 use existing browser Python cells and the assignment workspace. Lessons 3–6 require actual PyTorch: they provide syntax-colored examples, copy controls, downloadable scripts, and self-contained notebooks opened in Colab or local Python. Those pages deliberately do not mount the ordinary assignment runner, which does not include PyTorch. No new execution service or GPU backend is deployed. Colab is an external service; users save their own copies and are subject to its limits.
+
+`curriculum/deep-learning.mjs` is the teaching source. `node scripts/build-deep-learning.mjs` (also part of `npm run build`) generates pages and scripts plus notebook inputs under `.runtime/`. With PyTorch, nbformat, nbclient, and ipykernel installed in a Python environment, run `python scripts/build-deep-learning-notebooks.py --execute` to regenerate and execute all six notebooks. Commit the resulting `room310files/notebooks/` files; Netlify does not install Python or PyTorch. Tests check code/notebook parity, links, runtime routing, and course coverage. The final synthetic-data classifier uses separate train/validation/test splits, reports measured metrics, and verifies that saved weights reload correctly.
+
+### Local preview
+
+In this checkout, run `npm ci` once and `npm run dev` to build and open a loopback-only server at `http://127.0.0.1:8127/deep-learning-study.html` (open that URL in a browser). Use Ctrl+C to stop it. The preview reuses the existing external sandbox for standard assignment runs; it does not execute arbitrary code on your computer. On localhost, PyTorch buttons use a notebook-download/upload guide so you can test local edits before publishing. On the live site, they open the published notebooks directly in Colab. Admin, games, and graph backend configuration is not part of this course preview.
 
 ## Code presentation
 
