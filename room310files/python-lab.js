@@ -157,6 +157,7 @@
   }
 
   function extractSources(panel) {
+    if (panel.hasAttribute("data-static-example")) return [];
     if (panel.dataset.pythonSource) return [panel.dataset.pythonSource];
     if (SKIP_PANEL.test(panel.textContent)) return [];
 
@@ -299,6 +300,7 @@
 
     const editor = cell.querySelector(".python-cell-editor");
     editor.value = source;
+    editor.dataset.codeLanguage = "python";
     editor.addEventListener("input", () => autoSize(editor));
     editor.addEventListener("keydown", (event) => {
       if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
@@ -310,6 +312,7 @@
     cell.querySelector(".python-cell-stop").addEventListener("click", () => stopCell(cell));
     cell.querySelector(".python-cell-reset").addEventListener("click", () => {
       editor.value = original;
+      window.Room310Code?.refresh(editor);
       autoSize(editor);
       cell.querySelector(".python-cell-output-wrap").hidden = true;
       setCellState(cell, "ready", "Ready");

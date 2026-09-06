@@ -50,6 +50,7 @@
   }
 
   function sourceFor(panel) {
+    if (panel.hasAttribute("data-static-example")) return "";
     if (panel.classList.contains("authored-code-panel")) return authoredSource(panel);
     return config.id === "java" ? javaSource(panel) : "";
   }
@@ -165,6 +166,7 @@
 
     const editor = cell.querySelector(".python-cell-editor");
     editor.value = source;
+    editor.dataset.codeLanguage = config.id;
     editor.addEventListener("input", () => autoSize(editor));
     editor.addEventListener("keydown", (event) => {
       if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
@@ -176,6 +178,7 @@
     cell.querySelector(".course-cell-stop").addEventListener("click", () => activeRequest?.abort());
     cell.querySelector(".course-cell-reset").addEventListener("click", () => {
       editor.value = original;
+      window.Room310Code?.refresh(editor);
       autoSize(editor);
       cell.querySelector(".python-cell-output-wrap").hidden = true;
       setState(cell, "ready", "Ready");

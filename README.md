@@ -1,6 +1,14 @@
 # Room310
 
-Room310 is an HTML/CSS/JavaScript learning site. Version 1.1 replaces the Extended Archives draft with an under-construction page and crossed construction tape. Its invitation links directly to the existing owners and staff section at `/index.html#contributors`. This release retains the v0.9 compiler fixes and does not include the unpublished v1.0 admin-request form.
+Room310 is an HTML/CSS/JavaScript learning site. Version 1.2 cleans up Python and Java assignment layouts and adds consistent syntax highlighting to every course's notebook cells and assignment workspace. It retains the v1.1 Extended Archives notice and v0.9 compiler fixes, and excludes the unpublished admin-request form.
+
+## Code presentation
+
+All six languages share a locally bundled Prism highlighter, a dark editor palette, and the same monospace font. Editable areas retain their native textareas: typing, selection, copying, undo, drafts, and execution continue to use the original source, not highlighted HTML. The decorative color layer is hidden from assistive technology. Colors update after edits, resets, and language changes, stay aligned while scrolling, and fall back to plain text if highlighting fails or a pasted file is unusually large. Forced-colors mode uses native system text colors.
+
+`client-src/code-tools.js` and `client-src/syntax-utils.js` are the source; `npm run build` regenerates `room310files/code-tools.js` for both production and the optional local Python server. `room310files/code-tools.css` contains the palette and shared code typography. Prism's license is included beside the bundle.
+
+Imported assignment panels now use labeled code blocks instead of tab-padded paragraphs. Starter code and sample output remain separate, with output intentionally uncolored. `scripts/format-assignments.mjs` is an idempotent migration for future legacy imports; its reviewed ASCII-art and outline repairs are in `scripts/assignment-layout-repairs.mjs`. It leaves existing runnable lesson examples intact. The tests cover all six grammars, source preservation and HTML escaping, editor reset/language synchronization, assignment layout, and all twelve original lessons' cell counts.
 
 ## Requirements
 

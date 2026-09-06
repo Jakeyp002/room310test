@@ -26,11 +26,185 @@
         <h1>Methods</h1>
         <p>Defining, calling, parameterizing, returning from, and combining Java methods.</p>
       </div>
-      <article class="lesson-content"><div class="code-panel"><p><strong>Java - Ch. 4 - Methods</strong></p></div><p><a href="#_eskv4rrfx4g1">4. Methods</a></p><p><a href="#_lxlsg7u94ef0">4.1 Overview</a></p><p><a href="#_uwa1cf7tcmdd">Chapter 4: Assignments</a></p><p><a href="#_r0dzm5x4gsw6">A4.1 A Very Simple Method</a></p><p><a href="#_iegzr5dtt0no">A4.2 Simple Method that Multiplies</a></p><p><a href="#_2h9qp4x7u6pf">A4.3 Flip the Boolean</a></p><p><a href="#_bxwnwu9d3vs7">A4.4 Square a Number</a></p><p><a href="#_wflekc74wb6t">A4.5 Modulus Calculator</a></p><p><a href="#_rcereqlacyi4">A4.6 Basic Math with Two Numbers</a></p><p><a href="#_ivttxf981ucy">A4.7 Using a method a few times</a></p><p><a href="#_rqps9uxaemoj">A4.8 Concatenation method</a></p><p><a href="#_pqatwznmc9fy">A4.9 Report Card Generator</a></p><h1><a id="_eskv4rrfx4g1"></a>4. Methods</h1><h2><a id="_lxlsg7u94ef0"></a>4.1 Overview</h2><p>What is a method:</p><ul><li>Think of a method as a mini-program. Each method has its own name.</li><li>It is created outside the <strong>main method</strong>, but inside the class brackets. </li><li>A method is a chunk of code which is called by name.</li><li>Used for organizing programs and breaking tasks into more modular pieces. </li></ul><p>How methods work:</p><ul><li>Methods are like function notation in algebra. (See Finkel’s lesson on this)</li><li>A method can be called (invoked) at any point in a program simply by utilizing the method's name and handing it variables if that is what is required.</li></ul><div class="code-panel"><p>Return types:</p></div><ul><li>Every method has a <strong>return type</strong>. This is the type of variable that will be sent back to the program from the method. It can be any of the types of variables that we have studied, but can also be <strong>void</strong>. </li><li>A <strong>void</strong> return type means that nothing is returned back to the program. Printing something to the screen is sending something to <strong>output</strong>, not the program. If you are just printing something to output, the return type should be <strong>void</strong>. </li></ul><div class="code-panel"><p>Example of a simple method:</p><p><strong>public static int add(int x, int y)  </strong>// This is called the method header</p><p><strong>{</strong></p><p><strong>	return x + y;  </strong>// This method returns the value of x + y</p><p><strong>}</strong></p><ul><li>Examining the method header from the example above:</li></ul><p>	<strong>public      static     int      add (int x,   int y)</strong></p><p>	<strong>public static</strong> - Use this for every method for now.</p><p>	<strong>int</strong> - This is the <strong><em>return type</em></strong>. This is the type of variable that the method returns </p><p>back to the program. It can be any variable type that we have worked with</p><p><strong>add</strong> - Method name</p><p>	<strong>int x, int y</strong> - This is the <strong><em>parameter list</em></strong>. It is a list of variables, along with their </p><p>types that are handed to the method. </p><p>How to call a method:</p><ul><li>Using the method in the example above, a full program could look like this:</li></ul><p><strong>public static void main(String[] args) // This is the main method that we always use</strong></p><p><strong>	{</strong></p><p><strong>		int a = 3;</strong></p><p><strong>		int b = 100;</strong></p><p><strong>		int c;</strong></p><p><strong>		</strong></p><p><strong>		</strong>// Call the "add" method and set "c" equal to result. Here, a and b are </p><p>// known as the “actual parameters”. </p><p><strong>		c = add(a, b);</strong></p><p><strong>		</strong></p><p><strong>		</strong>// Print c to the screen</p><p><strong>		System.out.print(a + " + " + b + " = " + c);</strong></p><p><strong>	}</strong></p><p><strong>	</strong></p><p>	// This is the “add” method. Here, x and y are known as the “formal </p><p>// parameters”. Parameter <strong>a</strong> becomes <strong>x</strong> inside the method and parameter <strong>b</strong> becomes <strong>y</strong>. </p><p><strong>	public static int add(int x, int y)</strong></p><p><strong>	{</strong></p><p><strong>		return x + y;</strong></p><p><strong>	}</strong></p><p><strong>	OUTPUT: 3 + 100 = 103</strong></p><p><strong>(see handout: “I can’t feel my face when I’m with you” for examples of methods)</strong></p></div><h1><a id="_uwa1cf7tcmdd"></a>Chapter 4: Assignments</h1><h2><a id="_r0dzm5x4gsw6"></a>A4.1 A Very Simple Method</h2><p>Create a program that takes a boolean, sends it to a method and prints it to the screen directly from the method.</p><div class="code-panel"><p><strong>PROGRAM STRUCTURE:</strong></p><p>public static void main(String[] args) </p><p>	{</p><p>		// Declare and initialize a boolean variable</p><p>// call the printBoolean method	</p><p>	}</p><p>	public static void printBoolean (boolean x)</p><p>	{</p><p>		// prints the output to the screen </p><p>	}</p><p><strong>SAMPLE RUN:</strong></p><p>true<strong> </strong></p></div><h2><a id="_iegzr5dtt0no"></a>A4.2 Simple Method that Multiplies</h2><p>Create a program that hands three numbers to a method and assigns the product of those numbers to a variable. That variable is then printed to the screen. </p><div class="code-panel"><p><strong>PROGRAM STRUCTURE:</strong></p><p><strong>	</strong>public static void main(String[] args) </p><p>	{</p><p>		// Create four variables, three with hard-coded values</p><p>int tom = 4;</p><p>	int sara = 8;</p><p>	int jack = 10;</p><p>	int multAnswer;</p><p>		// Call the method that multiplies the three variables together</p><p>		// and assigns the result to “multAnswer”</p><p>multAnswer = mult3(tom, sara, jack);</p><p>// print “multAnswer” to the screen</p><p>	}</p><p>	public static int mult3(int pat, int emily, int zora)</p><p>{</p><p>	// create the code that multiplies the parameters together and returns the answer</p><p>}</p><p><strong>OUTPUT:</strong></p><p>	4 * 8 * 10 = 320</p></div><h2><a id="_2h9qp4x7u6pf"></a>A4.3 Flip the Boolean</h2><p>Create a program that takes in a boolean, sends it to a method that returns the opposite of that boolean. The value of the switched boolean will then be printed from the main method. </p><p>To switch the value of a boolean variable, you can use the “!” symbol. For example, if the variable <strong>w</strong> is given a value of <strong>true</strong>, <strong>!w</strong> would have a value of <strong>false</strong>. </p><div class="code-panel"><p><strong>PROGRAM STRUCTURE:</strong></p><p>public static void main(String[] args) </p><p>	{</p><p>		// Print a line requesting a boolean</p><p>		// Assign the input to a variable called “origBoolean”</p><p>// Call the method and assign the returned value to a new variable like this:</p><p>boolean flipped = flipBoolean(origBoolean);</p><p>// Print the new variable</p><p>	}</p><p>	public static boolean flipBoolean (boolean x)</p><p>	{</p><p>		// returns the opposite of the boolean parameter (hint: use !x)</p><p>	}</p><p><strong>SAMPLE RUN #1:</strong></p><p>	<strong>Please give me a boolean (true or false):</strong></p><p>	true</p><p>	<strong>The opposite of that boolean is false. </strong></p><p><strong>SAMPLE RUN #2:</strong></p><p>	<strong>Please give me a boolean (true or false):</strong></p><p>	false</p><p>	<strong>The opposite of that boolean is true. </strong></p></div><h2><a id="_bxwnwu9d3vs7"></a>A4.4 Square a Number</h2><p>Write a program that finds the square of a number using a method.</p><div class="code-panel"><p><strong>PROGRAM STRUCTURE:</strong></p><p>public static void main(String[] args) </p><p>	{</p><p>		// Print a line requesting a number to be squared from the user</p><p>		// Assign the input to a variable called “num”</p><p>// Call the method and hand it the variable. Assign the returned value to a </p><p>//	new variable called squared like this:</p><p><strong>int squared = square(num)</strong></p><p>// print the value of squared</p><p>	}</p><p>	public static int square(int number)</p><p>	{</p><p>		// Returns the value of number squared  </p><p>	}</p><p><strong>SAMPLE RUN #1:</strong></p><p>	<strong>What number would you like to square? (integer please)</strong></p><p><strong>	</strong>4</p><p><strong>	That would be 16.</strong></p><p><strong>SAMPLE RUN #2:</strong></p><p>	<strong>What number would you like to square? (integer please)</strong></p><p><strong>	</strong>10</p><p><strong>	That would be 100.</strong></p></div><h2><a id="_wflekc74wb6t"></a>A4.5 Modulus Calculator</h2><p>Write a program that takes a dividend and divisor and calculates the modulus. (See sample run below for clarification of dividend and divisors)</p><div class="code-panel"><p><strong>PROGRAM STRUCTURE:</strong></p><p>public static void main(String[] args) </p><p>	{</p><p>		// print a line showing a modulus example</p><p>		// print a line asking for the dividend</p><p>		// assign the dividend to a variable</p><p>		// print a line asking for the divisor</p><p>// assign the divisor to a variable</p><p>// call the modulus method and hand it two parameters</p><p>// the result should be stored in a variable:</p><p>   int mod = modulus(dividend, divisor)</p><p>// print the answer with proper formatting</p><p>	}</p><p>	public static int modulus (int divid, int divis)</p><p>	{</p><p>		// returns the answer of divid % divis  </p><p>	}</p><p><strong>SAMPLE RUN:</strong></p><p><strong>Example of modulus: 5 % 2 = 1 where 5 is the dividend and 2 is the divisor.</strong></p><p><strong>Please give me the dividend:</strong></p><p>18</p><p><strong>Please give me the divisor:</strong></p><p>4</p><p><strong>18 % 4 = 2</strong></p></div><h2><a id="_rcereqlacyi4"></a>A4.6 Basic Math with Two Numbers</h2><p>Takes two numbers and adds, multiplies, and subtracts them with each operation being done in a separate method.</p><div class="code-panel"><p><strong>PROGRAM STRUCTURE:</strong></p><p>public static void main(String[] args) </p><p>	{</p><p>		// Print a line asking for a number</p><p>		// Assign the number to a variable called “num1”</p><p>		// Print a line asking for a number</p><p>		// Assign the number to a variable called “num2”</p><p>		// Say “Thanks!”</p><p>		// Call the “add” method and hand it num1 and num2. Assign the result to a </p><p>// variable. </p><p>		// Print the result to the screen with proper formatting</p><p>// Call the “mult” method and hand it num1 and num2. Assign the result to a </p><p>// variable. </p><p>		// Print the result to the screen with proper formatting</p><p>// Call the “sub” method and hand it num1 and num2. Assign the result to a </p><p>// variable. </p><p>		// Print the result to the screen with proper formatting</p><p>	}</p><p><strong>	</strong>public static int add (int n1, int n2)</p><p>	{</p><p>		// return the answer of n1 + n2  </p><p>	}</p><p>public static int mult (int n1, int n2)</p><p>	{</p><p>		// return the answer of n1 * n2  </p><p>	}</p><p>public static int sub (int n1, int n2)</p><p>	{</p><p>		// return the answer of n1 - n2  </p><p>	}</p><p><strong>SAMPLE RUN:</strong></p><p><strong>Please give me a number to do some math on:</strong></p><p>7</p><p><strong>Please give me a second number:</strong></p><p>2</p><p><strong>Thanks!</strong></p><p><strong>7 + 2 = 9</strong></p><p><strong>7 * 2 = 14</strong></p><p><strong>7 - 2 = 5</strong></p></div><h2><a id="_ivttxf981ucy"></a>A4.7 Using a method a few times</h2><p>This program finds the average of a first batch of numbers, a second batch of numbers, a third batch of numbers and then the average of all three batches. It will use the “avg3” method four times.</p><div class="code-panel"><p><strong>PROGRAM STRUCTURE:</strong></p><p><strong>	</strong>public static void main(String[] args) </p><p>	{</p><p>		// Create thirteen variables, nine with hard-coded values</p><p>double firstBatch1 = 7.0;</p><p>		double firstBatch2 = 10.0;</p><p>		double firstBatch3 = 30.0;</p><p>double firstBatchAvg; 	// You could call the method here (answer: 15.6666)</p><p>		double secondBatch1 = 4.0;</p><p>		double secondBatch2 = 6.0;</p><p>		double secondBatch3 = 6.0;</p><p>		double secondBatchAvg;  // You could call the method here (answer: 5.3333)</p><p>		double thridBatch1 = 150.0;</p><p>		double thirdBatch2 = 220.0;</p><p>		double thirdBatch3 = 255.0;</p><p>		double thirdBatchAvg;  // You could call the method here (answer: 208.3333)</p><p>		double allBatchAvg; // This will hold the average of the other three averages</p><p>// print “allBatchAvg” to the screen</p><p>	}</p><p><strong>		</strong></p><p>public static double avg3(double  x, double y, double z)</p><p>{</p><p>	// create the code that returns the average of x, y and z. </p><p>}</p><p><strong>OUTPUT:</strong></p><p>The overall average is: 76.44 <strong>   // If the decimals don’t match exactly, its ok</strong></p></div><h2><a id="_rqps9uxaemoj"></a>A4.8 Concatenation method</h2><p>This program will join a bunch of words together to make one long string which will be stored in the <strong>sentence</strong> variable. </p><div class="code-panel"><p><strong>PROGRAM STRUCTURE:</strong></p><p><strong>	</strong>public static void main(String[] args) </p><p>	{</p><p>		// Create the following variables:</p><p>String word1 = “The ”;</p><p>	String word2 = “first ”;</p><p>	String word3 = “sentence. ”</p><p>	String word4 = “Now ”;</p><p>	String word5 = “the “;</p><p>	String word6 = “second. “</p><p>	String sentence;</p><p>	// Call joinStrings six times to create the entire sentence. The first time, hand it </p><p>// sentence and word1, the second time hand it sentence and word2, and so </p><p>// on….</p><p>	}</p><p>	public static String joinStrings(String sent, String newWord)</p><p>{</p><p>	// create the code that adds “newWord” to the end of “sentence”.</p><p>	// This is done by concatenating two Strings together. </p><p>}</p><p><strong>OUTPUT:</strong></p><p>	The first sentence. Now the second. </p></div><h2><a id="_pqatwznmc9fy"></a>A4.9 Report Card Generator</h2><p>Create a program that asks the user for their name and three test grades. It then returns a report card as shown in the Sample Run.</p><div class="code-panel"><p><strong>PROGRAM STRUCTURE:</strong></p><p><strong>	</strong>public static void main(String[] args) </p><p>	{</p><p>		// Take in all of the variables with appropriate variable names</p><p>		// Say “Thank you. Here is your report card:”</p><p>		// Call both methods below to generate the desired results</p><p>	}</p><p>	// The header goes here. The method is called <strong>avg</strong>, should take in three test grades and </p><p>// return the average of the test grades. </p><p>{</p><p>	// Calculate and return the average of the three test grades</p><p>}</p><p>// The method header goes here. It is called <strong>printCard</strong> and should display the name, </p><p>// each test grade and the average, as displayed in the Sample Run.</p><p>{</p><p>	// Print the relevant information. You can call the <strong>avg</strong> method when you need it</p><p>}</p><p><strong>SAMPLE RUN:</strong></p><p><strong>Please enter your first name: </strong>Paul</p><p><strong>Please enter your second name: </strong>Rudd</p><p><strong>What did you get on your first test? </strong>87</p><p><strong>What did you get on your second test? </strong>82</p><p><strong>What did you get on your third test? </strong>100</p><p><strong>Thank you. Here is your report card:</strong></p><p><strong>Rudd, Paul</strong></p><p><strong>Test #1: 87</strong></p><p><strong>Test #2: 82</strong></p><p><strong>Test #3: 100</strong></p><p><strong>Average: 90</strong></p></div></article>
+      <article class="lesson-content"><div class="code-panel"><p><strong>Java - Ch. 4 - Methods</strong></p></div><p><a href="#_eskv4rrfx4g1">4. Methods</a></p><p><a href="#_lxlsg7u94ef0">4.1 Overview</a></p><p><a href="#_uwa1cf7tcmdd">Chapter 4: Assignments</a></p><p><a href="#_r0dzm5x4gsw6">A4.1 A Very Simple Method</a></p><p><a href="#_iegzr5dtt0no">A4.2 Simple Method that Multiplies</a></p><p><a href="#_2h9qp4x7u6pf">A4.3 Flip the Boolean</a></p><p><a href="#_bxwnwu9d3vs7">A4.4 Square a Number</a></p><p><a href="#_wflekc74wb6t">A4.5 Modulus Calculator</a></p><p><a href="#_rcereqlacyi4">A4.6 Basic Math with Two Numbers</a></p><p><a href="#_ivttxf981ucy">A4.7 Using a method a few times</a></p><p><a href="#_rqps9uxaemoj">A4.8 Concatenation method</a></p><p><a href="#_pqatwznmc9fy">A4.9 Report Card Generator</a></p><h1><a id="_eskv4rrfx4g1"></a>4. Methods</h1><h2><a id="_lxlsg7u94ef0"></a>4.1 Overview</h2><p>What is a method:</p><ul><li>Think of a method as a mini-program. Each method has its own name.</li><li>It is created outside the <strong>main method</strong>, but inside the class brackets. </li><li>A method is a chunk of code which is called by name.</li><li>Used for organizing programs and breaking tasks into more modular pieces. </li></ul><p>How methods work:</p><ul><li>Methods are like function notation in algebra. (See Finkel’s lesson on this)</li><li>A method can be called (invoked) at any point in a program simply by utilizing the method's name and handing it variables if that is what is required.</li></ul><div class="code-panel"><p>Return types:</p></div><ul><li>Every method has a <strong>return type</strong>. This is the type of variable that will be sent back to the program from the method. It can be any of the types of variables that we have studied, but can also be <strong>void</strong>. </li><li>A <strong>void</strong> return type means that nothing is returned back to the program. Printing something to the screen is sending something to <strong>output</strong>, not the program. If you are just printing something to output, the return type should be <strong>void</strong>. </li></ul><div class="code-panel"><p>Example of a simple method:</p><p><strong>public static int add(int x, int y)  </strong>// This is called the method header</p><p><strong>{</strong></p><p><strong>	return x + y;  </strong>// This method returns the value of x + y</p><p><strong>}</strong></p><ul><li>Examining the method header from the example above:</li></ul><p>	<strong>public      static     int      add (int x,   int y)</strong></p><p>	<strong>public static</strong> - Use this for every method for now.</p><p>	<strong>int</strong> - This is the <strong><em>return type</em></strong>. This is the type of variable that the method returns </p><p>back to the program. It can be any variable type that we have worked with</p><p><strong>add</strong> - Method name</p><p>	<strong>int x, int y</strong> - This is the <strong><em>parameter list</em></strong>. It is a list of variables, along with their </p><p>types that are handed to the method. </p><p>How to call a method:</p><ul><li>Using the method in the example above, a full program could look like this:</li></ul><p><strong>public static void main(String[] args) // This is the main method that we always use</strong></p><p><strong>	{</strong></p><p><strong>		int a = 3;</strong></p><p><strong>		int b = 100;</strong></p><p><strong>		int c;</strong></p><p><strong>		</strong></p><p><strong>		</strong>// Call the "add" method and set "c" equal to result. Here, a and b are </p><p>// known as the “actual parameters”. </p><p><strong>		c = add(a, b);</strong></p><p><strong>		</strong></p><p><strong>		</strong>// Print c to the screen</p><p><strong>		System.out.print(a + " + " + b + " = " + c);</strong></p><p><strong>	}</strong></p><p><strong>	</strong></p><p>	// This is the “add” method. Here, x and y are known as the “formal </p><p>// parameters”. Parameter <strong>a</strong> becomes <strong>x</strong> inside the method and parameter <strong>b</strong> becomes <strong>y</strong>. </p><p><strong>	public static int add(int x, int y)</strong></p><p><strong>	{</strong></p><p><strong>		return x + y;</strong></p><p><strong>	}</strong></p><p><strong>	OUTPUT: 3 + 100 = 103</strong></p><p><strong>(see handout: “I can’t feel my face when I’m with you” for examples of methods)</strong></p></div><h1><a id="_uwa1cf7tcmdd"></a>Chapter 4: Assignments</h1><h2><a id="_r0dzm5x4gsw6"></a>A4.1 A Very Simple Method</h2><p>Create a program that takes a boolean, sends it to a method and prints it to the screen directly from the method.</p><div class="code-panel assignment-example" data-static-example="true"><div class="assignment-example-label">Program structure</div><pre><code class="language-java">public static void main(String[] args)
+{
+    // Declare and initialize a boolean variable
+    // call the printBoolean method
+}
+public static void printBoolean (boolean x)
+{
+    // prints the output to the screen
+}</code></pre><div class="assignment-example-label">Sample run</div><pre><code class="language-none">true</code></pre></div><h2><a id="_iegzr5dtt0no"></a>A4.2 Simple Method that Multiplies</h2><p>Create a program that hands three numbers to a method and assigns the product of those numbers to a variable. That variable is then printed to the screen. </p><div class="code-panel assignment-example" data-static-example="true"><div class="assignment-example-label">Program structure</div><pre><code class="language-java">public static void main(String[] args)
+{
+    // Create four variables, three with hard-coded values
+    int tom = 4;
+    int sara = 8;
+    int jack = 10;
+    int multAnswer;
+    // Call the method that multiplies the three variables together
+    // and assigns the result to "multAnswer"
+    multAnswer = mult3(tom, sara, jack);
+    // print "multAnswer" to the screen
+}
+public static int mult3(int pat, int emily, int zora)
+{
+    // create the code that multiplies the parameters together and returns the answer
+}</code></pre><div class="assignment-example-label">Output</div><pre><code class="language-none">4 * 8 * 10 = 320</code></pre></div><h2><a id="_2h9qp4x7u6pf"></a>A4.3 Flip the Boolean</h2><p>Create a program that takes in a boolean, sends it to a method that returns the opposite of that boolean. The value of the switched boolean will then be printed from the main method. </p><p>To switch the value of a boolean variable, you can use the “!” symbol. For example, if the variable <strong>w</strong> is given a value of <strong>true</strong>, <strong>!w</strong> would have a value of <strong>false</strong>. </p><div class="code-panel assignment-example" data-static-example="true"><div class="assignment-example-label">Program structure</div><pre><code class="language-java">public static void main(String[] args)
+{
+    // Print a line requesting a boolean
+    // Assign the input to a variable called "origBoolean"
+    // Call the method and assign the returned value to a new variable like this:
+    boolean flipped = flipBoolean(origBoolean);
+    // Print the new variable
+}
+public static boolean flipBoolean (boolean x)
+{
+    // returns the opposite of the boolean parameter (hint: use !x)
+}</code></pre><div class="assignment-example-label">Sample run #1</div><pre><code class="language-none">Please give me a boolean (true or false):
+true
+The opposite of that boolean is false.</code></pre><div class="assignment-example-label">Sample run #2</div><pre><code class="language-none">Please give me a boolean (true or false):
+false
+The opposite of that boolean is true.</code></pre></div><h2><a id="_bxwnwu9d3vs7"></a>A4.4 Square a Number</h2><p>Write a program that finds the square of a number using a method.</p><div class="code-panel assignment-example" data-static-example="true"><div class="assignment-example-label">Program structure</div><pre><code class="language-java">public static void main(String[] args)
+{
+    // Print a line requesting a number to be squared from the user
+    // Assign the input to a variable called "num"
+    // Call the method and hand it the variable. Assign the returned value to a
+    //  new variable called squared like this:
+    int squared = square(num)
+    // print the value of squared
+}
+public static int square(int number)
+{
+    // Returns the value of number squared
+}</code></pre><div class="assignment-example-label">Sample run #1</div><pre><code class="language-none">What number would you like to square? (integer please)
+4
+That would be 16.</code></pre><div class="assignment-example-label">Sample run #2</div><pre><code class="language-none">What number would you like to square? (integer please)
+10
+That would be 100.</code></pre></div><h2><a id="_wflekc74wb6t"></a>A4.5 Modulus Calculator</h2><p>Write a program that takes a dividend and divisor and calculates the modulus. (See sample run below for clarification of dividend and divisors)</p><div class="code-panel assignment-example" data-static-example="true"><div class="assignment-example-label">Program structure</div><pre><code class="language-java">public static void main(String[] args)
+{
+    // print a line showing a modulus example
+    // print a line asking for the dividend
+    // assign the dividend to a variable
+    // print a line asking for the divisor
+    // assign the divisor to a variable
+    // call the modulus method and hand it two parameters
+    // the result should be stored in a variable:
+    int mod = modulus(dividend, divisor)
+    // print the answer with proper formatting
+}
+public static int modulus (int divid, int divis)
+{
+    // returns the answer of divid % divis
+}</code></pre><div class="assignment-example-label">Sample run</div><pre><code class="language-none">Example of modulus: 5 % 2 = 1 where 5 is the dividend and 2 is the divisor.
+Please give me the dividend:
+18
+Please give me the divisor:
+4
+18 % 4 = 2</code></pre></div><h2><a id="_rcereqlacyi4"></a>A4.6 Basic Math with Two Numbers</h2><p>Takes two numbers and adds, multiplies, and subtracts them with each operation being done in a separate method.</p><div class="code-panel assignment-example" data-static-example="true"><div class="assignment-example-label">Program structure</div><pre><code class="language-java">public static void main(String[] args)
+{
+    // Print a line asking for a number
+    // Assign the number to a variable called "num1"
+    // Print a line asking for a number
+    // Assign the number to a variable called "num2"
+    // Say "Thanks!"
+    // Call the "add" method and hand it num1 and num2. Assign the result to a
+    // variable.
+    // Print the result to the screen with proper formatting
+    // Call the "mult" method and hand it num1 and num2. Assign the result to a
+    // variable.
+    // Print the result to the screen with proper formatting
+    // Call the "sub" method and hand it num1 and num2. Assign the result to a
+    // variable.
+    // Print the result to the screen with proper formatting
+}
+public static int add (int n1, int n2)
+{
+    // return the answer of n1 + n2
+}
+public static int mult (int n1, int n2)
+{
+    // return the answer of n1 * n2
+}
+public static int sub (int n1, int n2)
+{
+    // return the answer of n1 - n2
+}</code></pre><div class="assignment-example-label">Sample run</div><pre><code class="language-none">Please give me a number to do some math on:
+7
+Please give me a second number:
+2
+Thanks!
+7 + 2 = 9
+7 * 2 = 14
+7 - 2 = 5</code></pre></div><h2><a id="_ivttxf981ucy"></a>A4.7 Using a method a few times</h2><p>This program finds the average of a first batch of numbers, a second batch of numbers, a third batch of numbers and then the average of all three batches. It will use the “avg3” method four times.</p><div class="code-panel assignment-example" data-static-example="true"><div class="assignment-example-label">Program structure</div><pre><code class="language-java">public static void main(String[] args)
+{
+    // Create thirteen variables, nine with hard-coded values
+    double firstBatch1 = 7.0;
+    double firstBatch2 = 10.0;
+    double firstBatch3 = 30.0;
+    double firstBatchAvg;   // You could call the method here (answer: 15.6666)
+    double secondBatch1 = 4.0;
+    double secondBatch2 = 6.0;
+    double secondBatch3 = 6.0;
+    double secondBatchAvg;  // You could call the method here (answer: 5.3333)
+    double thridBatch1 = 150.0;
+    double thirdBatch2 = 220.0;
+    double thirdBatch3 = 255.0;
+    double thirdBatchAvg;  // You could call the method here (answer: 208.3333)
+    double allBatchAvg; // This will hold the average of the other three averages
+    // print "allBatchAvg" to the screen
+}
+
+public static double avg3(double  x, double y, double z)
+{
+    // create the code that returns the average of x, y and z.
+}</code></pre><div class="assignment-example-label">Output</div><pre><code class="language-none">The overall average is: 76.44    // If the decimals don’t match exactly, its ok</code></pre></div><h2><a id="_rqps9uxaemoj"></a>A4.8 Concatenation method</h2><p>This program will join a bunch of words together to make one long string which will be stored in the <strong>sentence</strong> variable. </p><div class="code-panel assignment-example" data-static-example="true"><div class="assignment-example-label">Program structure</div><pre><code class="language-java">public static void main(String[] args)
+{
+    // Create the following variables:
+    String word1 = "The ";
+    String word2 = "first ";
+    String word3 = "sentence. "
+    String word4 = "Now ";
+    String word5 = "the ";
+    String word6 = "second. "
+    String sentence;
+    // Call joinStrings six times to create the entire sentence. The first time, hand it
+    // sentence and word1, the second time hand it sentence and word2, and so
+    // on….
+}
+public static String joinStrings(String sent, String newWord)
+{
+    // create the code that adds "newWord" to the end of "sentence".
+    // This is done by concatenating two Strings together.
+}</code></pre><div class="assignment-example-label">Output</div><pre><code class="language-none">The first sentence. Now the second.</code></pre></div><h2><a id="_pqatwznmc9fy"></a>A4.9 Report Card Generator</h2><p>Create a program that asks the user for their name and three test grades. It then returns a report card as shown in the Sample Run.</p><div class="code-panel assignment-example" data-static-example="true"><div class="assignment-example-label">Program structure</div><pre><code class="language-java">public static void main(String[] args)
+{
+    // Take in all of the variables with appropriate variable names
+    // Say "Thank you. Here is your report card:"
+    // Call both methods below to generate the desired results
+}
+// The header goes here. The method is called avg, should take in three test grades and
+// return the average of the test grades.
+{
+    // Calculate and return the average of the three test grades
+}
+// The method header goes here. It is called printCard and should display the name,
+// each test grade and the average, as displayed in the Sample Run.
+{
+    // Print the relevant information. You can call the avg method when you need it
+}</code></pre><div class="assignment-example-label">Sample run</div><pre><code class="language-none">Please enter your first name: Paul
+Please enter your second name: Rudd
+What did you get on your first test? 87
+What did you get on your second test? 82
+What did you get on your third test? 100
+Thank you. Here is your report card:
+Rudd, Paul
+Test #1: 87
+Test #2: 82
+Test #3: 100
+Average: 90</code></pre></div></article>
       <nav class="lesson-pagination" aria-label="AP Java lesson navigation">
         <a href="java-3-user-input.html"><span>Previous</span>User Input</a>
         <a href="java-5-conditionals.html"><span>Next</span>Conditionals →</a>
       </nav>
-    </main>    <script src="site-polish.js?v=1.1"></script>
+    </main>    <script src="site-polish.js?v=1.2"></script>
   </body>
 </html>

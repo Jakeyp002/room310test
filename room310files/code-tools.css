@@ -1,0 +1,69 @@
+:root { --code-font: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace; }
+.curriculum-page .python-cell-editor,
+.curriculum-page .assignment-workspace-editor,
+.curriculum-page .python-cell-input,
+.curriculum-page .assignment-workspace-input,
+.curriculum-page .python-cell-output,
+.curriculum-page .assignment-workspace-output,
+.curriculum-page .code-panel,
+.curriculum-page .code-panel pre,
+.curriculum-page .lesson-content code { font-family: var(--code-font) !important; font-weight: 400; letter-spacing: normal; tab-size: 4; }
+.curriculum-page .lesson-content code { font-size: .9em; }
+.curriculum-page .code-panel pre > code { font: inherit; }
+.syntax-editor { --editor-padding: 22px 24px 24px 58px; position: relative; min-width: 0; background: linear-gradient(90deg, #292925 0 42px, #171714 42px); }
+.syntax-editor.syntax-workspace { --editor-padding: 18px 20px; min-height: 0; height: 100%; background: #171714; }
+.curriculum-page .syntax-editor > textarea,
+.curriculum-page .syntax-editor > .syntax-mirror {
+  margin: 0;
+  padding: var(--editor-padding);
+  border: 0;
+  border-radius: 0;
+  font: 15px/1.6 var(--code-font) !important;
+  letter-spacing: normal;
+  tab-size: 4;
+  white-space: pre;
+  overflow-wrap: normal;
+  word-break: normal;
+  text-align: left;
+}
+.curriculum-page .syntax-editor > .syntax-mirror { position: absolute; inset: 0; overflow: hidden; pointer-events: none; color: #d4d4d4; background: transparent; }
+.curriculum-page .syntax-mirror > code { display: block; width: max-content; min-width: 100%; font: inherit; color: inherit; }
+.syntax-editor > textarea { position: relative; z-index: 1; caret-color: #f1efe7; }
+.syntax-editor.syntax-ready > textarea { color: transparent; -webkit-text-fill-color: transparent; background: transparent; }
+.syntax-editor.syntax-ready > textarea::selection { background: #42648888; }
+.curriculum-page .syntax-editor > .python-cell-editor { overflow-x: auto; }
+.syntax-editor:not(.syntax-ready) > .syntax-mirror { visibility: hidden; }
+.syntax-mirror .token.comment, .syntax-code .token.comment { color: #89a878; }
+.syntax-mirror .token.keyword, .syntax-code .token.keyword { color: #c792ea; }
+.syntax-mirror .token.string, .syntax-mirror .token.char, .syntax-code .token.string, .syntax-code .token.char { color: #ce9178; }
+.syntax-mirror .token.number, .syntax-mirror .token.boolean, .syntax-code .token.number, .syntax-code .token.boolean { color: #b5cea8; }
+.syntax-mirror .token.function, .syntax-mirror .token.builtin, .syntax-code .token.function, .syntax-code .token.builtin { color: #dcdcaa; }
+.syntax-mirror .token.class-name, .syntax-mirror .token.namespace, .syntax-code .token.class-name, .syntax-code .token.namespace { color: #4ec9b0; }
+.syntax-mirror .token.operator, .syntax-code .token.operator { color: #d4d4d4; }
+.syntax-mirror .token.punctuation, .syntax-code .token.punctuation { color: #c6c6c6; }
+.syntax-mirror .token.property, .syntax-mirror .token.parameter, .syntax-code .token.property, .syntax-code .token.parameter { color: #9cdcfe; }
+.syntax-mirror .token.tag, .syntax-mirror .token.selector, .syntax-code .token.tag, .syntax-code .token.selector { color: #569cd6; }
+.syntax-mirror .token.attr-name, .syntax-code .token.attr-name { color: #9cdcfe; }
+.syntax-mirror .token.regex, .syntax-code .token.regex { color: #d7ba7d; }
+/* Inline phrases on the paper-colored lesson page need darker token colors. */
+.lesson-content code.syntax-code:not(pre code):not(.code-panel code) { color: #294d73; }
+.lesson-content code.syntax-code:not(pre code):not(.code-panel code) :is(.token.keyword, .token.function, .token.builtin) { color: #74358c; }
+.lesson-content code.syntax-code:not(pre code):not(.code-panel code) :is(.token.string, .token.char) { color: #9c4031; }
+.lesson-content code.syntax-code:not(pre code):not(.code-panel code) :is(.token.number, .token.boolean, .token.comment) { color: #35623d; }
+.lesson-content code.syntax-code:not(pre code):not(.code-panel code) :is(.token.punctuation, .token.operator) { color: #414141; }
+.lesson-content .assignment-example { padding: 0; white-space: normal; overflow: hidden; }
+.assignment-example .assignment-example-label { margin: 0; padding: 12px 20px; border-bottom: 1px solid #ffffff24; color: var(--accent); background: #252521; font: 12px/1.4 var(--code-font); font-weight: 600; }
+.assignment-example .assignment-example-caption { padding: 14px 20px 0; font: 15px/1.5 Arial, sans-serif; color: #d4d4d4; }
+.lesson-content .assignment-example pre { margin: 0; padding: 18px 20px 20px; overflow-x: auto; color: #d4d4d4; background: #171714; font: 15px/1.6 var(--code-font); white-space: pre; }
+.lesson-content .assignment-example pre + .assignment-example-label { border-top: 1px solid #ffffff24; }
+.lesson-content .assignment-example + .assignment-example { margin-top: 28px; }
+@media (max-width: 760px) {
+  .syntax-editor { --editor-padding: 18px 16px 20px 42px; }
+  .syntax-editor.syntax-workspace { --editor-padding: 14px; }
+  .curriculum-page .syntax-editor > textarea, .curriculum-page .syntax-editor > .syntax-mirror { font-size: 14px !important; }
+  .lesson-content .assignment-example pre { font-size: 14px; }
+}
+@media (forced-colors: active) {
+  .syntax-editor.syntax-ready > textarea { color: CanvasText; -webkit-text-fill-color: CanvasText; background: Canvas; }
+  .syntax-editor > .syntax-mirror { display: none; }
+}

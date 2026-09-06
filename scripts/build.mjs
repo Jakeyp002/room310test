@@ -5,11 +5,21 @@ const projectUrl = process.env.SUPABASE_URL || "https://khbmuaitysznyxxefhou.sup
 const publishableKey = process.env.SUPABASE_PUBLISHABLE_KEY || "";
 
 if (process.env.NETLIFY === "true" && !publishableKey) {
-  throw new Error("SUPABASE_PUBLISHABLE_KEY must be configured in Netlify before deploying Room310 v1.1.");
+  throw new Error("SUPABASE_PUBLISHABLE_KEY must be configured in Netlify before deploying Room310 v1.2.");
 }
 
 await rm("dist", { force: true, recursive: true });
 await mkdir("dist", { recursive: true });
+// Retain the generated bundle for the original local Python server as well.
+await build({
+  entryPoints: ["client-src/code-tools.js"],
+  bundle: true,
+  format: "iife",
+  minify: true,
+  outfile: "room310files/code-tools.js",
+  target: ["es2022"],
+  legalComments: "eof"
+});
 await cp("room310files", "dist", { recursive: true });
 
 await writeFile(

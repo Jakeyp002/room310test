@@ -26,11 +26,111 @@
         <h1>User Input</h1>
         <p>Using Scanner, collecting user values, processing input, and five complete assignments.</p>
       </div>
-      <article class="lesson-content"><div class="code-panel"><p><strong>  Java - Intro 3. User Input</strong></p></div><p><a href="#_rr5cedh6xane">3. User Input</a></p><p><a href="#_q960slrxafp8">3.1 Overview</a></p><p><a href="#_nh0njo5anonw">3.2 The Big Picture</a></p><p><a href="#_fy8z99kks69y">Chapter 3: Assignments</a></p><p><a href="#_6r5sx4db6jrz">A3.1 Gather Basic Information</a></p><p><a href="#_ujq930n13yv6">A3.2 Adding Machine</a></p><p><a href="#_vorxtxlhq1rp">A3.3 Short Mad-Lib</a></p><p><a href="#_qtc2nklrgaef">A3.4 Volume and Surface Area of a Rectangular Prism</a></p><p><a href="#_eqbq2rdcuult">A3.5 Adding and Multiplying User Input</a></p><h1><a id="_rr5cedh6xane"></a>3. User Input</h1><h2><a id="_q960slrxafp8"></a>3.1 Overview</h2><ul><li>This section takes some practice and you have to go on faith. You won’t really understand it all, just learn how to put the pieces in place. </li><li>“hard coding” vs user input: Hard coding is what we have been doing when we put values (numbers and Strings) right in the program. Now we are going to take things in from the user.</li></ul><h2><a id="_nh0njo5anonw"></a>3.2 The Big Picture</h2><ul><li>There are four key pieces that need to be in the program to take in user input. They are highlighted in purple in the sample program below. </li><li>The “userInput” variable (or any identifier name that you want), highlighted in red below, can be used as many times as needed as long as you don’t close it using the last purple highlighted line. </li><li>We will work with the following, which can be put in place of the highlighted blue portion below:</li><li><strong>.nextInt() </strong>- Takes the input as an integer</li><li><strong>.next()</strong> - Takes the input as a String</li><li><strong>.nextDouble()</strong> - Takes the input as a double</li><li><strong>.nextBoolean()</strong> - Takes the input as a boolean</li></ul><div class="code-panel"><p><strong>Sample Program:</strong></p><p><strong>import java.util.Scanner;</strong></p><p>public class HelloWorld</p></div><p>{</p><div class="code-panel"><p>	public static void main(String[] arg)</p></div><p>	{</p><div class="code-panel"><p>		int age;</p></div><p>		// In the line below, “userInput” can be anything you want</p><div class="code-panel"><p>		<strong>Scanner userInput = new Scanner(System.in);</strong></p></div><div class="code-panel"><p>System.out.print("How old are you?");</p><p>		<strong>age = userInput.nextInt();</strong></p></div><div class="code-panel"><p>		System.out.println("You are a " + age + " year old!!");</p></div><div class="code-panel"><p>		<strong>userInput.close();</strong></p></div><p>	}</p><p>}</p><div class="code-panel"><p><strong>SAMPLE RUN:</strong></p><p><strong>How old are you? </strong>35</p><p><strong>	You are a 35 year old!!</strong></p></div><h1><a id="_fy8z99kks69y"></a>Chapter 3: Assignments</h1><h2><a id="_6r5sx4db6jrz"></a>A3.1 Gather Basic Information</h2><p>Create a program that asks a user for their first name, last name and age. Each of these values should be assigned to a different variable. </p><div class="code-panel"><p><strong>PROGRAM STRUCTURE:</strong></p><p><strong>import java.util.Scanner;</strong></p><p>public class Prog33</p><p>{</p><p>	public static void main(String[ ] arg)</p><p>	{</p><p>		// Declare a <strong>String</strong> called <strong>first</strong> but don’t initialize it</p><p>		// Declare a <strong>String</strong> called <strong>last</strong> but don’t initialize it</p><p>// Declare an <strong>int</strong> called <strong>age</strong> but don’t initialize it</p><p>		<strong>Scanner info = new Scanner(System.in);</strong></p><p>		// Create a print statement asking for a first name</p><p>		<strong>first = info.next();</strong></p><p>		// Create a print statement asking for a last name</p><p>		<strong>last = info.next();</strong></p><p>// Create a print statement asking for the age</p><p>		<strong>age = info.nextInt();</strong></p><p>		// Print the desired output</p><p>		<strong>info.close();</strong></p><p>	}</p><p>}</p><p><strong>SAMPLE RUN:</strong></p><p><strong>	What is your first name? </strong></p><p>Peter</p><p><strong>	What is your last name? </strong></p><p>Bigelow</p><p><strong>	How old are you? </strong></p><p>32</p><p><strong>Peter Bigelow is 32 years old!</strong></p></div><h2><a id="_ujq930n13yv6"></a>A3.2 Adding Machine</h2><p>Take the user’s name and three doubles. Add together the numbers and print out the sum. </p><div class="code-panel"><p><strong>PROGRAM STRUCTURE:</strong></p><p>import java.util.Scanner;</p><p>public class Prog34</p><p>{</p><p>	public static void main(String[ ] arg)</p><p>	{</p><p>		// Declare a String and three doubles</p><p>// Create the Scanner with the input variable</p><p>// Ask the user for their name and three numbers and assign the input to </p><p>the proper variables. </p><p>		// Print the desired output</p><p>// Close the Scanner</p><p>	}</p><p>}</p><p><strong>SAMPLE RUN:</strong></p><p>	<strong>What is your name? </strong></p><p>Betty</p><p><strong>	Please give me your first number: </strong></p><p>7.2</p><p><strong>	Please give me your second number: </strong></p><p>1.3</p><p><strong>	Please give me your third number: </strong></p><p>10.3</p><p><strong>	Betty, the sum of your numbers is: 18.8</strong></p></div><h2><a id="_vorxtxlhq1rp"></a>A3.3 Short Mad-Lib</h2><p>Ask the user for at least two nouns, two verbs, two adjectives and two adverbs. They should be stored with the following variable names: noun1, noun2, verb1, verb2, adj1, adj2, adv1, adv2. Then have the program print a story to the screen based on these words. </p><div class="code-panel"><p><strong>PROGRAM STRUCTURE:</strong></p><p>import java.util.Scanner;</p><p>public class Prog35</p><p>{</p><p>	public static void main(String[ ] arg)</p><p>	{</p><p>		// Declare all the String variables</p><p>// Create the Scanner with the input variable</p><p>// Ask the user for all of the words</p><p>		// Print the desired output</p><p>// Close the Scanner</p><p>	}</p><p>}</p><p><strong>SAMPLE RUN:</strong></p><p>	<strong>Please give me a noun:</strong>		house</p><p>	<strong>Another noun:	</strong>		key</p><p>	<strong>Please give me a verb:</strong>		stick</p><p>	<strong>Another verb (past tense):</strong>		kicked</p><p><strong>Please give me an adjective:</strong>	fantastic</p><p>	<strong>Another adjective:</strong>			deathly</p><p><strong>Please give me an adverb:		</strong>quickly</p><p>	<strong>Another adverb:</strong>			smoothly</p><p><strong>Here is the story that you generated:</strong></p><p>Once there was a fantastic house. It liked to stick quickly. Yesterday, the house </p><p>smoothly kicked a deathly key. </p></div><h2><a id="_qtc2nklrgaef"></a>A3.4 Volume and Surface Area of a Rectangular Prism</h2><p>Ask the user for three dimensions of a rectangular prism, the height, width and length as well as the unit of the measurements. The volume and the surface area should each be calculated. The program should run like this:</p><div class="code-panel"><p><strong>PROGRAM STRUCTURE:</strong></p><p>import java.util.Scanner;</p><p>public class Prog36</p><p>{</p><p>	public static void main(String[ ] arg)</p><p>	{</p><p>		// Declare all variables with appropriate names</p><p>// Create the Scanner with the input variable</p><p>// Ask the user for values for all variables</p><p>		// Print the desired output</p><p>// Close the Scanner</p><p>	}</p><p>}</p><p><strong>SAMPLE RUN:</strong></p><p>	<strong>What is the height of the prism?</strong> </p><p>5</p><p>	<strong>What is the length of the prism?</strong> </p><p>7</p><p>	<strong>What is the width of the prism? </strong></p><p>2</p><p>	<strong>What units are the length measured in? </strong></p><p>feet</p><p><strong>	The volume of the prism is 70 feet cubed and the surface area is 118 feet squared. </strong></p></div><h2><a id="_eqbq2rdcuult"></a>A3.5 Adding and Multiplying User Input</h2><p>Practice collecting more information from the user, processing it, and returning information. </p><div class="code-panel"><p><strong>PROGRAM STRUCTURE:</strong></p><p>import java.util.Scanner;</p><p>public class Prog37</p><p>{</p><p>	public static void main(String[ ] arg)</p><p>	{</p><p>		// See the program structure from 3.5</p><p>	}</p><p>}</p><p><strong>SAMPLE RUN:</strong></p><p><strong>Hello! What is your name?</strong></p><p>Jen</p><p><strong>Hi Jen. Please give me a number:</strong></p><p>14</p><p><strong>Thank you. Please give me another number:</strong></p><p>10</p><p><strong>OK.</strong></p><p><strong>If I add those numbers together, I get 24.</strong></p><p><strong>If I multiply those numbers together, I get 140. </strong></p></div></article>
+      <article class="lesson-content"><div class="code-panel"><p><strong>  Java - Intro 3. User Input</strong></p></div><p><a href="#_rr5cedh6xane">3. User Input</a></p><p><a href="#_q960slrxafp8">3.1 Overview</a></p><p><a href="#_nh0njo5anonw">3.2 The Big Picture</a></p><p><a href="#_fy8z99kks69y">Chapter 3: Assignments</a></p><p><a href="#_6r5sx4db6jrz">A3.1 Gather Basic Information</a></p><p><a href="#_ujq930n13yv6">A3.2 Adding Machine</a></p><p><a href="#_vorxtxlhq1rp">A3.3 Short Mad-Lib</a></p><p><a href="#_qtc2nklrgaef">A3.4 Volume and Surface Area of a Rectangular Prism</a></p><p><a href="#_eqbq2rdcuult">A3.5 Adding and Multiplying User Input</a></p><h1><a id="_rr5cedh6xane"></a>3. User Input</h1><h2><a id="_q960slrxafp8"></a>3.1 Overview</h2><ul><li>This section takes some practice and you have to go on faith. You won’t really understand it all, just learn how to put the pieces in place. </li><li>“hard coding” vs user input: Hard coding is what we have been doing when we put values (numbers and Strings) right in the program. Now we are going to take things in from the user.</li></ul><h2><a id="_nh0njo5anonw"></a>3.2 The Big Picture</h2><ul><li>There are four key pieces that need to be in the program to take in user input. They are highlighted in purple in the sample program below. </li><li>The “userInput” variable (or any identifier name that you want), highlighted in red below, can be used as many times as needed as long as you don’t close it using the last purple highlighted line. </li><li>We will work with the following, which can be put in place of the highlighted blue portion below:</li><li><strong>.nextInt() </strong>- Takes the input as an integer</li><li><strong>.next()</strong> - Takes the input as a String</li><li><strong>.nextDouble()</strong> - Takes the input as a double</li><li><strong>.nextBoolean()</strong> - Takes the input as a boolean</li></ul><div class="code-panel"><p><strong>Sample Program:</strong></p><p><strong>import java.util.Scanner;</strong></p><p>public class HelloWorld</p></div><p>{</p><div class="code-panel"><p>	public static void main(String[] arg)</p></div><p>	{</p><div class="code-panel"><p>		int age;</p></div><p>		// In the line below, “userInput” can be anything you want</p><div class="code-panel"><p>		<strong>Scanner userInput = new Scanner(System.in);</strong></p></div><div class="code-panel"><p>System.out.print("How old are you?");</p><p>		<strong>age = userInput.nextInt();</strong></p></div><div class="code-panel"><p>		System.out.println("You are a " + age + " year old!!");</p></div><div class="code-panel"><p>		<strong>userInput.close();</strong></p></div><p>	}</p><p>}</p><div class="code-panel assignment-example" data-static-example="true"><div class="assignment-example-label">Sample run</div><pre><code class="language-none">How old are you? 35
+You are a 35 year old!!</code></pre></div><h1><a id="_fy8z99kks69y"></a>Chapter 3: Assignments</h1><h2><a id="_6r5sx4db6jrz"></a>A3.1 Gather Basic Information</h2><p>Create a program that asks a user for their first name, last name and age. Each of these values should be assigned to a different variable. </p><div class="code-panel assignment-example" data-static-example="true"><div class="assignment-example-label">Program structure</div><pre><code class="language-java">import java.util.Scanner;
+public class Prog33
+{
+    public static void main(String[ ] arg)
+    {
+        // Declare a String called first but don't initialize it
+        // Declare a String called last but don't initialize it
+        // Declare an int called age but don't initialize it
+        Scanner info = new Scanner(System.in);
+        // Create a print statement asking for a first name
+        first = info.next();
+        // Create a print statement asking for a last name
+        last = info.next();
+        // Create a print statement asking for the age
+        age = info.nextInt();
+        // Print the desired output
+        info.close();
+    }
+}</code></pre><div class="assignment-example-label">Sample run</div><pre><code class="language-none">What is your first name?
+Peter
+What is your last name?
+Bigelow
+How old are you?
+32
+Peter Bigelow is 32 years old!</code></pre></div><h2><a id="_ujq930n13yv6"></a>A3.2 Adding Machine</h2><p>Take the user’s name and three doubles. Add together the numbers and print out the sum. </p><div class="code-panel assignment-example" data-static-example="true"><div class="assignment-example-label">Program structure</div><pre><code class="language-java">import java.util.Scanner;
+public class Prog34
+{
+    public static void main(String[ ] arg)
+    {
+        // Declare a String and three doubles
+        // Create the Scanner with the input variable
+        // Ask the user for their name and three numbers and assign the input to
+        the proper variables.
+        // Print the desired output
+        // Close the Scanner
+    }
+}</code></pre><div class="assignment-example-label">Sample run</div><pre><code class="language-none">What is your name?
+Betty
+Please give me your first number:
+7.2
+Please give me your second number:
+1.3
+Please give me your third number:
+10.3
+Betty, the sum of your numbers is: 18.8</code></pre></div><h2><a id="_vorxtxlhq1rp"></a>A3.3 Short Mad-Lib</h2><p>Ask the user for at least two nouns, two verbs, two adjectives and two adverbs. They should be stored with the following variable names: noun1, noun2, verb1, verb2, adj1, adj2, adv1, adv2. Then have the program print a story to the screen based on these words. </p><div class="code-panel assignment-example" data-static-example="true"><div class="assignment-example-label">Program structure</div><pre><code class="language-java">import java.util.Scanner;
+public class Prog35
+{
+    public static void main(String[ ] arg)
+    {
+        // Declare all the String variables
+        // Create the Scanner with the input variable
+        // Ask the user for all of the words
+        // Print the desired output
+        // Close the Scanner
+    }
+}</code></pre><div class="assignment-example-label">Sample run</div><pre><code class="language-none">Please give me a noun:      house
+Another noun:           key
+Please give me a verb:      stick
+Another verb (past tense):      kicked
+Please give me an adjective:    fantastic
+Another adjective:          deathly
+Please give me an adverb:       quickly
+Another adverb:         smoothly
+Here is the story that you generated:
+Once there was a fantastic house. It liked to stick quickly. Yesterday, the house
+smoothly kicked a deathly key.</code></pre></div><h2><a id="_qtc2nklrgaef"></a>A3.4 Volume and Surface Area of a Rectangular Prism</h2><p>Ask the user for three dimensions of a rectangular prism, the height, width and length as well as the unit of the measurements. The volume and the surface area should each be calculated. The program should run like this:</p><div class="code-panel assignment-example" data-static-example="true"><div class="assignment-example-label">Program structure</div><pre><code class="language-java">import java.util.Scanner;
+public class Prog36
+{
+    public static void main(String[ ] arg)
+    {
+        // Declare all variables with appropriate names
+        // Create the Scanner with the input variable
+        // Ask the user for values for all variables
+        // Print the desired output
+        // Close the Scanner
+    }
+}</code></pre><div class="assignment-example-label">Sample run</div><pre><code class="language-none">What is the height of the prism?
+5
+What is the length of the prism?
+7
+What is the width of the prism?
+2
+What units are the length measured in?
+feet
+The volume of the prism is 70 feet cubed and the surface area is 118 feet squared.</code></pre></div><h2><a id="_eqbq2rdcuult"></a>A3.5 Adding and Multiplying User Input</h2><p>Practice collecting more information from the user, processing it, and returning information. </p><div class="code-panel assignment-example" data-static-example="true"><div class="assignment-example-label">Program structure</div><pre><code class="language-java">import java.util.Scanner;
+public class Prog37
+{
+    public static void main(String[ ] arg)
+    {
+        // See the program structure from 3.5
+    }
+}</code></pre><div class="assignment-example-label">Sample run</div><pre><code class="language-none">Hello! What is your name?
+Jen
+Hi Jen. Please give me a number:
+14
+Thank you. Please give me another number:
+10
+OK.
+If I add those numbers together, I get 24.
+If I multiply those numbers together, I get 140.</code></pre></div></article>
       <nav class="lesson-pagination" aria-label="AP Java lesson navigation">
         <a href="java-2-variables.html"><span>Previous</span>Variables</a>
         <a href="java-4-methods.html"><span>Next</span>Methods →</a>
       </nav>
-    </main>    <script src="site-polish.js?v=1.1"></script>
+    </main>    <script src="site-polish.js?v=1.2"></script>
   </body>
 </html>

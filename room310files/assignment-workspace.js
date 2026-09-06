@@ -2,7 +2,7 @@
   "use strict";
 
   if (!document.body.classList.contains("curriculum-page") || document.documentElement.dataset.assignmentWorkspace) return;
-  document.documentElement.dataset.assignmentWorkspace = "v1.1";
+  document.documentElement.dataset.assignmentWorkspace = "v1.2";
 
   const languages = {
     python: {
@@ -84,7 +84,7 @@ Console.WriteLine($"Hello from {course}!");`
   panel.innerHTML = `
     <header class="assignment-workspace-header">
       <div><span class="assignment-workspace-kicker">Room 310 terminal</span><strong>Assignment Workspace</strong></div>
-      <div class="assignment-workspace-header-actions"><span class="assignment-workspace-version">v1.1</span><button type="button" class="assignment-workspace-close" aria-label="Close assignment workspace">×</button></div>
+      <div class="assignment-workspace-header-actions"><span class="assignment-workspace-version">v1.2</span><button type="button" class="assignment-workspace-close" aria-label="Close assignment workspace">×</button></div>
     </header>
     <div class="assignment-workspace-toolbar">
       <label>Language<select class="assignment-workspace-language" aria-label="Programming language"></select></label>
@@ -118,6 +118,7 @@ Console.WriteLine($"Hello from {course}!");`
   Object.entries(languages).forEach(([value, language]) => select.add(new Option(language.label, value)));
   select.value = currentLanguage;
   editor.value = drafts[currentLanguage];
+  editor.dataset.codeLanguage = currentLanguage;
   input.value = typeof saved.input === "string" ? saved.input : "";
   filename.textContent = filenames[currentLanguage];
 
@@ -235,6 +236,8 @@ Console.WriteLine($"Hello from {course}!");`
     drafts[currentLanguage] = editor.value;
     currentLanguage = select.value;
     editor.value = drafts[currentLanguage];
+    editor.dataset.codeLanguage = currentLanguage;
+    window.Room310Code?.refresh(editor);
     filename.textContent = filenames[currentLanguage];
     output.textContent = `Ready to run ${languages[currentLanguage].label}.`;
     output.parentElement.removeAttribute("data-result");
@@ -259,6 +262,7 @@ Console.WriteLine($"Hello from {course}!");`
   panel.querySelector(".assignment-workspace-reset").addEventListener("click", () => {
     drafts[currentLanguage] = languages[currentLanguage].starter;
     editor.value = drafts[currentLanguage];
+    window.Room310Code?.refresh(editor);
     save();
     status.textContent = "Starter restored";
     editor.focus();
