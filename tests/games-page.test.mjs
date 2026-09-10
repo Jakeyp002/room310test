@@ -9,7 +9,7 @@ const css = await read("../room310files/style.css");
 
 test("Games embeds Apex Trails with a restricted fallback-friendly frame", () => {
   assert.match(page, /id="apex-trails-frame"/);
-  assert.match(page, /src="https:\/\/apextrails\.lol\/"/);
+  assert.match(page, /src="https:\/\/oneshotstudios\.org\/"/);
   assert.match(page, /sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"/);
   assert.doesNotMatch(page, /allow-top-navigation|allow-popups|clipboard-read|clipboard-write/);
   assert.match(page, /referrerpolicy="no-referrer"/);

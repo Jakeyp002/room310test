@@ -12,7 +12,9 @@ export function slugify(value) {
 export function isApexTrailsUrl(value) {
   try {
     const url = new URL(value);
-    return url.protocol === "https:" && (url.hostname === "apextrails.lol" || url.hostname.endsWith(".apextrails.lol"));
+    const apexHost = url.hostname === "apextrails.lol" || url.hostname.endsWith(".apextrails.lol");
+    const studioHost = url.hostname === "oneshotstudios.org" || url.hostname.endsWith(".oneshotstudios.org");
+    return url.protocol === "https:" && (apexHost || studioHost);
   } catch {
     return false;
   }

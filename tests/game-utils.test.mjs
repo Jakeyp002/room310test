@@ -34,7 +34,9 @@ test("thumbnailExtension only accepts supported image MIME types", () => {
 test("isApexTrailsUrl only accepts the HTTPS Apex Trails host", () => {
   assert.equal(isApexTrailsUrl("https://apextrails.lol/"), true);
   assert.equal(isApexTrailsUrl("https://play.apextrails.lol/level/1"), true);
+  assert.equal(isApexTrailsUrl("https://oneshotstudios.org/"), true);
   assert.equal(isApexTrailsUrl("http://apextrails.lol/"), false);
   assert.equal(isApexTrailsUrl("https://apextrails.lol.example.com/"), false);
+  assert.equal(isApexTrailsUrl("https://oneshotstudios.org.example.com/"), false);
   assert.equal(isApexTrailsUrl("not a URL"), false);
 });
