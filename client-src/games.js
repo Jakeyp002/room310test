@@ -1,5 +1,5 @@
 import { configurationMessage, isConfigured, messageFor, supabase } from "./supabase-client.js";
-import { gameFromRow } from "./game-utils.js";
+import { gameFromRow, isApexTrailsUrl } from "./game-utils.js";
 
 const container = document.querySelector(".games-list");
 const heroCopy = document.querySelector(".games-hero > p");
@@ -34,10 +34,18 @@ function makeCard(game, index) {
   const description = document.createElement("p");
   description.textContent = game.description;
   const link = document.createElement("a");
-  link.href = game.externalUrl;
-  link.target = "_blank";
-  link.rel = "noopener noreferrer";
-  link.textContent = "Play game →";
+  if (isApexTrailsUrl(game.externalUrl)) {
+    link.href = "#apex-trails";
+    link.textContent = "Play in Room310 →";
+    link.addEventListener("click", () => {
+      document.querySelector("#apex-trails-frame")?.focus({ preventScroll: true });
+    });
+  } else {
+    link.href = game.externalUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Play game →";
+  }
   body.append(meta, title, description, link);
   article.append(visual, body);
   return article;

@@ -9,6 +9,15 @@ export function slugify(value) {
   return base || "game";
 }
 
+export function isApexTrailsUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && (url.hostname === "apextrails.lol" || url.hostname.endsWith(".apextrails.lol"));
+  } catch {
+    return false;
+  }
+}
+
 export function gameFromRow(row) {
   return {
     id: row.id,

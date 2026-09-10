@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { gameFromRow, slugify, thumbnailExtension } from "../client-src/game-utils.js";
+import { gameFromRow, isApexTrailsUrl, slugify, thumbnailExtension } from "../client-src/game-utils.js";
 
 test("slugify produces a safe beginner-friendly game slug", () => {
   assert.equal(slugify("  Café Racer!  "), "cafe-racer");
@@ -29,4 +29,12 @@ test("gameFromRow maps database names to the UI model", () => {
 test("thumbnailExtension only accepts supported image MIME types", () => {
   assert.equal(thumbnailExtension({ type: "image/png" }), "png");
   assert.equal(thumbnailExtension({ type: "image/svg+xml" }), "");
+});
+
+test("isApexTrailsUrl only accepts the HTTPS Apex Trails host", () => {
+  assert.equal(isApexTrailsUrl("https://apextrails.lol/"), true);
+  assert.equal(isApexTrailsUrl("https://play.apextrails.lol/level/1"), true);
+  assert.equal(isApexTrailsUrl("http://apextrails.lol/"), false);
+  assert.equal(isApexTrailsUrl("https://apextrails.lol.example.com/"), false);
+  assert.equal(isApexTrailsUrl("not a URL"), false);
 });

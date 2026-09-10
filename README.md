@@ -1,6 +1,6 @@
 # Room310
 
-Room310 is an HTML/CSS/JavaScript learning site. Version 0.13 adds a six-lesson deep learning and PyTorch course for Python learners. It retains v1.2 assignment formatting and syntax highlighting, the v1.1 Extended Archives notice, and v0.9 compiler fixes. The held admin-request form remains unpublished.
+Room310 is an HTML/CSS/JavaScript learning site. Version 0.14 embeds Apex Trails as a featured, fullscreen-capable game with a restricted frame and separate-tab fallback. It retains the v0.13 deep learning and PyTorch course, v1.2 assignment formatting and syntax highlighting, the v1.1 Extended Archives notice, and v0.9 compiler fixes. The held admin-request form remains unpublished.
 
 ## Deep learning course
 

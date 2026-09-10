@@ -569,10 +569,32 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
 }
 .collection-hero > p { max-width: 720px; margin: 0; font-size: clamp(19px, 2vw, 30px); line-height: 1.35; }
 .games-hero { border-color: #ff795f; }
+.games-page .collection-hero { min-height: auto; padding-bottom: 44px; }
 .extended-hero { border-color: #79b7ff; }
 .page-jump { display: flex; gap: 12px; margin-top: 35px; }
 .page-jump a { padding: 10px 13px; border: 1px solid; font: 11px "Courier New", monospace; text-transform: uppercase; }
 .page-jump a:hover { color: var(--paper); background: var(--ink); }
+
+.featured-game { margin-top: 42px; overflow: hidden; border: 1px solid var(--ink); background: var(--ink); }
+.featured-game-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding: 20px 24px; color: var(--ink); background: #ff795f; }
+.featured-game-heading small { font: 10px "Courier New", monospace; letter-spacing: 0.04em; text-transform: uppercase; }
+.featured-game-heading h2 { margin: 8px 0 0; font-size: clamp(36px, 5vw, 70px); line-height: 0.85; letter-spacing: -0.065em; }
+.featured-game-actions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+.featured-game-actions a,
+.featured-game-fullscreen { padding: 9px 11px; border: 1px solid var(--ink); border-radius: 0; color: var(--ink); background: transparent; font: 700 10px "Courier New", monospace; letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; }
+.featured-game-actions a:hover,
+.featured-game-actions a:focus-visible,
+.featured-game-fullscreen:hover,
+.featured-game-fullscreen:focus-visible { color: var(--paper); background: var(--ink); }
+.featured-game-frame { position: relative; height: min(70vh, 760px); min-height: 460px; background: #0b0d10; }
+.featured-game-frame iframe { width: 100%; height: 100%; display: block; border: 0; background: #0b0d10; }
+.featured-game-frame iframe[hidden] { display: none; }
+.featured-game-frame iframe:fullscreen { width: 100vw; height: 100vh; background: #0b0d10; }
+.featured-game-state { position: absolute; z-index: 1; inset: 0; display: grid; place-content: center; gap: 12px; padding: 28px; color: var(--paper); background: #0b0d10; text-align: center; }
+.featured-game-state[hidden] { display: none; }
+.featured-game-state strong { font-size: clamp(28px, 5vw, 60px); line-height: 0.95; letter-spacing: -0.05em; }
+.featured-game-state p { max-width: 620px; margin: 0 auto; font: 14px/1.5 "Courier New", monospace; }
+.featured-game-note { margin: 0; padding: 14px 24px; color: var(--paper); font: 13px/1.45 "Courier New", monospace; }
 
 .games-list {
   min-height: 380px;
@@ -625,6 +647,12 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
 @media (max-width: 700px) {
   .collection-page { padding: 120px 16px 70px; }
   .collection-hero { min-height: 55vh; }
+  .games-page .collection-hero { min-height: auto; padding-bottom: 35px; }
+  .featured-game { margin-top: 28px; }
+  .featured-game-heading { align-items: flex-start; flex-direction: column; gap: 14px; padding: 18px; }
+  .featured-game-actions { width: 100%; flex-wrap: wrap; justify-content: flex-start; }
+  .featured-game-frame { height: min(68svh, 620px); min-height: 390px; }
+  .featured-game-note { padding: 13px 18px; }
   .bulletin-grid { grid-template-columns: 1fr; }
   .bulletin-post,
   .bulletin-post:nth-child(odd),

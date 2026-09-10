@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="The future home of games made for Room310." />
+    <meta name="description" content="Play Apex Trails and discover browser games selected for Room310." />
     <title>Games · Room310</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -22,21 +22,52 @@
 
     <main class="collection-page">
       <section class="collection-hero games-hero">
-        <div class="games-hero-meta"><small>Room310 / Games</small><small>v1.2</small></div>
-        <h1>Games live here.</h1>
-        <p>This page is ready for future games, experiments, and interactive projects. Nothing is playable yet.</p>
+        <div class="games-hero-meta"><small>Room310 / Games</small><small>v0.14</small></div>
+        <h1>Play here.</h1>
+        <p>Play Apex Trails without leaving Room310, then explore more student games below.</p>
       </section>
 
-      <section class="games-list" aria-label="Games archive">
-        <div>
-          <small>Archive status</small>
-          <h2>No games yet.</h2>
+      <section id="apex-trails" class="featured-game" aria-labelledby="apex-trails-title">
+        <div class="featured-game-heading">
+          <div>
+            <small>Featured game / OneShot Studios</small>
+            <h2 id="apex-trails-title">Apex Trails</h2>
+          </div>
+          <div class="featured-game-actions">
+            <a href="https://apextrails.lol/" target="_blank" rel="noopener noreferrer">Open separately ↗</a>
+            <button type="button" class="featured-game-fullscreen" data-game-fullscreen aria-controls="apex-trails-frame" aria-pressed="false">Fullscreen</button>
+          </div>
         </div>
-        <p>New work will be added here when it is ready. Each game can eventually have its own title, description, year, and link.</p>
+        <div class="featured-game-frame">
+          <div class="featured-game-state" data-game-state hidden>
+            <strong>Apex Trails is not responding.</strong>
+            <p>The game’s website could not be reached. Room310 is still working; try opening the game separately or come back later.</p>
+          </div>
+          <iframe
+            id="apex-trails-frame"
+            src="https://apextrails.lol/"
+            title="Play Apex Trails"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"
+            allow="fullscreen; gamepad"
+            allowfullscreen
+            referrerpolicy="no-referrer"
+            loading="eager"
+          ></iframe>
+        </div>
+        <p class="featured-game-note">Apex Trails runs on its own website inside this restricted frame. Use “Open separately” if your browser blocks embedded play. <span class="sr-only" data-fullscreen-status aria-live="polite"></span></p>
+      </section>
+
+      <section class="games-list" aria-label="More games" aria-live="polite">
+        <div>
+          <small>More games</small>
+          <h2>Next up.</h2>
+        </div>
+        <p>More Room310 games and interactive projects will appear here as they are released.</p>
       </section>
     </main>
-      <script src="site-polish.js?v=0.13"></script>
+      <script src="site-polish.js?v=0.14"></script>
       <script src="supabase-config.js?v=0.6"></script>
-      <script src="games.js?v=0.6"></script>
+      <script src="games.js?v=0.14"></script>
+      <script src="game-embed.js?v=0.14"></script>
   </body>
 </html>
