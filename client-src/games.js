@@ -27,7 +27,7 @@ function makeCard(game, index) {
   const year = document.createElement("span");
   year.textContent = game.year;
   const type = document.createElement("span");
-  type.textContent = game.hostType === "embed" ? "Room310 player" : "External game";
+  type.textContent = game.hostType === "hosted" ? "Hosted ZIP" : game.hostType === "embed" ? "Pasted HTML" : "Linked game";
   meta.append(year, type);
   const title = document.createElement("h2");
   title.textContent = game.title;
@@ -42,10 +42,6 @@ function makeCard(game, index) {
     });
   } else {
     link.href = gamePlayUrl(game);
-    if (game.hostType === "external") {
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-    }
     link.textContent = "Play game →";
   }
   body.append(meta, title, description, link);

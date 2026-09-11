@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { createSandboxedGameFrame, embeddedDocument, GAME_SANDBOX } from "../client-src/embed-runner.js";
+import { createSandboxedGameFrame, createSandboxedUrlFrame, embeddedDocument, GAME_SANDBOX } from "../client-src/embed-runner.js";
 
 function fakeDocument() {
   return {
@@ -49,4 +49,20 @@ test("malicious HTML is data in an opaque-origin sandbox, not parent DOM", () =>
   assert.equal(frame.innerHTML, undefined);
   assert.match(frame.srcdoc, /parent\.document/);
   assert.equal(document.body.dataset.pwned, undefined);
+});
+
+test("linked and hosted game URLs use the same opaque-origin sandbox", () => {
+  const frame = createSandboxedUrlFrame(fakeDocument(), "https://example.com/game", "Linked game");
+  assert.equal(frame.src, "https://example.com/game");
+  assert.equal(frame.getAttribute("sandbox"), GAME_SANDBOX);
+  assert.doesNotMatch(frame.getAttribute("sandbox"), /allow-same-origin|allow-top-navigation|allow-popups/);
+  assert.equal(frame.getAttribute("referrerpolicy"), "no-referrer");
+});
+
+test("the production player supports HTML, hosted ZIP, and linked games", async () => {
+  const source = await readFile(new URL("../client-src/game-player.js", import.meta.url), "utf8");
+  assert.match(source, /game\.hostType === "embed"/);
+  assert.match(source, /game\.hostType === "hosted"/);
+  assert.match(source, /\/game-assets\/\$\{encodeURIComponent\(game\.slug\)\}/);
+  assert.match(source, /externalFallback\.href = game\.externalUrl/);
 });

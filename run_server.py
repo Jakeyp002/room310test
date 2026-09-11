@@ -323,7 +323,7 @@ def execute(language: str, code: str, user_input: str) -> dict:
 class Room310Handler(SimpleHTTPRequestHandler):
     """Main site, course runner, public catalog, and authenticated admin API."""
 
-    server_version = "Room310/1.4"
+    server_version = "Room310/1.5"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(SITE_ROOT), **kwargs)
@@ -426,17 +426,18 @@ class Room310Handler(SimpleHTTPRequestHandler):
 
     def _play_shell(self, slug: str) -> None:
         game = GAMES.get_public_game(slug)
-        if game["hostType"] not in {"hosted", "embed"}:
+        if game["hostType"] not in {"external", "hosted", "embed"}:
             raise AppError("Game not found.", 404)
-        frame_url = (
-            f"{ASSET_ORIGIN}/{quote(slug)}/index.html"
-            if game["hostType"] == "hosted"
-            else f"{ASSET_ORIGIN}/embedded/{quote(slug)}/index.html"
-        )
+        if game["hostType"] == "hosted":
+            frame_url = f"{ASSET_ORIGIN}/{quote(slug)}/index.html"
+        elif game["hostType"] == "embed":
+            frame_url = f"{ASSET_ORIGIN}/embedded/{quote(slug)}/index.html"
+        else:
+            frame_url = game["externalUrl"]
         title = html.escape(game["title"])
         description = html.escape(game["description"])
-        source_label = "Hosted game" if game["hostType"] == "hosted" else "Embedded game"
-        sandbox = "allow-scripts allow-forms allow-modals allow-pointer-lock" if game["hostType"] == "hosted" else "allow-scripts allow-pointer-lock"
+        source_label = "Hosted ZIP" if game["hostType"] == "hosted" else "Linked game" if game["hostType"] == "external" else "Embedded HTML"
+        sandbox = "allow-scripts allow-pointer-lock"
         nonce = secrets.token_urlsafe(18)
         body = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -455,7 +456,7 @@ aside button{{color:#f1efe7;background:transparent;border-color:#f1efe7}}section
 <aside><small>{game['year']} · {source_label}</small><h1>{title}</h1><p>{description}</p><button id="fullscreen" type="button">Fullscreen</button></aside>
 <section><div id="viewport"><iframe id="game-frame" src="{html.escape(frame_url, quote=True)}" title="{title}" sandbox="{sandbox}" allow="fullscreen; gamepad" referrerpolicy="no-referrer" scrolling="no"></iframe></div><div id="loading" role="status"><span aria-hidden="true"></span><strong>Starting game</strong><small>Loading in a secure sandbox…</small></div></section></main>
 <script nonce="{nonce}">const v=document.querySelector('#viewport'),b=document.querySelector('#fullscreen'),f=document.querySelector('#game-frame'),l=document.querySelector('#loading');f.addEventListener('load',()=>{{l.hidden=true}},{{once:true}});b.hidden=!document.fullscreenEnabled;b.addEventListener('click',async()=>{{try{{if(document.fullscreenElement)await document.exitFullscreen();else await v.requestFullscreen()}}catch{{}}}});document.addEventListener('fullscreenchange',()=>{{b.textContent=document.fullscreenElement?'Exit fullscreen':'Fullscreen'}})</script></body></html>"""
-        frame_origin = f"{urlsplit(ASSET_ORIGIN).scheme}://{urlsplit(ASSET_ORIGIN).netloc}"
+        frame_origin = "http: https:" if game["hostType"] == "external" else f"{urlsplit(frame_url).scheme}://{urlsplit(frame_url).netloc}"
         csp = f"default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-{nonce}'; frame-src {frame_origin}; frame-ancestors 'self'; base-uri 'none'; form-action 'none'"
         self._send_bytes(body.encode(), content_type="text/html; charset=utf-8", headers=[("Content-Security-Policy", csp)])
 
@@ -633,7 +634,7 @@ aside button{{color:#f1efe7;background:transparent;border-color:#f1efe7}}section
 class GameAssetHandler(BaseHTTPRequestHandler):
     """Published hosted-game files on an origin that never receives admin cookies."""
 
-    server_version = "Room310GameAssets/1.4"
+    server_version = "Room310GameAssets/1.5"
 
     def _serve(self, include_body: bool) -> None:
         try:

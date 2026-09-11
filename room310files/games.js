@@ -43,7 +43,7 @@
     const year = document.createElement("span");
     year.textContent = game.year;
     const type = document.createElement("span");
-    type.textContent = game.hostType === "external" ? "External game" : "Room310 player";
+    type.textContent = game.hostType === "hosted" ? "Hosted ZIP" : game.hostType === "embed" ? "Pasted HTML" : "Linked game";
     meta.append(year, type);
 
     const title = document.createElement("h2");
@@ -62,10 +62,6 @@
       });
     } else {
       link.href = game.playUrl;
-      if (game.hostType === "external") {
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-      }
       link.textContent = "Play game →";
     }
 

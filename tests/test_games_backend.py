@@ -71,7 +71,7 @@ class GamesSchemaMigrationTests(unittest.TestCase):
 
             service = GamesService(root, "http://127.0.0.1:8001")
             public = service.list_public_games()
-            self.assertEqual([(game["slug"], game["playUrl"]) for game in public], [("legacy-external", "https://example.com/legacy")])
+            self.assertEqual([(game["slug"], game["playUrl"]) for game in public], [("legacy-external", "/games/play/legacy-external/")])
             embedded = service.create_game(migration_embed_payload("Migrated Embed", "published"), 1)
             self.assertEqual(embedded["hostType"], "embed")
 
@@ -184,7 +184,14 @@ class GamesHTTPTests(unittest.TestCase):
         status, _, body = self.request("GET", "/api/games")
         public = next(item for item in json.loads(body)["games"] if item["slug"] == game["slug"])
         self.assertEqual(public["title"], "Space Potato Deluxe")
-        self.assertEqual(public["playUrl"], "https://example.com/play")
+        self.assertEqual(public["playUrl"], f"/games/play/{game['slug']}/")
+        self.assertEqual(public["externalUrl"], "https://example.com/play")
+        status, _, shell = self.request("GET", public["playUrl"])
+        self.assertEqual(status, 200)
+        self.assertIn(b'https://example.com/play', shell)
+        self.assertIn(b'Linked game', shell)
+        self.assertIn(b'sandbox="allow-scripts allow-pointer-lock"', shell)
+        self.assertNotIn(b"allow-same-origin", shell)
 
         status, _, _ = self.request("DELETE", f"/api/admin/games/{game['id']}", headers=self.admin_headers(cookie, csrf))
         self.assertEqual(status, 200)
@@ -232,7 +239,7 @@ class GamesHTTPTests(unittest.TestCase):
 
         status, headers, shell = self.request("GET", public["playUrl"])
         self.assertEqual(status, 200)
-        self.assertIn(b"Embedded game", shell)
+        self.assertIn(b"Embedded HTML", shell)
         self.assertIn(b"Fullscreen", shell)
         self.assertIn(b'sandbox="allow-scripts allow-pointer-lock"', shell)
         self.assertNotIn(b"allow-same-origin", shell)

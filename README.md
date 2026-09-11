@@ -1,6 +1,6 @@
 # Room310
 
-Room310 is an HTML/CSS/JavaScript learning site. Version 1.4 adds administrator-managed Embedded HTML games, a responsive opaque-origin game player, and live Supabase-backed publishing. It retains the featured Apex Trails embed, the deep learning and PyTorch course, assignment formatting and syntax highlighting, the Extended Archives notice, and compiler fixes. The held admin-request form remains unpublished.
+Room310 is an HTML/CSS/JavaScript learning site. Version 1.5 runs linked games, pasted HTML, and uploaded web-game ZIPs inside the responsive Room310 player. ZIP assets stay in private Supabase Storage and are served through a CSP-sandboxed asset function. It retains the featured Apex Trails embed, the deep learning and PyTorch course, assignment formatting and syntax highlighting, the Extended Archives notice, and compiler fixes. The held admin-request form remains unpublished.
 
 ## Deep learning course
 

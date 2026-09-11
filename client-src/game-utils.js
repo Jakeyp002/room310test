@@ -40,7 +40,7 @@ export function gameFromRow(row) {
 }
 
 export function gamePlayUrl(game) {
-  return game.hostType === "external" ? game.externalUrl : `/games/play/${encodeURIComponent(game.slug)}/`;
+  return `/games/play/${encodeURIComponent(game.slug)}/`;
 }
 
 export const MAX_EMBED_HTML_BYTES = 512 * 1024;

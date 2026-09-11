@@ -47,8 +47,9 @@ test("embedded game rows retain their source and use the Room310 player", () => 
   assert.equal(gamePlayUrl(game), "/games/play/canvas-quest/");
 });
 
-test("external games keep their original destination", () => {
-  assert.equal(gamePlayUrl({ hostType: "external", externalUrl: "https://example.com/play", slug: "example" }), "https://example.com/play");
+test("external and hosted games open in the Room310 player", () => {
+  assert.equal(gamePlayUrl({ hostType: "external", externalUrl: "https://example.com/play", slug: "example" }), "/games/play/example/");
+  assert.equal(gamePlayUrl({ hostType: "hosted", slug: "zip-game" }), "/games/play/zip-game/");
 });
 
 test("embedded HTML validation rejects empty and oversized documents", () => {

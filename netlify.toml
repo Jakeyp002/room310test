@@ -44,6 +44,12 @@
   to = "/game.html"
   status = 200
 
+[[redirects]]
+  from = "/game-assets/*"
+  to = "/.netlify/functions/game-asset?asset=:splat"
+  status = 200
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]

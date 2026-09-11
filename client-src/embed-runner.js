@@ -19,8 +19,27 @@ export function createSandboxedGameFrame(ownerDocument, html, title = "Embedded 
   return frame;
 }
 
+export function createSandboxedUrlFrame(ownerDocument, url, title = "Game") {
+  const frame = ownerDocument.createElement("iframe");
+  frame.className = "embedded-game-frame";
+  frame.title = title;
+  frame.setAttribute("sandbox", GAME_SANDBOX);
+  frame.setAttribute("allow", GAME_FEATURES);
+  frame.setAttribute("referrerpolicy", "no-referrer");
+  frame.setAttribute("scrolling", "no");
+  frame.src = url;
+  return frame;
+}
+
 export function renderSandboxedGame(container, html, title, onLoad) {
   const frame = createSandboxedGameFrame(container.ownerDocument, html, title);
+  if (onLoad) frame.addEventListener("load", onLoad, { once: true });
+  container.replaceChildren(frame);
+  return frame;
+}
+
+export function renderSandboxedUrl(container, url, title, onLoad) {
+  const frame = createSandboxedUrlFrame(container.ownerDocument, url, title);
   if (onLoad) frame.addEventListener("load", onLoad, { once: true });
   container.replaceChildren(frame);
   return frame;

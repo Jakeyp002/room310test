@@ -200,8 +200,9 @@ function toggleHostFields() {
   form.elements.externalUrl.required = hostType.value === "external";
   form.elements.embedHtml.required = hostType.value === "embed";
   const hosted = hostType.value === "hosted";
-  statusSelect.querySelector('[value="published"]').disabled = hosted;
-  if (hosted) statusSelect.value = "draft";
+  const hostedReady = Boolean(editing?.hostType === "hosted" && editing.bundleReady);
+  statusSelect.querySelector('[value="published"]').disabled = hosted && !hostedReady;
+  if (hosted && !hostedReady) statusSelect.value = "draft";
 }
 
 function clearEmbedPreview() {
@@ -277,7 +278,7 @@ function gameCard(game) {
   const type = document.createElement("span");
   type.textContent = game.hostType === "hosted"
     ? (game.bundleReady ? "Hosted · stored" : "Hosted · ZIP needed")
-    : game.hostType === "embed" ? "Embedded HTML" : "External";
+    : game.hostType === "embed" ? "Pasted HTML" : "Linked game";
   meta.append(status, type);
 
   const title = document.createElement("h3");
@@ -295,9 +296,9 @@ function gameCard(game) {
   const publish = Object.assign(document.createElement("button"), {
     type: "button",
     textContent: game.status === "published" ? "Unpublish" : "Publish",
-    disabled: game.hostType === "hosted"
+    disabled: game.hostType === "hosted" && !game.bundleReady
   });
-  if (game.hostType === "hosted") publish.title = "Hosted ZIP publishing arrives with the isolated runner.";
+  if (game.hostType === "hosted" && !game.bundleReady) publish.title = "Upload a ZIP before publishing this game.";
   publish.addEventListener("click", async () => {
     publish.disabled = true;
     try {
@@ -400,12 +401,14 @@ form.addEventListener("submit", async (event) => {
   showFormMessage("Saving game…", "working");
 
   try {
+    const bundle = form.elements.bundle.files[0];
+    const wantedStatus = statusSelect.value;
     const payload = {
       title: form.elements.title.value.trim(),
       description: form.elements.description.value.trim(),
       year: Number(form.elements.year.value),
       host_type: hostType.value,
-      status: hostType.value === "hosted" ? "draft" : statusSelect.value,
+      status: hostType.value === "hosted" && (bundle || !editing?.bundleReady) ? "draft" : wantedStatus,
       external_url: hostType.value === "external" ? form.elements.externalUrl.value.trim() : null,
       embed_html: hostType.value === "embed" ? validateEmbedHtml(form.elements.embedHtml.value) : null,
       bundle_path: hostType.value === "hosted" ? editing?.bundlePath || null : null
@@ -420,7 +423,6 @@ form.addEventListener("submit", async (event) => {
 
     let row = data;
     const thumbnail = croppedThumbnail;
-    const bundle = form.elements.bundle.files[0];
     if (thumbnail) {
       showFormMessage("Uploading thumbnail…", "working");
       row = await uploadThumbnail(row, thumbnail);
@@ -428,6 +430,16 @@ form.addEventListener("submit", async (event) => {
     if (bundle) {
       showFormMessage("Storing hosted-game ZIP…", "working");
       row = await uploadBundle(row, bundle);
+    }
+    if (hostType.value === "hosted" && bundle && wantedStatus === "published") {
+      const { data: published, error: publishError } = await supabase
+        .from("games")
+        .update({ status: "published" })
+        .eq("id", row.id)
+        .select()
+        .single();
+      if (publishError) throw publishError;
+      row = published;
     }
     if (editing?.bundlePath && hostType.value !== "hosted") {
       await removeObject("game-bundles", editing.bundlePath).catch(() => {});

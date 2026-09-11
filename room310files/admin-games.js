@@ -135,7 +135,7 @@
     const type = document.createElement("span");
     type.textContent = game.hostType === "hosted"
       ? (game.bundleReady ? "Hosted · ready" : "Hosted · ZIP needed")
-      : game.hostType === "embed" ? "Embedded HTML" : "External";
+      : game.hostType === "embed" ? "Pasted HTML" : "Linked game";
     meta.append(status, type);
     const title = document.createElement("h3");
     title.textContent = game.title;

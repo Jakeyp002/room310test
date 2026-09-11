@@ -23,7 +23,7 @@ from pathlib import Path, PurePosixPath
 from urllib.parse import urlsplit
 
 
-APP_VERSION = "1.4"
+APP_VERSION = "1.5"
 SESSION_COOKIE = "room310_session"
 CSRF_COOKIE = "room310_csrf"
 MAX_EMBED_HTML_BYTES = 512 * 1024
@@ -445,10 +445,10 @@ class GamesService:
         return [self.admin_game(row) for row in rows]
 
     def public_game(self, row: sqlite3.Row) -> dict:
-        play_url = row["external_url"] if row["host_type"] == "external" else f"/games/play/{row['slug']}/"
+        play_url = f"/games/play/{row['slug']}/"
         return {
             "title": row["title"], "slug": row["slug"], "description": row["description"], "year": row["year"],
-            "hostType": row["host_type"], "playUrl": play_url,
+            "hostType": row["host_type"], "playUrl": play_url, "externalUrl": row["external_url"] or "",
             "thumbnailUrl": f"/media/games/{row['slug']}/thumbnail" if row["thumbnail_filename"] else None,
             "dateAdded": row["created_at"], "dateUpdated": row["updated_at"],
         }
