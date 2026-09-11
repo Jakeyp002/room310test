@@ -13,13 +13,12 @@
       <header class="game-player-header">
         <a class="game-player-back" href="/games.html">← Games</a>
         <a class="logo" href="/index.html" aria-label="Room310 home">ROOM<span>310</span></a>
-        <span class="game-player-version">v1.5</span>
+        <span class="game-player-version">v1.6</span>
       </header>
       <section class="game-player-info" aria-labelledby="game-title">
         <div class="game-player-meta"><span id="game-year">—</span><span id="game-source">Game</span></div>
         <h1 id="game-title">Loading game…</h1>
         <p id="game-description">Room310 is preparing the isolated game player.</p>
-        <a id="game-open-external" class="game-player-external" href="#" target="_blank" rel="noopener noreferrer" hidden>Open separately ↗</a>
         <button id="game-fullscreen" type="button">Fullscreen</button>
       </section>
       <section class="game-player-stage" aria-label="Game viewport">
@@ -29,6 +28,15 @@
           <strong>Starting game</strong>
           <small>Loading in a secure sandbox…</small>
         </div>
+        <div id="game-external-choice" class="game-player-state game-external-choice" hidden>
+          <strong>Choose how to play</strong>
+          <p>Play on the game's original website, or try Room310's experimental online-game player.</p>
+          <div class="game-external-actions">
+            <a id="game-play-external" class="game-play-external" href="#" target="_blank" rel="noopener noreferrer">Play Game ↗</a>
+            <button id="game-open-experimental" class="game-open-experimental" type="button">Open in Room310 (experimental)</button>
+          </div>
+          <small>The experimental option does not work for every online game.</small>
+        </div>
         <div id="game-error" class="game-player-state game-player-error" role="alert" hidden>
           <strong>Game unavailable</strong>
           <p>This game could not be loaded.</p>
@@ -36,7 +44,7 @@
         </div>
       </section>
     </main>
-    <script src="/supabase-config.js?v=1.5"></script>
-    <script src="/game-player.js?v=1.5"></script>
+    <script src="/supabase-config.js?v=1.6"></script>
+    <script src="/game-player.js?v=1.6"></script>
   </body>
 </html>

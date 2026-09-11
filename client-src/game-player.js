@@ -7,7 +7,10 @@ const viewport = document.querySelector("#game-viewport");
 const loading = document.querySelector("#game-loading");
 const errorPanel = document.querySelector("#game-error");
 const fullscreen = document.querySelector("#game-fullscreen");
-const externalFallback = document.querySelector("#game-open-external");
+const externalChoice = document.querySelector("#game-external-choice");
+const playExternal = document.querySelector("#game-play-external");
+const openExperimental = document.querySelector("#game-open-experimental");
+let externalGame = null;
 
 function slugFromPath() {
   const match = location.pathname.match(/^\/games\/play\/([a-z0-9][a-z0-9-]{0,69})\/?$/);
@@ -16,9 +19,34 @@ function slugFromPath() {
 
 function showError(text) {
   loading.hidden = true;
+  externalChoice.hidden = true;
+  fullscreen.hidden = true;
   errorPanel.querySelector("p").textContent = text;
   errorPanel.hidden = false;
   shell.dataset.state = "error";
+}
+
+function showExternalChoice(game) {
+  externalGame = game;
+  playExternal.href = game.externalUrl;
+  loading.hidden = true;
+  externalChoice.hidden = false;
+  fullscreen.hidden = true;
+  shell.dataset.state = "choice";
+}
+
+function openExternalExperiment() {
+  if (!externalGame) return;
+  externalChoice.hidden = true;
+  loading.querySelector("strong").textContent = "Opening experimental player";
+  loading.querySelector("small").textContent = "Some online games block embedded play…";
+  loading.hidden = false;
+  openExperimental.disabled = true;
+  renderSandboxedUrl(viewport, externalGame.externalUrl, externalGame.title, () => {
+    loading.hidden = true;
+    fullscreen.hidden = !document.fullscreenEnabled;
+    shell.dataset.state = "ready";
+  });
 }
 
 async function openFullscreen() {
@@ -59,24 +87,22 @@ async function loadGame() {
 
   const ready = () => {
     loading.hidden = true;
+    fullscreen.hidden = !document.fullscreenEnabled;
     shell.dataset.state = "ready";
   };
   if (game.hostType === "embed") {
     renderSandboxedGame(viewport, game.embedHtml, game.title, ready);
+  } else if (game.hostType === "external") {
+    showExternalChoice(game);
   } else {
-    const url = game.hostType === "hosted"
-      ? `/game-assets/${encodeURIComponent(game.slug)}/index.html?v=${encodeURIComponent(game.updatedAt || "1")}`
-      : game.externalUrl;
+    const url = `/game-assets/${encodeURIComponent(game.slug)}/index.html?v=${encodeURIComponent(game.updatedAt || "1")}`;
     renderSandboxedUrl(viewport, url, game.title, ready);
-    if (game.hostType === "external") {
-      externalFallback.href = game.externalUrl;
-      externalFallback.hidden = false;
-    }
   }
 }
 
-fullscreen.hidden = !document.fullscreenEnabled;
+fullscreen.hidden = true;
 fullscreen.addEventListener("click", openFullscreen);
+openExperimental.addEventListener("click", openExternalExperiment);
 document.addEventListener("fullscreenchange", () => {
   fullscreen.textContent = document.fullscreenElement ? "Exit fullscreen" : "Fullscreen";
 });

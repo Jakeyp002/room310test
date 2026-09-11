@@ -59,10 +59,29 @@ test("linked and hosted game URLs use the same opaque-origin sandbox", () => {
   assert.equal(frame.getAttribute("referrerpolicy"), "no-referrer");
 });
 
-test("the production player supports HTML, hosted ZIP, and linked games", async () => {
+test("the production player supports HTML, hosted ZIP, and opt-in linked games", async () => {
   const source = await readFile(new URL("../client-src/game-player.js", import.meta.url), "utf8");
   assert.match(source, /game\.hostType === "embed"/);
   assert.match(source, /game\.hostType === "hosted"/);
   assert.match(source, /\/game-assets\/\$\{encodeURIComponent\(game\.slug\)\}/);
-  assert.match(source, /externalFallback\.href = game\.externalUrl/);
+  assert.match(source, /showExternalChoice\(game\)/);
+  assert.match(source, /playExternal\.href = game\.externalUrl/);
+  assert.match(source, /openExperimental\.addEventListener\("click", openExternalExperiment\)/);
+  const choiceBranch = source.match(/else if \(game\.hostType === "external"\) \{([\s\S]*?)\n  \} else \{/);
+  assert.ok(choiceBranch);
+  assert.doesNotMatch(choiceBranch[1], /renderSandboxedUrl/);
+});
+
+test("linked games present the reliable launch and experimental Room310 choices", async () => {
+  const [html, css] = await Promise.all([
+    readFile(new URL("../room310files/game.html", import.meta.url), "utf8"),
+    readFile(new URL("../room310files/style.css", import.meta.url), "utf8")
+  ]);
+
+  assert.match(html, /id="game-play-external"[^>]*target="_blank"[^>]*rel="noopener noreferrer"[^>]*>Play Game/);
+  assert.match(html, /id="game-open-experimental"[^>]*>Open in Room310 \(experimental\)<\/button>/);
+  assert.match(html, /does not work for every online game/);
+  assert.match(css, /\.game-play-external[^}]*background: var\(--accent\)/s);
+  assert.match(css, /\.game-open-experimental[^}]*background: #b72f25/s);
+  assert.match(css, /@media \(max-width: 760px\)[\s\S]*\.game-external-actions \{ grid-template-columns: 1fr;/);
 });

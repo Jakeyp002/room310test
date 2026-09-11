@@ -190,7 +190,11 @@ class GamesHTTPTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertIn(b'https://example.com/play', shell)
         self.assertIn(b'Linked game', shell)
-        self.assertIn(b'sandbox="allow-scripts allow-pointer-lock"', shell)
+        self.assertIn(b'Play Game', shell)
+        self.assertIn(b'Open in Room310 (experimental)', shell)
+        self.assertNotIn(b'<iframe id="game-frame"', shell)
+        self.assertIn(b"document.createElement('iframe')", shell)
+        self.assertIn(b"setAttribute('sandbox','allow-scripts allow-pointer-lock')", shell)
         self.assertNotIn(b"allow-same-origin", shell)
 
         status, _, _ = self.request("DELETE", f"/api/admin/games/{game['id']}", headers=self.admin_headers(cookie, csrf))

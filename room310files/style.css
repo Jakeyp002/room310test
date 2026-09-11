@@ -1353,8 +1353,6 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
 .game-player-meta { display: flex; justify-content: space-between; gap: 15px; color: var(--accent); font: 10px "Courier New", monospace; text-transform: uppercase; }
 .game-player-info h1 { display: -webkit-box; max-height: 3.4em; margin: auto 0 14px; overflow: hidden; font-size: clamp(42px, 5vw, 76px); line-height: 0.84; letter-spacing: -0.065em; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 4; }
 .game-player-info p { display: -webkit-box; max-height: 8.5em; margin: 0 0 24px; overflow: hidden; color: #bdbbb2; font-size: 15px; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 6; }
-.game-player-external { width: 100%; margin: 0 0 10px; padding: 11px 14px; border: 1px solid #77776f; color: var(--paper); font: 700 10px "Courier New", monospace; text-align: center; text-transform: uppercase; }
-.game-player-external:hover, .game-player-external:focus-visible { border-color: var(--accent); color: var(--accent); }
 .game-player-info button { min-height: 44px; padding: 0 14px; border: 1px solid var(--paper); color: var(--paper); background: transparent; font: 700 10px "Courier New", monospace; text-transform: uppercase; cursor: pointer; }
 .game-player-info button:hover, .game-player-info button:focus-visible { border-color: var(--accent); color: var(--ink); background: var(--accent); }
 .game-player-stage { position: relative; min-width: 0; min-height: 0; padding: 14px; overflow: hidden; background: #0b0b0a; }
@@ -1367,6 +1365,18 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
 .game-player-state small { color: #a8a69d; font: 10px "Courier New", monospace; text-transform: uppercase; }
 .game-player-state p { max-width: 450px; margin: 0; color: #c4c2b9; line-height: 1.45; }
 .game-player-state a { margin-top: 8px; padding: 10px 12px; border: 1px solid var(--accent); color: var(--ink); background: var(--accent); font: 700 10px "Courier New", monospace; text-transform: uppercase; }
+.game-external-choice { padding: clamp(24px, 5vw, 70px); }
+.game-external-choice > p { max-width: 580px; }
+.game-external-actions { width: min(100%, 620px); display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.game-external-actions .game-play-external,
+.game-external-actions .game-open-experimental { display: grid; place-items: center; min-height: 58px; margin: 0; padding: 12px 16px; border: 1px solid; font: 700 11px "Courier New", monospace; line-height: 1.25; text-align: center; text-transform: uppercase; cursor: pointer; }
+.game-external-actions .game-play-external { border-color: var(--accent); color: var(--ink); background: var(--accent); }
+.game-external-actions .game-open-experimental { border-color: #f05a49; color: var(--paper); background: #b72f25; }
+.game-external-actions .game-play-external:hover,
+.game-external-actions .game-play-external:focus-visible { color: var(--accent); background: transparent; }
+.game-external-actions .game-open-experimental:hover,
+.game-external-actions .game-open-experimental:focus-visible { border-color: #ff8779; background: #d13a2e; }
+.game-external-choice > small { max-width: 620px; color: #d7a29b; }
 .game-loader { width: 34px; height: 34px; border: 2px solid #4d4d45; border-top-color: var(--accent); border-radius: 50%; animation: game-loader-spin 0.8s linear infinite; }
 @keyframes game-loader-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .game-loader { animation: none; border-color: var(--accent); } }
@@ -1527,6 +1537,9 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
   .game-player-info button { min-height: 36px; }
   .game-player-stage { padding: 8px; }
   .game-player-state { inset: 8px; }
+  .game-external-actions { grid-template-columns: 1fr; gap: 8px; margin-top: 5px; }
+  .game-external-actions .game-play-external,
+  .game-external-actions .game-open-experimental { min-height: 42px; padding: 8px 12px; }
   #embed-preview-viewport { min-height: 200px; }
 }
 
