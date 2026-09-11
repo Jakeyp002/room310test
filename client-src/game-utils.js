@@ -30,12 +30,29 @@ export function gameFromRow(row) {
     status: row.status,
     hostType: row.host_type,
     externalUrl: row.external_url || "",
+    embedHtml: row.embed_html || "",
     thumbnailPath: row.thumbnail_path || "",
     bundlePath: row.bundle_path || "",
     bundleReady: Boolean(row.bundle_path),
     createdAt: row.created_at,
     updatedAt: row.updated_at
   };
+}
+
+export function gamePlayUrl(game) {
+  return game.hostType === "external" ? game.externalUrl : `/games/play/${encodeURIComponent(game.slug)}/`;
+}
+
+export const MAX_EMBED_HTML_BYTES = 512 * 1024;
+
+export function validateEmbedHtml(value) {
+  const html = String(value || "");
+  if (!html.trim()) throw new Error("Paste the HTML or embed code for this game.");
+  if (html.length > 500_000 || new TextEncoder().encode(html).byteLength > MAX_EMBED_HTML_BYTES) {
+    throw new Error("Embedded HTML must be 512 KB or smaller.");
+  }
+  if (html.includes("\0")) throw new Error("Embedded HTML cannot contain null characters.");
+  return html;
 }
 
 export function thumbnailExtension(file) {

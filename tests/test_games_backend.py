@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 import json
+import sqlite3
 import tempfile
 import threading
 import unittest
@@ -39,6 +40,46 @@ def multipart(field: str, filename: str, content_type: str, data: bytes) -> tupl
     return body, f"multipart/form-data; boundary={boundary}"
 
 
+class GamesSchemaMigrationTests(unittest.TestCase):
+    def test_existing_external_games_survive_the_local_embed_schema_upgrade(self) -> None:
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name)
+            database = sqlite3.connect(root / "room310.sqlite3")
+            database.executescript(
+                """
+                PRAGMA foreign_keys = ON;
+                CREATE TABLE users (
+                    id INTEGER PRIMARY KEY, username TEXT NOT NULL UNIQUE, display_name TEXT NOT NULL,
+                    password_hash TEXT NOT NULL, role TEXT NOT NULL, approved INTEGER NOT NULL,
+                    created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+                );
+                CREATE TABLE games (
+                    id INTEGER PRIMARY KEY, title TEXT NOT NULL, slug TEXT NOT NULL UNIQUE,
+                    description TEXT NOT NULL, year INTEGER NOT NULL, thumbnail_filename TEXT,
+                    status TEXT NOT NULL CHECK(status IN ('draft', 'published')),
+                    host_type TEXT NOT NULL CHECK(host_type IN ('external', 'hosted')),
+                    external_url TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+                    created_by INTEGER NOT NULL REFERENCES users(id), updated_by INTEGER NOT NULL REFERENCES users(id)
+                );
+                CREATE INDEX games_public_order ON games(status, year DESC, created_at DESC);
+                INSERT INTO users VALUES (1, 'legacy-admin', 'Legacy Admin', 'unused', 'admin', 1, '2026-01-01', '2026-01-01');
+                INSERT INTO games VALUES (1, 'Legacy External', 'legacy-external', 'Existing game', 2025, NULL, 'published', 'external', 'https://example.com/legacy', '2026-01-01', '2026-01-01', 1, 1);
+                """
+            )
+            database.commit()
+            database.close()
+
+            service = GamesService(root, "http://127.0.0.1:8001")
+            public = service.list_public_games()
+            self.assertEqual([(game["slug"], game["playUrl"]) for game in public], [("legacy-external", "https://example.com/legacy")])
+            embedded = service.create_game(migration_embed_payload("Migrated Embed", "published"), 1)
+            self.assertEqual(embedded["hostType"], "embed")
+
+
+def migration_embed_payload(title: str, status: str = "draft") -> dict:
+    return {"title": title, "description": "Migration test", "year": 2026, "hostType": "embed", "externalUrl": "", "embedHtml": "<canvas></canvas>", "status": status}
+
+
 class GamesHTTPTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -54,6 +95,8 @@ class GamesHTTPTests(unittest.TestCase):
         cls.thread.start()
         cls.asset_server = run_server.ThreadingHTTPServer(("127.0.0.1", 0), run_server.GameAssetHandler)
         cls.asset_port = cls.asset_server.server_address[1]
+        run_server.ASSET_ORIGIN = f"http://127.0.0.1:{cls.asset_port}"
+        cls.service.asset_origin = run_server.ASSET_ORIGIN
         cls.asset_thread = threading.Thread(target=cls.asset_server.serve_forever, daemon=True)
         cls.asset_thread.start()
 
@@ -100,6 +143,10 @@ class GamesHTTPTests(unittest.TestCase):
     def hosted_payload(title: str, status: str = "draft") -> dict:
         return {"title": title, "description": "A tiny uploaded web game.", "year": 2026, "hostType": "hosted", "externalUrl": "", "status": status}
 
+    @staticmethod
+    def embedded_payload(title: str, status: str = "draft", embed_html: str = "<canvas id=game></canvas>") -> dict:
+        return {"title": title, "description": "A safely isolated embedded game.", "year": 2026, "hostType": "embed", "externalUrl": "", "embedHtml": embed_html, "status": status}
+
     def test_unauthenticated_and_unapproved_users_cannot_write(self) -> None:
         payload = json.dumps(self.external_payload("Forbidden game"))
         status, _, _ = self.request("POST", "/api/admin/games", payload, {"Content-Type": "application/json", "Origin": run_server.PUBLIC_ORIGIN})
@@ -108,6 +155,15 @@ class GamesHTTPTests(unittest.TestCase):
         self.assertFalse(login["user"]["approved"])
         status, _, _ = self.request("POST", "/api/admin/games", payload, self.admin_headers(cookie, csrf))
         self.assertEqual(status, 403)
+
+        manager_cookie, manager_csrf, _ = self.login("test-admin")
+        _, _, body = self.request("POST", "/api/admin/games", payload, self.admin_headers(manager_cookie, manager_csrf))
+        game = json.loads(body)["game"]
+        status, _, _ = self.request(
+            "PUT", f"/api/admin/games/{game['id']}", payload, self.admin_headers(cookie, csrf)
+        )
+        self.assertEqual(status, 403)
+        self.request("DELETE", f"/api/admin/games/{game['id']}", headers=self.admin_headers(manager_cookie, manager_csrf))
 
     def test_approved_admin_external_game_crud_and_public_visibility(self) -> None:
         cookie, csrf, _ = self.login("test-admin")
@@ -148,6 +204,48 @@ class GamesHTTPTests(unittest.TestCase):
         self.assertEqual(status, 400)
         for game in created:
             self.request("DELETE", f"/api/admin/games/{game['id']}", headers=self.admin_headers(cookie, csrf))
+
+    def test_embedded_game_create_edit_publish_and_isolated_rendering(self) -> None:
+        cookie, csrf, _ = self.login("test-admin")
+        malicious = '<script>parent.document.body.dataset.pwned="yes";top.location="https://evil.test"</script><canvas id="game"></canvas>'
+        draft = self.embedded_payload("Sandbox Quest", embed_html=malicious)
+        status, _, body = self.request("POST", "/api/admin/games", json.dumps(draft), self.admin_headers(cookie, csrf))
+        self.assertEqual(status, 201, body)
+        game = json.loads(body)["game"]
+        self.assertEqual(game["hostType"], "embed")
+        self.assertEqual(game["embedHtml"], malicious)
+
+        status, _, body = self.request("GET", "/api/games")
+        self.assertEqual(status, 200)
+        self.assertNotIn(game["slug"], [item["slug"] for item in json.loads(body)["games"]])
+
+        edited_html = malicious.replace("<canvas", "<style>canvas{display:block}</style><canvas")
+        published = self.embedded_payload("Sandbox Quest Edited", "published", edited_html)
+        status, _, body = self.request("PUT", f"/api/admin/games/{game['id']}", json.dumps(published), self.admin_headers(cookie, csrf))
+        self.assertEqual(status, 200, body)
+        self.assertEqual(json.loads(body)["game"]["embedHtml"], edited_html)
+
+        status, _, body = self.request("GET", "/api/games")
+        public = next(item for item in json.loads(body)["games"] if item["slug"] == game["slug"])
+        self.assertEqual(public["playUrl"], f"/games/play/{game['slug']}/")
+        self.assertNotIn("embedHtml", public)
+
+        status, headers, shell = self.request("GET", public["playUrl"])
+        self.assertEqual(status, 200)
+        self.assertIn(b"Embedded game", shell)
+        self.assertIn(b"Fullscreen", shell)
+        self.assertIn(b'sandbox="allow-scripts allow-pointer-lock"', shell)
+        self.assertNotIn(b"allow-same-origin", shell)
+        self.assertNotIn(b"allow-top-navigation", shell)
+        self.assertNotIn(b"parent.document", shell)
+
+        status, headers, asset = self.request("GET", f"/embedded/{game['slug']}/index.html", asset=True)
+        self.assertEqual(status, 200)
+        self.assertIn(b"parent.document", asset)
+        header_map = {name.lower(): value for name, value in headers}
+        self.assertIn("frame-ancestors", header_map["content-security-policy"])
+        self.assertNotIn("set-cookie", header_map)
+        self.request("DELETE", f"/api/admin/games/{game['id']}", headers=self.admin_headers(cookie, csrf))
 
     def test_hosted_bundle_thumbnail_publication_and_asset_isolation(self) -> None:
         cookie, csrf, _ = self.login("test-admin")

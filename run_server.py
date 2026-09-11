@@ -13,6 +13,7 @@ import mimetypes
 import os
 import re
 import resource
+import secrets
 import signal
 import subprocess
 import sys
@@ -322,7 +323,7 @@ def execute(language: str, code: str, user_input: str) -> dict:
 class Room310Handler(SimpleHTTPRequestHandler):
     """Main site, course runner, public catalog, and authenticated admin API."""
 
-    server_version = "Room310/0.6"
+    server_version = "Room310/1.4"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(SITE_ROOT), **kwargs)
@@ -425,22 +426,37 @@ class Room310Handler(SimpleHTTPRequestHandler):
 
     def _play_shell(self, slug: str) -> None:
         game = GAMES.get_public_game(slug)
-        if game["hostType"] != "hosted":
+        if game["hostType"] not in {"hosted", "embed"}:
             raise AppError("Game not found.", 404)
-        frame_url = f"{ASSET_ORIGIN}/{quote(slug)}/index.html"
+        frame_url = (
+            f"{ASSET_ORIGIN}/{quote(slug)}/index.html"
+            if game["hostType"] == "hosted"
+            else f"{ASSET_ORIGIN}/embedded/{quote(slug)}/index.html"
+        )
         title = html.escape(game["title"])
+        description = html.escape(game["description"])
+        source_label = "Hosted game" if game["hostType"] == "hosted" else "Embedded game"
+        sandbox = "allow-scripts allow-forms allow-modals allow-pointer-lock" if game["hostType"] == "hosted" else "allow-scripts allow-pointer-lock"
+        nonce = secrets.token_urlsafe(18)
         body = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title} · Room310 Games</title><style>
 *{{box-sizing:border-box}}html,body{{width:100%;height:100%;margin:0;overflow:hidden;background:#171714;color:#f1efe7;font-family:Arial,sans-serif}}
-body{{display:grid;grid-template-rows:48px minmax(0,1fr)}}header{{display:flex;align-items:center;gap:14px;padding:0 16px;border-bottom:1px solid #45453f}}
-a{{color:#171714;background:#dfff00;padding:8px 11px;text-decoration:none;font:700 11px 'Courier New',monospace;text-transform:uppercase}}
-strong{{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}small{{margin-left:auto;color:#dfff00;font:10px 'Courier New',monospace;text-transform:uppercase}}
-iframe{{display:block;width:100%;height:100%;border:0;background:#000}}
-</style></head><body><header><a href="/games.html">← Games</a><strong>{title}</strong><small>v{APP_VERSION}</small></header>
-<iframe src="{html.escape(frame_url, quote=True)}" title="{title}" sandbox="allow-scripts allow-forms allow-modals allow-pointer-lock" allow="fullscreen; gamepad" scrolling="no"></iframe></body></html>"""
+body{{height:100svh}}main{{width:100%;height:100%;display:grid;grid-template-columns:minmax(250px,320px) minmax(0,1fr);grid-template-rows:54px minmax(0,1fr);overflow:hidden}}
+header{{grid-column:1/-1;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;padding:0 16px;border-bottom:1px solid #45453f}}
+a,button{{color:#171714;background:#dfff00;padding:9px 11px;border:1px solid #dfff00;text-decoration:none;font:700 10px 'Courier New',monospace;text-transform:uppercase;cursor:pointer}}
+header strong{{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}}header small{{justify-self:end;color:#dfff00;font:10px 'Courier New',monospace;text-transform:uppercase}}
+aside{{min-height:0;display:flex;flex-direction:column;overflow:hidden;padding:28px 22px 22px;border-right:1px solid #45453f;background:#1d1d19}}aside small{{color:#dfff00;font:10px 'Courier New',monospace;text-transform:uppercase}}
+h1{{display:-webkit-box;max-height:3.4em;margin:auto 0 14px;overflow:hidden;font-size:clamp(42px,5vw,70px);line-height:.84;letter-spacing:-.06em;overflow-wrap:anywhere;-webkit-box-orient:vertical;-webkit-line-clamp:4}}p{{display:-webkit-box;max-height:8.5em;margin:0 0 22px;overflow:hidden;color:#bdbbb2;font-size:15px;line-height:1.45;-webkit-box-orient:vertical;-webkit-line-clamp:6}}
+aside button{{color:#f1efe7;background:transparent;border-color:#f1efe7}}section{{position:relative;min-width:0;min-height:0;padding:12px;background:#0b0b0a}}#viewport{{width:100%;height:100%;overflow:hidden;background:#000}}#viewport:fullscreen{{width:100vw;height:100vh}}iframe{{display:block;width:100%;height:100%;border:0;background:#000}}
+#loading{{position:absolute;inset:12px;display:grid;place-items:center;align-content:center;gap:8px;background:#10100e}}#loading[hidden]{{display:none}}#loading span{{width:32px;height:32px;border:2px solid #505049;border-top-color:#dfff00;border-radius:50%;animation:spin .8s linear infinite}}#loading small{{color:#aaa89f;font:10px 'Courier New',monospace;text-transform:uppercase}}@keyframes spin{{to{{transform:rotate(360deg)}}}}
+@media(max-width:720px){{main{{grid-template-columns:1fr;grid-template-rows:48px minmax(100px,23svh) minmax(0,1fr)}}header{{grid-column:1;padding:0 10px}}aside{{padding:10px 14px;border-right:0;border-bottom:1px solid #45453f}}h1{{max-height:1.7em;margin:auto 0 6px;font-size:30px;-webkit-line-clamp:2}}p{{margin:0 0 8px;font-size:12px;-webkit-line-clamp:2}}aside button{{min-height:30px;padding:5px 9px}}section{{padding:7px}}#loading{{inset:7px}}}}@media(prefers-reduced-motion:reduce){{#loading span{{animation:none;border-color:#dfff00}}}}
+</style></head><body><main><header><a href="/games.html">← Games</a><strong>{title}</strong><small>v{APP_VERSION}</small></header>
+<aside><small>{game['year']} · {source_label}</small><h1>{title}</h1><p>{description}</p><button id="fullscreen" type="button">Fullscreen</button></aside>
+<section><div id="viewport"><iframe id="game-frame" src="{html.escape(frame_url, quote=True)}" title="{title}" sandbox="{sandbox}" allow="fullscreen; gamepad" referrerpolicy="no-referrer" scrolling="no"></iframe></div><div id="loading" role="status"><span aria-hidden="true"></span><strong>Starting game</strong><small>Loading in a secure sandbox…</small></div></section></main>
+<script nonce="{nonce}">const v=document.querySelector('#viewport'),b=document.querySelector('#fullscreen'),f=document.querySelector('#game-frame'),l=document.querySelector('#loading');f.addEventListener('load',()=>{{l.hidden=true}},{{once:true}});b.hidden=!document.fullscreenEnabled;b.addEventListener('click',async()=>{{try{{if(document.fullscreenElement)await document.exitFullscreen();else await v.requestFullscreen()}}catch{{}}}});document.addEventListener('fullscreenchange',()=>{{b.textContent=document.fullscreenElement?'Exit fullscreen':'Fullscreen'}})</script></body></html>"""
         frame_origin = f"{urlsplit(ASSET_ORIGIN).scheme}://{urlsplit(ASSET_ORIGIN).netloc}"
-        csp = f"default-src 'none'; style-src 'unsafe-inline'; frame-src {frame_origin}; frame-ancestors 'self'; base-uri 'none'; form-action 'none'"
+        csp = f"default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-{nonce}'; frame-src {frame_origin}; frame-ancestors 'self'; base-uri 'none'; form-action 'none'"
         self._send_bytes(body.encode(), content_type="text/html; charset=utf-8", headers=[("Content-Security-Policy", csp)])
 
     def do_GET(self) -> None:
@@ -499,7 +515,7 @@ iframe{{display:block;width:100%;height:100%;border:0;background:#000}}
                     self.send_header("Location", "/admin/login")
                     self.end_headers()
                     return
-                self._serve_site_file("admin-games.html", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; base-uri 'none'; form-action 'self'; frame-ancestors 'none'")
+                self._serve_site_file("admin-games.html", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; frame-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'")
                 return
             super().do_GET()
         except Exception as error:
@@ -617,13 +633,24 @@ iframe{{display:block;width:100%;height:100%;border:0;background:#000}}
 class GameAssetHandler(BaseHTTPRequestHandler):
     """Published hosted-game files on an origin that never receives admin cookies."""
 
-    server_version = "Room310GameAssets/0.6"
+    server_version = "Room310GameAssets/1.4"
 
     def _serve(self, include_body: bool) -> None:
         try:
-            path = GAMES.asset_path(unquote(urlsplit(self.path).path))
-            content_type = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
-            data = path.read_bytes()
+            request_path = unquote(urlsplit(self.path).path)
+            embedded = re.fullmatch(r"/embedded/([a-z0-9][a-z0-9-]{0,79})/(?:index[.]html)?", request_path)
+            if embedded:
+                source = GAMES.embed_html_for_public(embedded.group(1))
+                if not re.search(r"<!doctype\s+html|<html(?:\s|>)", source, re.I):
+                    source = f'<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{{width:100%;height:100%;margin:0;overflow:hidden;background:#000}}body>iframe:only-child{{display:block;width:100%!important;height:100%!important;border:0}}</style></head><body>{source}</body></html>'
+                data = source.encode("utf-8")
+                content_type = "text/html; charset=utf-8"
+                content_security_policy = f"default-src 'self' http: https: data: blob:; script-src 'self' http: https: data: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' http: https: 'unsafe-inline'; connect-src http: https: ws: wss:; frame-src http: https: data: blob:; frame-ancestors {PUBLIC_ORIGIN}; form-action 'none'; base-uri 'none'"
+            else:
+                path = GAMES.asset_path(request_path)
+                content_type = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
+                data = path.read_bytes()
+                content_security_policy = f"default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-ancestors {PUBLIC_ORIGIN}; base-uri 'none'"
             self.send_response(200)
             self.send_header("Content-Type", content_type)
             self.send_header("Content-Length", str(len(data)))
@@ -631,7 +658,8 @@ class GameAssetHandler(BaseHTTPRequestHandler):
             self.send_header("Referrer-Policy", "no-referrer")
             self.send_header("Cache-Control", "no-cache")
             self.send_header("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
-            self.send_header("Content-Security-Policy", f"default-src 'self' data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-ancestors {PUBLIC_ORIGIN}; base-uri 'none'")
+            self.send_header("Cross-Origin-Resource-Policy", "cross-origin")
+            self.send_header("Content-Security-Policy", content_security_policy)
             self.end_headers()
             if include_body:
                 self.wfile.write(data)

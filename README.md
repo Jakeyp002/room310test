@@ -1,6 +1,6 @@
 # Room310
 
-Room310 is an HTML/CSS/JavaScript learning site. Version 0.14 embeds Apex Trails as a featured, fullscreen-capable game with a restricted frame and separate-tab fallback. It retains the v0.13 deep learning and PyTorch course, v1.2 assignment formatting and syntax highlighting, the v1.1 Extended Archives notice, and v0.9 compiler fixes. The held admin-request form remains unpublished.
+Room310 is an HTML/CSS/JavaScript learning site. Version 1.4 adds administrator-managed Embedded HTML games, a responsive opaque-origin game player, and live Supabase-backed publishing. It retains the featured Apex Trails embed, the deep learning and PyTorch course, assignment formatting and syntax highlighting, the Extended Archives notice, and compiler fixes. The held admin-request form remains unpublished.
 
 ## Deep learning course
 
@@ -34,7 +34,7 @@ Imported assignment panels now use labeled code blocks instead of tab-padded par
 The production site is built from `room310files/` into `dist/`. Supabase supplies authentication, the Games database, and private thumbnail/ZIP storage.
 
 1. Install the pinned JavaScript dependencies with `npm ci`.
-2. Apply the SQL migrations in `supabase/migrations/` to the Supabase project. The current Room310 project has already been migrated.
+2. Apply the SQL migrations in `supabase/migrations/` to the Supabase project.
 3. In Netlify, add these environment variables for all deploy contexts:
 
    | Variable | Value |
@@ -138,6 +138,15 @@ Sign in at `/admin/games`, then select **Add game**.
 
 Embedded credentials, non-HTTP protocols, control characters, and malformed URLs are rejected.
 
+### Embedded HTML game
+
+1. Choose **Embedded HTML**.
+2. Paste an iframe snippet or a self-contained HTML document containing HTML, CSS, and JavaScript (512 KB maximum).
+3. Choose **Preview safely** to run it in the same restricted sandbox used by the public player.
+4. Save it as a draft, or choose **Published** to add it to the public Games catalog.
+
+Published embedded games open on the normal Room310 player page at `/games/play/[slug]/`. The saved source is assigned only to a sandboxed iframe's `srcdoc`; it is never assigned to Room310's DOM with `innerHTML`. The frame receives `allow-scripts` and `allow-pointer-lock`, plus the `fullscreen` and `gamepad` feature policy. It does not receive same-origin, top-navigation, popup, download, form-submission, or modal permissions, so the embedded document gets an opaque origin and cannot read Room310 authentication or page state. Published embed source is public data; never include secrets or private information in it.
+
 ### Hosted static game
 
 1. Choose **Hosted ZIP bundle**.
@@ -150,7 +159,7 @@ Replacing a bundle installs the new validated bundle atomically. Deleting a game
 
 ## Hosted-game isolation and limitations
 
-Uploaded HTML and JavaScript are untrusted. They are served from `ROOM310_ASSET_ORIGIN`, which must be a different origin from `ROOM310_PUBLIC_ORIGIN`, and displayed in a restricted iframe at `/games/play/[slug]/`. The iframe does not receive `allow-same-origin`, top-navigation, downloads, or popup permissions. The asset server has no admin/API routes and sets no cookies.
+Uploaded ZIP HTML and JavaScript are untrusted. They are served from `ROOM310_ASSET_ORIGIN`, which must be a different origin from `ROOM310_PUBLIC_ORIGIN`, and displayed in a restricted iframe at `/games/play/[slug]/`. Embedded HTML uses an opaque-origin `srcdoc` frame in production; the optional Python server also serves its published embedded document from the existing isolated asset origin. Neither frame receives `allow-same-origin`, top-navigation, downloads, or popup permissions. The asset server has no admin/API routes and sets no cookies.
 
 This hosted option is intentionally for self-contained static games. Its content security policy allows scripts, styles, media, fonts, WebAssembly, and same-asset-origin fetches, but blocks connections to other origins. Games requiring accounts, remote APIs, popups, downloads, server code, or looser browser permissions should be reviewed and hosted externally instead.
 

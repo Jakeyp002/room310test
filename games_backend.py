@@ -23,10 +23,11 @@ from pathlib import Path, PurePosixPath
 from urllib.parse import urlsplit
 
 
-APP_VERSION = "0.7"
+APP_VERSION = "1.4"
 SESSION_COOKIE = "room310_session"
 CSRF_COOKIE = "room310_csrf"
-MAX_JSON_BYTES = 128 * 1024
+MAX_EMBED_HTML_BYTES = 512 * 1024
+MAX_JSON_BYTES = 2 * 1024 * 1024
 MAX_THUMBNAIL_BYTES = 5 * 1024 * 1024
 MAX_BUNDLE_BYTES = 20 * 1024 * 1024
 MAX_BUNDLE_EXPANDED_BYTES = 80 * 1024 * 1024
@@ -191,8 +192,9 @@ class GamesService:
                     year INTEGER NOT NULL CHECK(year BETWEEN 1900 AND 2100),
                     thumbnail_filename TEXT,
                     status TEXT NOT NULL CHECK(status IN ('draft', 'published')),
-                    host_type TEXT NOT NULL CHECK(host_type IN ('external', 'hosted')),
+                    host_type TEXT NOT NULL CHECK(host_type IN ('external', 'embed', 'hosted')),
                     external_url TEXT,
+                    embed_html TEXT,
                     created_at TEXT NOT NULL,
                     updated_at TEXT NOT NULL,
                     created_by INTEGER NOT NULL REFERENCES users(id),
@@ -202,6 +204,42 @@ class GamesService:
                 CREATE INDEX IF NOT EXISTS sessions_expiry ON sessions(expires_at);
                 """
             )
+            games_sql = database.execute("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'games'").fetchone()["sql"]
+            if "embed_html" not in games_sql or "'embed'" not in games_sql:
+                database.executescript(
+                    """
+                    BEGIN IMMEDIATE;
+                    DROP INDEX IF EXISTS games_public_order;
+                    ALTER TABLE games RENAME TO games_before_embeds;
+                    CREATE TABLE games (
+                        id INTEGER PRIMARY KEY,
+                        title TEXT NOT NULL,
+                        slug TEXT NOT NULL UNIQUE,
+                        description TEXT NOT NULL,
+                        year INTEGER NOT NULL CHECK(year BETWEEN 1900 AND 2100),
+                        thumbnail_filename TEXT,
+                        status TEXT NOT NULL CHECK(status IN ('draft', 'published')),
+                        host_type TEXT NOT NULL CHECK(host_type IN ('external', 'embed', 'hosted')),
+                        external_url TEXT,
+                        embed_html TEXT,
+                        created_at TEXT NOT NULL,
+                        updated_at TEXT NOT NULL,
+                        created_by INTEGER NOT NULL REFERENCES users(id),
+                        updated_by INTEGER NOT NULL REFERENCES users(id)
+                    );
+                    INSERT INTO games (
+                        id, title, slug, description, year, thumbnail_filename, status, host_type,
+                        external_url, embed_html, created_at, updated_at, created_by, updated_by
+                    )
+                    SELECT
+                        id, title, slug, description, year, thumbnail_filename, status, host_type,
+                        external_url, NULL, created_at, updated_at, created_by, updated_by
+                    FROM games_before_embeds;
+                    DROP TABLE games_before_embeds;
+                    CREATE INDEX games_public_order ON games(status, year DESC, created_at DESC);
+                    COMMIT;
+                    """
+                )
 
     def create_user(self, username: str, password: str, role: str = "editor", approved: bool = False, display_name: str = "") -> dict:
         username = username.strip().lower()
@@ -343,13 +381,19 @@ class GamesService:
         host_type = str(payload.get("hostType", "external"))
         if status_value not in {"draft", "published"}:
             raise AppError("Status must be draft or published.")
-        if host_type not in {"external", "hosted"}:
-            raise AppError("Hosting type must be external or hosted.")
+        if host_type not in {"external", "embed", "hosted"}:
+            raise AppError("Game source must be external, embedded HTML, or hosted.")
         external_url = validate_external_url(str(payload.get("externalUrl", ""))) if host_type == "external" else None
+        embed_html = str(payload.get("embedHtml", "")) if host_type == "embed" else None
+        if host_type == "embed":
+            if not embed_html.strip():
+                raise AppError("Paste the HTML or embed code for this game.")
+            if "\x00" in embed_html or len(embed_html) > 500_000 or len(embed_html.encode("utf-8")) > MAX_EMBED_HTML_BYTES:
+                raise AppError("Embedded HTML must be 512 KB or smaller and cannot contain null characters.")
         if status_value == "published" and host_type == "hosted":
             if current is None or not self.bundle_ready(current["slug"]):
                 raise AppError("Upload a hosted game bundle before publishing this game.")
-        return {"title": title, "description": description, "year": year, "status": status_value, "host_type": host_type, "external_url": external_url}
+        return {"title": title, "description": description, "year": year, "status": status_value, "host_type": host_type, "external_url": external_url, "embed_html": embed_html}
 
     def create_game(self, payload: dict, user_id: int) -> dict:
         game = self.validate_game(payload)
@@ -357,8 +401,8 @@ class GamesService:
         now = utc_now()
         with self.connect() as database:
             cursor = database.execute(
-                """INSERT INTO games(title, slug, description, year, status, host_type, external_url, created_at, updated_at, created_by, updated_by)
-                   VALUES(:title,:slug,:description,:year,:status,:host_type,:external_url,:created_at,:updated_at,:created_by,:updated_by)""",
+                """INSERT INTO games(title, slug, description, year, status, host_type, external_url, embed_html, created_at, updated_at, created_by, updated_by)
+                   VALUES(:title,:slug,:description,:year,:status,:host_type,:external_url,:embed_html,:created_at,:updated_at,:created_by,:updated_by)""",
                 {**game, "created_at": now, "updated_at": now, "created_by": user_id, "updated_by": user_id},
             )
             game_id = cursor.lastrowid
@@ -373,7 +417,8 @@ class GamesService:
         with self.connect() as database:
             database.execute(
                 """UPDATE games SET title=:title, description=:description, year=:year, status=:status,
-                   host_type=:host_type, external_url=:external_url, updated_at=:updated_at, updated_by=:updated_by WHERE id=:id""",
+                   host_type=:host_type, external_url=:external_url, embed_html=:embed_html,
+                   updated_at=:updated_at, updated_by=:updated_by WHERE id=:id""",
                 {**game, "updated_at": utc_now(), "updated_by": user_id, "id": game_id},
             )
         return self.get_admin_game(game_id)
@@ -389,7 +434,7 @@ class GamesService:
         return {
             "id": row["id"], "title": row["title"], "slug": row["slug"], "description": row["description"],
             "year": row["year"], "status": row["status"], "hostType": row["host_type"],
-            "externalUrl": row["external_url"] or "", "hasThumbnail": bool(row["thumbnail_filename"]),
+            "externalUrl": row["external_url"] or "", "embedHtml": row["embed_html"] or "", "hasThumbnail": bool(row["thumbnail_filename"]),
             "thumbnailUrl": f"/api/admin/games/{row['id']}/thumbnail" if row["thumbnail_filename"] else None,
             "bundleReady": self.bundle_ready(row["slug"]), "createdAt": row["created_at"], "updatedAt": row["updated_at"],
         }
@@ -411,7 +456,7 @@ class GamesService:
     def list_public_games(self) -> list[dict]:
         with self.connect() as database:
             rows = database.execute("SELECT * FROM games WHERE status = 'published' ORDER BY year DESC, created_at DESC").fetchall()
-        return [self.public_game(row) for row in rows if row["host_type"] == "external" or self.bundle_ready(row["slug"])]
+        return [self.public_game(row) for row in rows if row["host_type"] != "hosted" or self.bundle_ready(row["slug"])]
 
     def get_public_game(self, slug: str) -> dict:
         with self.connect() as database:
@@ -419,6 +464,16 @@ class GamesService:
         if not row or (row["host_type"] == "hosted" and not self.bundle_ready(row["slug"])):
             raise AppError("Game not found.", 404)
         return self.public_game(row)
+
+    def embed_html_for_public(self, slug: str) -> str:
+        with self.connect() as database:
+            row = database.execute(
+                "SELECT embed_html FROM games WHERE slug = ? AND status = 'published' AND host_type = 'embed'",
+                (slug,),
+            ).fetchone()
+        if not row or not row["embed_html"]:
+            raise AppError("Game not found.", 404)
+        return row["embed_html"]
 
     def delete_game(self, game_id: int) -> None:
         with self.connect() as database:

@@ -15,18 +15,18 @@
     </header>
     <main class="admin-login-shell">
       <section class="admin-login-card" aria-labelledby="login-title">
-        <div class="admin-eyebrow"><span>Room310 administration</span><span>v1.2</span></div>
+        <div class="admin-eyebrow"><span>Room310 administration</span><span>v1.4</span></div>
         <h1 id="login-title">Sign in.</h1>
-        <p>Sign in with your existing administrator email and password.</p>
+        <p>Sign in with your administrator email, or your local development username.</p>
         <form id="admin-login-form">
-          <label>Email<input name="email" type="email" autocomplete="username" required maxlength="254" /></label>
+          <label>Email or local username<input name="email" type="text" inputmode="email" autocomplete="username" required maxlength="254" /></label>
           <label>Password<input name="password" type="password" autocomplete="current-password" required /></label>
           <button type="submit">Sign in <span aria-hidden="true">→</span></button>
           <p class="admin-form-message" id="login-message" role="status"></p>
         </form>
       </section>
     </main>
-    <script src="/supabase-config.js?v=0.14"></script>
-    <script src="/admin-login.js?v=0.14"></script>
+    <script src="/supabase-config.js?v=1.4"></script>
+    <script src="/admin-login.js?v=1.4"></script>
   </body>
 </html>

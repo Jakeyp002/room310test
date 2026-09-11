@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { parseHTML } from "linkedom";
+import { parseHTML } from "linkedom/worker";
 import { highlightCode, structuralCode } from "../client-src/syntax-utils.js";
 import { installCodeTools } from "../client-src/code-tools.js";
 import { formatPanel, normalizeProgram, normalizeOutput } from "../scripts/format-assignments.mjs";

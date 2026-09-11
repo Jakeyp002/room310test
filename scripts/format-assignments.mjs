@@ -1,6 +1,6 @@
 import { readFile, readdir, writeFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
-import { parseHTML } from "linkedom";
+import { parseHTML } from "linkedom/worker";
 import { escapeCode, structuralCode } from "../client-src/syntax-utils.js";
 import { repairLayout, gameFiles } from "./assignment-layout-repairs.mjs";
 

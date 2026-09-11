@@ -13,7 +13,7 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "same-origin",
-        body: JSON.stringify({ username: data.get("username"), password: data.get("password") })
+        body: JSON.stringify({ username: data.get("email"), password: data.get("password") })
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Sign in failed.");

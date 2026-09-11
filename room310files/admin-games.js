@@ -5,8 +5,35 @@
   const form = document.querySelector("#game-form");
   const message = document.querySelector("#game-form-message");
   const hostType = form.elements.hostType;
+  const embedPreview = document.querySelector("#embed-preview");
+  const embedPreviewViewport = document.querySelector("#embed-preview-viewport");
   let games = [];
   let editing = null;
+
+  const validateEmbedHtml = (value) => {
+    const html = String(value || "");
+    if (!html.trim()) throw new Error("Paste the HTML or embed code for this game.");
+    if (html.length > 500000 || new TextEncoder().encode(html).byteLength > 512 * 1024) throw new Error("Embedded HTML must be 512 KB or smaller.");
+    if (html.includes("\0")) throw new Error("Embedded HTML cannot contain null characters.");
+    return html;
+  };
+
+  const embeddedDocument = (html) => {
+    if (/<!doctype\s+html|<html(?:\s|>)/i.test(html)) return html;
+    return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#000}body>iframe:only-child{display:block;width:100%!important;height:100%!important;border:0}</style></head><body>${html}</body></html>`;
+  };
+
+  const sandboxedFrame = (html, title) => {
+    const frame = document.createElement("iframe");
+    frame.className = "embedded-game-frame";
+    frame.title = title;
+    frame.setAttribute("sandbox", "allow-scripts allow-pointer-lock");
+    frame.setAttribute("allow", "fullscreen; gamepad");
+    frame.setAttribute("referrerpolicy", "no-referrer");
+    frame.setAttribute("scrolling", "no");
+    frame.srcdoc = embeddedDocument(html);
+    return frame;
+  };
 
   const csrf = () => decodeURIComponent((document.cookie.split("; ").find((row) => row.startsWith("room310_csrf=")) || "=").split("=").slice(1).join("="));
   const api = async (url, options = {}) => {
@@ -25,7 +52,8 @@
     year: Number(form.elements.year.value),
     hostType: hostType.value,
     status,
-    externalUrl: form.elements.externalUrl.value
+    externalUrl: hostType.value === "external" ? form.elements.externalUrl.value : "",
+    embedHtml: hostType.value === "embed" ? validateEmbedHtml(form.elements.embedHtml.value) : ""
   });
 
   const toggleHostFields = () => {
@@ -33,12 +61,33 @@
       field.hidden = field.dataset.hostField !== hostType.value;
     });
     form.elements.externalUrl.required = hostType.value === "external";
+    form.elements.embedHtml.required = hostType.value === "embed";
+  };
+
+  const clearEmbedPreview = () => {
+    embedPreview.hidden = true;
+    embedPreviewViewport.replaceChildren();
+  };
+
+  const previewEmbeddedGame = () => {
+    try {
+      const html = validateEmbedHtml(form.elements.embedHtml.value);
+      embedPreviewViewport.replaceChildren(sandboxedFrame(html, form.elements.title.value.trim() || "Embedded game preview"));
+      embedPreview.hidden = false;
+      message.textContent = "Preview running in the same restricted sandbox used by the published player.";
+      message.dataset.state = "success";
+    } catch (error) {
+      clearEmbedPreview();
+      message.textContent = error.message;
+      message.dataset.state = "error";
+    }
   };
 
   const closeEditor = () => {
     editor.hidden = true;
     editing = null;
     form.reset();
+    clearEmbedPreview();
     message.textContent = "";
     toggleHostFields();
   };
@@ -46,6 +95,7 @@
   const openEditor = (game = null) => {
     editing = game;
     form.reset();
+    clearEmbedPreview();
     form.elements.gameId.value = game?.id || "";
     form.elements.title.value = game?.title || "";
     form.elements.description.value = game?.description || "";
@@ -53,6 +103,7 @@
     form.elements.hostType.value = game?.hostType || "external";
     form.elements.status.value = game?.status || "draft";
     form.elements.externalUrl.value = game?.externalUrl || "";
+    form.elements.embedHtml.value = game?.embedHtml || "";
     document.querySelector("#editor-mode").textContent = game ? `Editing ${game.slug}` : "New game";
     message.textContent = game?.bundleReady ? "A hosted bundle is already installed. Choosing a new ZIP will replace it." : "";
     toggleHostFields();
@@ -82,7 +133,9 @@
     status.className = `admin-status admin-status-${game.status}`;
     status.textContent = game.status;
     const type = document.createElement("span");
-    type.textContent = game.hostType === "hosted" ? (game.bundleReady ? "Hosted · ready" : "Hosted · ZIP needed") : "External";
+    type.textContent = game.hostType === "hosted"
+      ? (game.bundleReady ? "Hosted · ready" : "Hosted · ZIP needed")
+      : game.hostType === "embed" ? "Embedded HTML" : "External";
     meta.append(status, type);
     const title = document.createElement("h3");
     title.textContent = game.title;
@@ -179,6 +232,8 @@
   });
 
   hostType.addEventListener("change", toggleHostFields);
+  form.elements.embedHtml.addEventListener("input", clearEmbedPreview);
+  document.querySelector("#preview-embed").addEventListener("click", previewEmbeddedGame);
   document.querySelector("#new-game").addEventListener("click", () => openEditor());
   document.querySelector("#cancel-edit").addEventListener("click", closeEditor);
   document.querySelector("#cancel-edit-bottom").addEventListener("click", closeEditor);

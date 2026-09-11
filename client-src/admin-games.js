@@ -1,5 +1,6 @@
 import { configurationMessage, getManager, isConfigured, messageFor, supabase } from "./supabase-client.js";
-import { gameFromRow, slugify, thumbnailExtension } from "./game-utils.js";
+import { renderSandboxedGame } from "./embed-runner.js";
+import { gameFromRow, slugify, thumbnailExtension, validateEmbedHtml } from "./game-utils.js";
 import { coverTransform } from "./image-crop-utils.js";
 
 const list = document.querySelector("#admin-games-list");
@@ -8,6 +9,8 @@ const form = document.querySelector("#game-form");
 const message = document.querySelector("#game-form-message");
 const hostType = form.elements.hostType;
 const statusSelect = form.elements.status;
+const embedPreview = document.querySelector("#embed-preview");
+const embedPreviewViewport = document.querySelector("#embed-preview-viewport");
 let games = [];
 let editing = null;
 let croppedThumbnail = null;
@@ -183,7 +186,7 @@ async function hydrateGames(rows) {
 async function loadGames() {
   const { data, error } = await supabase
     .from("games")
-    .select("id,title,slug,description,year,status,host_type,external_url,thumbnail_path,bundle_path,created_at,updated_at")
+    .select("id,title,slug,description,year,status,host_type,external_url,embed_html,thumbnail_path,bundle_path,created_at,updated_at")
     .order("updated_at", { ascending: false });
   if (error) throw error;
   games = await hydrateGames(data || []);
@@ -195,9 +198,27 @@ function toggleHostFields() {
     field.hidden = field.dataset.hostField !== hostType.value;
   });
   form.elements.externalUrl.required = hostType.value === "external";
+  form.elements.embedHtml.required = hostType.value === "embed";
   const hosted = hostType.value === "hosted";
   statusSelect.querySelector('[value="published"]').disabled = hosted;
   if (hosted) statusSelect.value = "draft";
+}
+
+function clearEmbedPreview() {
+  embedPreview.hidden = true;
+  embedPreviewViewport.replaceChildren();
+}
+
+function previewEmbeddedGame() {
+  try {
+    const html = validateEmbedHtml(form.elements.embedHtml.value);
+    renderSandboxedGame(embedPreviewViewport, html, form.elements.title.value.trim() || "Embedded game preview");
+    embedPreview.hidden = false;
+    showFormMessage("Preview running in the same restricted sandbox used by the published player.", "success");
+  } catch (error) {
+    clearEmbedPreview();
+    showFormMessage(error.message);
+  }
 }
 
 function closeEditor() {
@@ -205,6 +226,7 @@ function closeEditor() {
   editing = null;
   form.reset();
   clearThumbnailDraft();
+  clearEmbedPreview();
   showFormMessage("");
   toggleHostFields();
 }
@@ -213,6 +235,7 @@ function openEditor(game = null) {
   editing = game;
   form.reset();
   clearThumbnailDraft();
+  clearEmbedPreview();
   form.elements.gameId.value = game?.id || "";
   form.elements.title.value = game?.title || "";
   form.elements.description.value = game?.description || "";
@@ -220,6 +243,7 @@ function openEditor(game = null) {
   form.elements.hostType.value = game?.hostType || "external";
   form.elements.status.value = game?.status || "draft";
   form.elements.externalUrl.value = game?.externalUrl || "";
+  form.elements.embedHtml.value = game?.embedHtml || "";
   document.querySelector("#editor-mode").textContent = game ? `Editing ${game.slug}` : "New game";
   showFormMessage(game?.bundleReady ? "A ZIP is stored for this draft. A new ZIP will replace it." : "", "info");
   toggleHostFields();
@@ -251,7 +275,9 @@ function gameCard(game) {
   status.className = `admin-status admin-status-${game.status}`;
   status.textContent = game.status;
   const type = document.createElement("span");
-  type.textContent = game.hostType === "hosted" ? (game.bundleReady ? "Hosted · stored" : "Hosted · ZIP needed") : "External";
+  type.textContent = game.hostType === "hosted"
+    ? (game.bundleReady ? "Hosted · stored" : "Hosted · ZIP needed")
+    : game.hostType === "embed" ? "Embedded HTML" : "External";
   meta.append(status, type);
 
   const title = document.createElement("h3");
@@ -318,7 +344,7 @@ function render() {
     const title = document.createElement("h3");
     title.textContent = "No games have been added.";
     const copy = document.createElement("p");
-    copy.textContent = "Create an external-game draft, then publish it when it is ready.";
+    copy.textContent = "Create an external, embedded HTML, or hosted-game draft, then publish it when it is ready.";
     empty.append(title, copy);
     list.append(empty);
     return;
@@ -381,7 +407,8 @@ form.addEventListener("submit", async (event) => {
       host_type: hostType.value,
       status: hostType.value === "hosted" ? "draft" : statusSelect.value,
       external_url: hostType.value === "external" ? form.elements.externalUrl.value.trim() : null,
-      bundle_path: hostType.value === "external" ? null : editing?.bundlePath || null
+      embed_html: hostType.value === "embed" ? validateEmbedHtml(form.elements.embedHtml.value) : null,
+      bundle_path: hostType.value === "hosted" ? editing?.bundlePath || null : null
     };
     if (!editing) payload.slug = `${slugify(payload.title)}-${crypto.randomUUID().slice(0, 8)}`;
 
@@ -402,7 +429,7 @@ form.addEventListener("submit", async (event) => {
       showFormMessage("Storing hosted-game ZIP…", "working");
       row = await uploadBundle(row, bundle);
     }
-    if (editing?.bundlePath && hostType.value === "external") {
+    if (editing?.bundlePath && hostType.value !== "hosted") {
       await removeObject("game-bundles", editing.bundlePath).catch(() => {});
     }
 
@@ -416,6 +443,8 @@ form.addEventListener("submit", async (event) => {
 });
 
 hostType.addEventListener("change", toggleHostFields);
+form.elements.embedHtml.addEventListener("input", clearEmbedPreview);
+document.querySelector("#preview-embed").addEventListener("click", previewEmbeddedGame);
 document.querySelector("#new-game").addEventListener("click", () => openEditor());
 document.querySelector("#cancel-edit").addEventListener("click", closeEditor);
 document.querySelector("#cancel-edit-bottom").addEventListener("click", closeEditor);

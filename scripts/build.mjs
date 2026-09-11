@@ -6,7 +6,7 @@ const projectUrl = process.env.SUPABASE_URL || "https://khbmuaitysznyxxefhou.sup
 const publishableKey = process.env.SUPABASE_PUBLISHABLE_KEY || "";
 
 if (process.env.NETLIFY === "true" && !publishableKey) {
-  throw new Error("SUPABASE_PUBLISHABLE_KEY must be configured in Netlify before deploying Room310 v0.14.");
+  throw new Error("SUPABASE_PUBLISHABLE_KEY must be configured in Netlify before deploying Room310 v1.4.");
 }
 
 await rm("dist", { force: true, recursive: true });
@@ -34,6 +34,7 @@ await build({
     "admin-login": "client-src/admin-login.js",
     "admin-games": "client-src/admin-games.js",
     games: "client-src/games.js",
+    "game-player": "client-src/game-player.js",
     graphs: "client-src/graphs.js",
     graph: "client-src/graph.js",
     "admin-graphs": "client-src/admin-graphs.js"

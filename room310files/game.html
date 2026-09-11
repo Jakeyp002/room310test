@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Play a game selected for Room310." />
+    <title>Game player · Room310</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+  </head>
+  <body class="game-player-page">
+    <main class="game-player-shell" data-state="loading">
+      <header class="game-player-header">
+        <a class="game-player-back" href="/games.html">← Games</a>
+        <a class="logo" href="/index.html" aria-label="Room310 home">ROOM<span>310</span></a>
+        <span class="game-player-version">v1.4</span>
+      </header>
+      <section class="game-player-info" aria-labelledby="game-title">
+        <div class="game-player-meta"><span id="game-year">—</span><span>Embedded game</span></div>
+        <h1 id="game-title">Loading game…</h1>
+        <p id="game-description">Room310 is preparing the isolated game player.</p>
+        <button id="game-fullscreen" type="button">Fullscreen</button>
+      </section>
+      <section class="game-player-stage" aria-label="Game viewport">
+        <div id="game-viewport" class="game-viewport"></div>
+        <div id="game-loading" class="game-player-state" role="status">
+          <span class="game-loader" aria-hidden="true"></span>
+          <strong>Starting game</strong>
+          <small>Loading in a secure sandbox…</small>
+        </div>
+        <div id="game-error" class="game-player-state game-player-error" role="alert" hidden>
+          <strong>Game unavailable</strong>
+          <p>This game could not be loaded.</p>
+          <a href="/games.html">Back to Games</a>
+        </div>
+      </section>
+    </main>
+    <script src="/supabase-config.js?v=1.4"></script>
+    <script src="/game-player.js?v=1.4"></script>
+  </body>
+</html>
