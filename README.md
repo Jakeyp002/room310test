@@ -1,6 +1,10 @@
 # Room310
 
-Room310 is an HTML/CSS/JavaScript learning site. Version 1.6 gives linked games a reliable open-on-original-site button and an opt-in experimental Room310 player, while pasted HTML and uploaded web-game ZIPs run in the responsive Room310 player. ZIP assets stay in private Supabase Storage and are served through a CSP-sandboxed asset function. It retains the featured Apex Trails embed, the deep learning and PyTorch course, assignment formatting and syntax highlighting, the Extended Archives notice, and compiler fixes. The held admin-request form remains unpublished.
+Room310 is an HTML/CSS/JavaScript learning site. Version 0.5.0 gives linked games a reliable open-on-original-site button and an opt-in experimental Room310 player, while pasted HTML and uploaded web-game ZIPs run in the responsive Room310 player. ZIP assets stay in private Supabase Storage and are served through a CSP-sandboxed asset function. It retains the featured Apex Trails embed, the deep learning and PyTorch course, assignment formatting and syntax highlighting, the Extended Archives notice, and compiler fixes. The held admin-request form remains unpublished.
+
+## Versioning
+
+Room310 follows three-part semantic versions and stays below `1.0.0` until the owner explicitly approves the stable release. Run `npm run version:bump -- auto "summary of the update"` after a completed update. Fixes and small refinements increment the patch number (`0.5.0` to `0.5.1`); meaningful new features and larger changes increment the minor number (`0.5.1` to `0.6.0`). `npm run build` synchronizes the full version into the visible site badge and page asset references. Explicit `patch` and `minor` modes are also available when the significance is already known. After the owner specifically declares the site ready for 1.0, `npm run version:bump -- release --confirm-1.0` performs that one protected transition.
 
 ## Deep learning course
 

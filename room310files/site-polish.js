@@ -1,13 +1,30 @@
 (() => {
   "use strict";
 
+  const scriptVersion = (() => {
+    try {
+      return new URL(document.currentScript?.src || "", document.baseURI).searchParams.get("v");
+    } catch {
+      return null;
+    }
+  })();
+  const siteVersion = /^\d+\.\d+\.\d+$/.test(scriptVersion || "") ? scriptVersion : "0.0.0";
+  window.ROOM310_VERSION = siteVersion;
+
+  document.querySelectorAll("[data-room310-version]").forEach((element) => {
+    element.textContent = `v${siteVersion}`;
+  });
+  document.querySelectorAll("[data-room310-version-prefix]").forEach((element) => {
+    element.textContent = `${element.dataset.room310VersionPrefix}v${siteVersion}`;
+  });
+
   const logo = document.querySelector(".header .logo");
   let version = document.querySelector(".site-version-badge");
   if (logo && !version) {
     version = document.createElement("span");
     version.className = "site-version-badge";
-    version.textContent = "v1.6";
-    version.setAttribute("aria-label", "Room310 version 1.6");
+    version.textContent = `v${siteVersion}`;
+    version.setAttribute("aria-label", `Room310 version ${siteVersion}`);
     logo.after(version);
   }
 
@@ -26,18 +43,18 @@
   if (isCurriculum) {
     const styles = document.createElement("link");
     styles.rel = "stylesheet";
-    styles.href = "/code-tools.css?v=1.6";
+    styles.href = `/code-tools.css?v=${siteVersion}`;
     styles.addEventListener("load", () => window.Room310Code?.refreshAll());
     document.head.append(styles);
     const codeTools = document.createElement("script");
-    codeTools.src = "/code-tools.js?v=1.6";
+    codeTools.src = `/code-tools.js?v=${siteVersion}`;
     codeTools.defer = true;
     document.body.append(codeTools);
   }
   const loadCourseLab = () => {
     if (!needsCourseLab || document.documentElement.dataset.courseRunner || document.querySelector('script[src^="course-lab.js"]')) return;
     const script = document.createElement("script");
-    script.src = "course-lab.js?v=1.6";
+    script.src = `course-lab.js?v=${siteVersion}`;
     document.body.append(script);
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", loadCourseLab, { once: true });
@@ -46,7 +63,7 @@
   const loadAssignmentWorkspace = () => {
     if (!needsAssignmentWorkspace || document.documentElement.dataset.assignmentWorkspace || document.querySelector('script[src^="assignment-workspace.js"]')) return;
     const script = document.createElement("script");
-    script.src = "assignment-workspace.js?v=1.6";
+    script.src = `assignment-workspace.js?v=${siteVersion}`;
     document.body.append(script);
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", loadAssignmentWorkspace, { once: true });

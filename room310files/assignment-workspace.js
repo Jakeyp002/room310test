@@ -2,7 +2,8 @@
   "use strict";
 
   if (!document.body.classList.contains("curriculum-page") || document.body.dataset.runtime === "external-pytorch" || document.documentElement.dataset.assignmentWorkspace) return;
-  document.documentElement.dataset.assignmentWorkspace = "v1.6";
+  const siteVersion = window.ROOM310_VERSION || "0.0.0";
+  document.documentElement.dataset.assignmentWorkspace = `v${siteVersion}`;
 
   const languages = {
     python: {
@@ -84,7 +85,7 @@ Console.WriteLine($"Hello from {course}!");`
   panel.innerHTML = `
     <header class="assignment-workspace-header">
       <div><span class="assignment-workspace-kicker">Room 310 terminal</span><strong>Assignment Workspace</strong></div>
-      <div class="assignment-workspace-header-actions"><span class="assignment-workspace-version">v1.6</span><button type="button" class="assignment-workspace-close" aria-label="Close assignment workspace">×</button></div>
+      <div class="assignment-workspace-header-actions"><span class="assignment-workspace-version">v${siteVersion}</span><button type="button" class="assignment-workspace-close" aria-label="Close assignment workspace">×</button></div>
     </header>
     <div class="assignment-workspace-toolbar">
       <label>Language<select class="assignment-workspace-language" aria-label="Programming language"></select></label>

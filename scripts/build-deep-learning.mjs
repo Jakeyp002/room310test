@@ -6,7 +6,7 @@ export function markdown(text) {
   const inline = value => escapeHTML(value).replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   return text.split(/\n\n/).map(p => `<p>${inline(p)}</p>`).join("\n");
 }
-const version = JSON.parse(await readFile(new URL("../package.json", import.meta.url))).version.split(".").slice(0, 2).join(".");
+const version = JSON.parse(await readFile(new URL("../package.json", import.meta.url))).version;
 const output = new URL("../room310files/", import.meta.url);
 const header = `<header class="header solid-header"><a class="logo" href="index.html">ROOM<span>310</span></a><nav aria-label="Main navigation"><a aria-current="page" href="study.html">Study</a><a href="games.html">Games</a><a href="/graphs">Graphs</a><a href="index.html#archive">Archive</a><a href="extended-archives.html">Extended Archives</a></nav></header>`;
 const shell = (title, description, classes, content, extra = "", attributes = "") => `<!doctype html>
