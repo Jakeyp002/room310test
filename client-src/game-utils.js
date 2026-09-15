@@ -34,6 +34,18 @@ export function gameFromRow(row) {
     thumbnailPath: row.thumbnail_path || "",
     bundlePath: row.bundle_path || "",
     bundleReady: Boolean(row.bundle_path),
+    collectionId: row.collection_id || null,
+    collection: row.game_collections || row.collection || null,
+    standaloneHtmlPath: row.standalone_html_path || "",
+    sourceSha256: row.source_sha256 || "",
+    sourceBytes: row.source_bytes || 0,
+    standaloneReviewedSha256: row.standalone_reviewed_sha256 || "",
+    standaloneReady: Boolean(
+      row.standalone_html_path
+      && row.source_sha256
+      && row.source_bytes
+      && row.standalone_reviewed_sha256 === row.source_sha256
+    ),
     createdAt: row.created_at,
     updatedAt: row.updated_at
   };
@@ -41,6 +53,10 @@ export function gameFromRow(row) {
 
 export function gamePlayUrl(game) {
   return `/games/play/${encodeURIComponent(game.slug)}/`;
+}
+
+export function collectionPlayUrl(collection) {
+  return `/games/collections/${encodeURIComponent(collection.slug)}/`;
 }
 
 export const MAX_EMBED_HTML_BYTES = 512 * 1024;

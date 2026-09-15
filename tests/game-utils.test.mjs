@@ -52,6 +52,19 @@ test("external and hosted games open in the Room310 player", () => {
   assert.equal(gamePlayUrl({ hostType: "hosted", slug: "zip-game" }), "/games/play/zip-game/");
 });
 
+test("standalone rows keep collection metadata and bind review to the exact hash", () => {
+  const hash = "a".repeat(64);
+  const game = gameFromRow({
+    id: 8, title: "Standalone", slug: "standalone", description: "Stored", year: 2026, status: "published",
+    host_type: "standalone", collection_id: 2, game_collections: { slug: "100-games", title: "100+ Games" },
+    standalone_html_path: `8/standalone-${hash}.html`, source_sha256: hash, source_bytes: 1200,
+    standalone_reviewed_sha256: hash, created_at: "2026-09-14T00:00:00Z", updated_at: "2026-09-14T00:00:00Z"
+  });
+  assert.equal(game.standaloneReady, true);
+  assert.equal(game.collection.slug, "100-games");
+  assert.equal(game.collectionId, 2);
+});
+
 test("embedded HTML validation rejects empty and oversized documents", () => {
   assert.equal(validateEmbedHtml(" <canvas></canvas> "), " <canvas></canvas> ");
   assert.throws(() => validateEmbedHtml("   "), /Paste the HTML/);

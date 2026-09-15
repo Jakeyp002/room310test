@@ -1,0 +1,28 @@
+{
+  "collection": {
+    "title": "100+ Games",
+    "slug": "100-games",
+    "description": "A searchable collection of browser games hosted directly for Room310."
+  },
+  "permission": {
+    "sourceOwner": "",
+    "note": ""
+  },
+  "games": [
+    { "title": "2048", "slug": "2048", "description": "Combine matching tiles and chase a high score.", "year": 2026, "source": "2048.html", "cover": "2048.webp" },
+    { "title": "Retro Bowl", "slug": "retro-bowl", "description": "Lead your football team through a retro season.", "year": 2026, "source": "retrobowl.html", "cover": "retro-bowl.webp" },
+    { "title": "OvO 2", "slug": "ovo-2", "description": "Run, jump, and slide through precision platforming stages.", "year": 2026, "source": "ovo2.html", "cover": "ovo-2.webp" },
+    { "title": "Paper.io 2", "slug": "paper-io-2", "description": "Claim territory while protecting your trail.", "year": 2026, "source": "paperio2.htm", "cover": "paper-io-2.webp" },
+    { "title": "Soccer Random", "slug": "soccer-random", "description": "Play quick, unpredictable one-button soccer matches.", "year": 2026, "source": "soccerrandom.htm", "cover": "soccer-random.webp" },
+    { "title": "Stack", "slug": "stack", "description": "Time each move and build the tallest stack you can.", "year": 2026, "source": "stack.html", "cover": "stack.webp" },
+    { "title": "Stickman Hook", "slug": "stickman-hook", "description": "Swing through obstacle courses with momentum and timing.", "year": 2026, "source": "stickmanhook.html", "cover": "stickman-hook.webp" },
+    { "title": "Vex 7", "slug": "vex-7", "description": "Clear fast platforming acts packed with traps and movement challenges.", "year": 2026, "source": "vex7.htm", "cover": "vex-7.webp" },
+    { "title": "Slope", "slug": "slope", "description": "Guide a speeding ball down a shifting neon slope.", "year": 2026, "source": "slope.html", "cover": "slope.webp" },
+    { "title": "Hole.io", "slug": "hole-io", "description": "Grow by swallowing objects before the round ends.", "year": 2026, "source": "holeio.html", "cover": "hole-io.webp" },
+    { "title": "Tomb of the Mask", "slug": "tomb-of-the-mask", "description": "Dash through a vertical maze filled with traps and treasure.", "year": 2026, "source": "tombofthemask.htm", "cover": "tomb-of-the-mask.webp" },
+    { "title": "Snow Rider", "slug": "snow-rider", "description": "Steer a sled through snowy hazards and collect gifts.", "year": 2026, "source": "snowrider.htm", "cover": "snow-rider.webp" },
+    { "title": "Getaway Shootout", "slug": "getaway-shootout", "description": "Race rivals through chaotic physics-driven getaway stages.", "year": 2026, "source": "getawayshootout.htm", "cover": "getaway-shootout.webp" },
+    { "title": "Monkey Mart", "slug": "monkey-mart", "description": "Grow and manage a busy market one aisle at a time.", "year": 2026, "source": "monkeymart.htm", "cover": "monkey-mart.webp" },
+    { "title": "Tunnel Rush", "slug": "tunnel-rush", "description": "Dodge obstacles at speed inside a twisting tunnel.", "year": 2026, "source": "tunnelrush.html", "cover": "tunnel-rush.webp" }
+  ]
+}

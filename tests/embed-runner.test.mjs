@@ -59,15 +59,17 @@ test("linked and hosted game URLs use the same opaque-origin sandbox", () => {
   assert.equal(frame.getAttribute("referrerpolicy"), "no-referrer");
 });
 
-test("the production player supports HTML, hosted ZIP, and opt-in linked games", async () => {
+test("the production player supports HTML, standalone HTML, hosted ZIP, and opt-in linked games", async () => {
   const source = await readFile(new URL("../client-src/game-player.js", import.meta.url), "utf8");
   assert.match(source, /game\.hostType === "embed"/);
   assert.match(source, /game\.hostType === "hosted"/);
+  assert.match(source, /game\.hostType === "standalone"/);
+  assert.match(source, /loadStandaloneHtml\(supabase, game\.standaloneHtmlPath/);
   assert.match(source, /\/game-assets\/\$\{encodeURIComponent\(game\.slug\)\}/);
   assert.match(source, /showExternalChoice\(game\)/);
   assert.match(source, /playExternal\.href = game\.externalUrl/);
   assert.match(source, /openExperimental\.addEventListener\("click", openExternalExperiment\)/);
-  const choiceBranch = source.match(/else if \(game\.hostType === "external"\) \{([\s\S]*?)\n  \} else \{/);
+  const choiceBranch = source.match(/else if \(game\.hostType === "external"\) \{([\s\S]*?)\n  \} else if/);
   assert.ok(choiceBranch);
   assert.doesNotMatch(choiceBranch[1], /renderSandboxedUrl/);
 });

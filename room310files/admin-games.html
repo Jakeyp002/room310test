@@ -16,8 +16,8 @@
     <main class="games-admin-shell">
       <nav class="admin-content-tabs" aria-label="Manage content"><a href="/admin/games" aria-current="page">Games</a><a href="/admin/graphs">Graphs</a></nav>
       <section class="games-admin-heading">
-        <div><small data-room310-version-prefix="Games administration / ">Games administration / v0.5.0</small><h1>Manage games.</h1></div>
-        <div><p>Add a game from a link, pasted HTML, or a static web-game ZIP. Every source opens in the Room310 player.</p><button type="button" id="new-game">+ Add game</button></div>
+        <div><small data-room310-version-prefix="Games administration / ">Games administration / v0.6.0</small><h1>Manage games.</h1></div>
+        <div><p>Add a game from a link, pasted HTML, a self-contained HTML file, or a static web-game ZIP. Every source opens in the Room310 player.</p><button type="button" id="new-game">+ Add game</button></div>
       </section>
 
       <section class="admin-editor" id="game-editor" hidden aria-labelledby="editor-title">
@@ -28,8 +28,9 @@
             <label>Title<input name="title" required minlength="2" maxlength="120" /></label>
             <label>Year<input name="year" type="number" required min="1900" max="2100" /></label>
             <label class="admin-full-field">Short description<textarea name="description" required minlength="1" maxlength="500" rows="4"></textarea></label>
-            <label>Game source<select name="hostType"><option value="external">Game Link (embedded)</option><option value="embed">Pasted HTML / embed code</option><option value="hosted">Game ZIP (uploaded)</option></select></label>
+            <label>Game source<select name="hostType"><option value="external">External URL</option><option value="embed">Embedded HTML</option><option value="standalone">Standalone HTML Game</option><option value="hosted">Hosted Game ZIP</option></select></label>
             <label>Status<select name="status"><option value="draft">Draft</option><option value="published">Published</option></select></label>
+            <label class="admin-full-field">Collection<select name="collectionId"><option value="">No collection</option></select><small>Games in a draft collection remain hidden from the public catalog even when their own status is Published.</small></label>
             <label class="admin-full-field" data-host-field="external">External game URL<input name="externalUrl" type="url" inputmode="url" placeholder="https://example.com/game" /><small>Room310 will try to load this link in its restricted player. Some websites block iframe embedding; those games will still have an “Open separately” fallback.</small></label>
             <div class="admin-full-field admin-embed-field" data-host-field="embed" hidden>
               <label>HTML / embed code<textarea name="embedHtml" class="admin-code-editor" rows="16" maxlength="500000" spellcheck="false" placeholder="&lt;iframe src=&quot;https://example.com/game&quot;&gt;&lt;/iframe&gt;"></textarea><small>HTML, CSS, and JavaScript are supported up to 512 KB. Preview and published games always run in an opaque-origin sandbox. Published source is public, so never paste passwords, API keys, or private data.</small></label>
@@ -39,13 +40,33 @@
                 <div id="embed-preview-viewport"></div>
               </div>
             </div>
+            <div class="admin-full-field admin-standalone-field" data-host-field="standalone" hidden>
+              <label>Self-contained game file<input name="standaloneFile" type="file" accept=".html,.htm,.zip,text/html,application/zip" /><small>Choose one UTF-8 HTML file, or a ZIP containing exactly one self-contained HTML file · 30 MB maximum. Replacing a file always returns the game to draft until the exact new file is reviewed.</small></label>
+              <div class="admin-standalone-actions"><button type="button" id="preview-standalone">Scan and preview safely</button><span id="standalone-file-summary">No standalone file selected.</span></div>
+              <progress id="standalone-upload-progress" max="100" value="0" hidden>0%</progress>
+              <div id="standalone-scan" class="admin-standalone-scan" hidden>
+                <strong>Security review</strong>
+                <p id="standalone-scan-summary"></p>
+                <ul id="standalone-scan-findings"></ul>
+                <label class="admin-review-check"><input type="checkbox" name="standaloneReviewed" /> I previewed this exact file and reviewed the findings.</label>
+              </div>
+              <div class="admin-embed-preview" id="standalone-preview" hidden>
+                <div><strong>Sandbox preview</strong><span>Opaque origin · no Room310 session access</span></div>
+                <div id="standalone-preview-viewport"></div>
+              </div>
+            </div>
             <label class="admin-full-field" data-host-field="hosted" hidden>Hosted game ZIP<input name="bundle" type="file" accept=".zip,application/zip" /><small>Include index.html at the ZIP root · stored privately · 20 MB maximum · publish after the upload finishes</small></label>
             <label class="admin-full-field admin-thumbnail-field">Cover image<input name="thumbnail" type="file" accept="image/png,image/jpeg,image/gif,image/webp" /><small>Choose an image, then crop and position it · PNG, JPEG, GIF, or WebP · 5 MB maximum</small><img id="thumbnail-crop-preview" hidden alt="Cropped cover preview" /></label>
           </div>
-          <div class="admin-security-note"><strong>Game isolation</strong><span>Links, pasted HTML, and ZIP games run in sandboxed iframes without same-origin, popup, download, or top-navigation access. ZIP assets are read from private storage through the restricted game runner.</span></div>
+          <div class="admin-security-note"><strong>Game isolation</strong><span>Links, pasted HTML, standalone HTML, and ZIP games run in sandboxed iframes without same-origin, popup, download, or top-navigation access. Standalone HTML is read from private storage and copied only into the restricted player frame.</span></div>
           <div class="admin-form-actions"><button type="button" id="cancel-edit-bottom">Cancel</button><button type="submit" class="primary-action">Save game</button></div>
           <p class="admin-form-message" id="game-form-message" role="status"></p>
         </form>
+      </section>
+
+      <section class="admin-collection-list-section" aria-labelledby="collections-list-title">
+        <div class="admin-list-heading"><h2 id="collections-list-title">Collections</h2><span>Publish only after every included game passes review</span></div>
+        <div id="admin-collections-list" class="admin-collections-list" aria-live="polite"><p>Loading collections…</p></div>
       </section>
 
       <section class="admin-game-list-section" aria-labelledby="games-list-title">
@@ -58,7 +79,7 @@
       <div class="thumbnail-cropper-stage"><canvas width="1280" height="720" aria-label="Cover crop preview"></canvas><p>Drag the image to position it inside the frame.</p></div>
       <div class="thumbnail-cropper-controls"><label for="crop-zoom">Zoom<input id="crop-zoom" type="range" min="1" max="3" value="1" step="0.01" /></label><div><button type="button" id="crop-reset">Reset</button><button type="button" id="crop-apply" class="primary-action">Use this crop</button></div></div>
     </dialog>
-    <script src="/supabase-config.js?v=0.5.0"></script>
-    <script src="/admin-games.js?v=0.5.0"></script>
+    <script src="/supabase-config.js?v=0.6.0"></script>
+    <script src="/admin-games.js?v=0.6.0"></script>
   </body>
 </html>

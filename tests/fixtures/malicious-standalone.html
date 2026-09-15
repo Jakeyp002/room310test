@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8"><title>Sandbox isolation fixture</title></head>
+  <body style="margin:0;display:grid;place-items:center;height:100vh;background:#10100e;color:#e9ff44;font:700 24px monospace">
+    <p id="result">Checking sandbox…</p>
+    <script>
+      let isolated = false;
+      try { parent.document.body.dataset.room310Compromised = "true"; } catch { isolated = true; }
+      try { top.location = "https://example.invalid/escaped"; } catch { isolated = true; }
+      try { document.cookie = "room310_attack=1"; } catch { isolated = true; }
+      document.querySelector("#result").textContent = isolated ? "Isolated safely" : "Isolation failed";
+    </script>
+  </body>
+</html>

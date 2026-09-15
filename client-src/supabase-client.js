@@ -2,9 +2,11 @@ import { createClient } from "@supabase/supabase-js";
 
 const config = globalThis.ROOM310_SUPABASE_CONFIG || {};
 
-export const isConfigured = Boolean(config.projectUrl && config.publishableKey);
+export const projectUrl = config.projectUrl || "";
+export const publishableKey = config.publishableKey || "";
+export const isConfigured = Boolean(projectUrl && publishableKey);
 export const supabase = isConfigured
-  ? createClient(config.projectUrl, config.publishableKey, {
+  ? createClient(projectUrl, publishableKey, {
       auth: {
         autoRefreshToken: true,
         detectSessionInUrl: true,

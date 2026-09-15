@@ -38,6 +38,11 @@ const server = createServer(async (req, res) => {
     if (!["GET", "HEAD"].includes(req.method)) return reply(405, "Method not allowed");
     let pathname = decodeURIComponent(url.pathname);
     if (pathname === "/") pathname = "/index.html";
+    if (/^\/games\/collections\/[a-z0-9][a-z0-9-]{0,69}\/?$/.test(pathname)) pathname = "/game-collection.html";
+    else if (/^\/games\/play\/[a-z0-9][a-z0-9-]{0,69}\/?$/.test(pathname)) pathname = "/game.html";
+    else if (pathname === "/admin/games") pathname = "/admin-games.html";
+    else if (pathname === "/admin/graphs") pathname = "/admin-graphs.html";
+    else if (pathname === "/admin/login") pathname = "/admin-login.html";
     // Match the production site's clean static lesson URLs.
     if (!extname(pathname)) pathname += ".html";
     const path = resolve(root, `.${pathname}`);

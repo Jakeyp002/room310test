@@ -82,17 +82,20 @@ test("hosted assets support HEAD, range requests, and unpublished-game failures"
   assert.equal(missing.headers.get("cache-control"), "no-store");
 });
 
-test("the admin exposes linked, pasted, and ZIP sources and only gates ZIP publishing on an upload", async () => {
+test("the admin exposes external, embedded, standalone, and ZIP sources with upload review gates", async () => {
   const [page, admin, player, netlify] = await Promise.all([
     readFile(new URL("../room310files/admin-games.html", import.meta.url), "utf8"),
     readFile(new URL("../client-src/admin-games.js", import.meta.url), "utf8"),
     readFile(new URL("../client-src/game-player.js", import.meta.url), "utf8"),
     readFile(new URL("../netlify.toml", import.meta.url), "utf8")
   ]);
-  assert.match(page, /Game Link \(embedded\)/);
-  assert.match(page, /Pasted HTML \/ embed code/);
-  assert.match(page, /Game ZIP \(uploaded\)/);
-  assert.match(admin, /disabled: game\.hostType === "hosted" && !game\.bundleReady/);
+  assert.match(page, /External URL/);
+  assert.match(page, /Embedded HTML/);
+  assert.match(page, /Standalone HTML Game/);
+  assert.match(page, /Hosted Game ZIP/);
+  assert.match(page, /name="standaloneReviewed"/);
+  assert.match(admin, /game\.hostType === "standalone" && !game\.standaloneReady/);
+  assert.match(admin, /uploadStandaloneTus/);
   assert.match(player, /game\.hostType === "hosted"/);
   assert.match(netlify, /from = "\/game-assets\/\*"/);
   assert.match(netlify, /game-asset\?asset=:splat/);

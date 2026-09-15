@@ -37,6 +37,7 @@ await build({
     "admin-login": "client-src/admin-login.js",
     "admin-games": "client-src/admin-games.js",
     games: "client-src/games.js",
+    "game-collection": "client-src/game-collection.js",
     "game-player": "client-src/game-player.js",
     graphs: "client-src/graphs.js",
     graph: "client-src/graph.js",

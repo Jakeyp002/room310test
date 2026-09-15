@@ -161,6 +161,30 @@ Hosted uploads are limited to 20 MB compressed, 80 MB expanded, and 1,000 files.
 
 Replacing a bundle installs the new validated bundle atomically. Deleting a game requires browser confirmation and removes its private thumbnail and bundle.
 
+### Standalone HTML game and native collections
+
+Use **Standalone HTML Game** for a self-contained UTF-8 `.html`/`.htm` file, or a ZIP containing exactly one self-contained HTML file and no other files. The administrator previews the exact file in Room310's opaque-origin sandbox, reviews the static capability scan, and acknowledges that hash before publishing. Files are limited to 30 MB and uploaded resumably to the private `game-standalone` Supabase bucket. Replacing a file changes its SHA-256 hash, clears the review acknowledgement, and returns the game to draft.
+
+The `100+ Games` collection is seeded as a draft by `supabase/migrations/20260914190035_directly_hosted_game_collections.sql`. Its native route is `/games/collections/100-games/`. Public RLS hides both draft collections and their member games; the old external Google Sites game remains published until the collection has at least 15 reviewed, published members. The Collections control in `/admin/games` performs the final cutover transaction and changes external game `55` to draft without deleting it.
+
+The pilot import manifest is `game-imports/100-games-pilot.json`. Add the authorizing member and permission note, place the 15 source files and covers beside the manifest (or pass a separate asset directory), then validate without writing:
+
+```sh
+npm run games:import -- game-imports/100-games-pilot.json /path/to/pilot-assets
+```
+
+After reviewing the hashes and scan findings, import all records as drafts with an approved manager account. Credentials are read only from the current process environment and are never written to browser code or the repository:
+
+```sh
+SUPABASE_URL=https://your-project.supabase.co \
+SUPABASE_PUBLISHABLE_KEY=your-publishable-key \
+ROOM310_MANAGER_EMAIL=manager@example.com \
+ROOM310_MANAGER_PASSWORD='use-a-secure-local-value' \
+npm run games:import -- game-imports/100-games-pilot.json /path/to/pilot-assets --apply
+```
+
+The import is idempotent by collection/game slug and content hash. It always leaves the collection and games as drafts. Preview, acknowledge, and publish each game from `/admin/games`; publish the collection only after the full pilot passes manual playtesting.
+
 ## Hosted-game isolation and limitations
 
 Uploaded ZIP HTML and JavaScript are untrusted. They are served from `ROOM310_ASSET_ORIGIN`, which must be a different origin from `ROOM310_PUBLIC_ORIGIN`, and displayed in a restricted iframe at `/games/play/[slug]/`. Embedded HTML uses an opaque-origin `srcdoc` frame in production; the optional Python server also serves its published embedded document from the existing isolated asset origin. Neither frame receives `allow-same-origin`, top-navigation, downloads, or popup permissions. The asset server has no admin/API routes and sets no cookies.

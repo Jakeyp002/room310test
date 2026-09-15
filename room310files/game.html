@@ -11,7 +11,7 @@
   <body class="game-player-page">
     <main class="game-player-shell" data-state="loading">
       <header class="game-player-header">
-        <a class="game-player-back" href="/games.html">← Games</a>
+        <a class="game-player-back" id="game-back" href="/games.html">← Games</a>
         <a class="logo" href="/index.html" aria-label="Room310 home">ROOM<span>310</span></a>
         <span class="game-player-version" data-room310-version>v0.5.0</span>
       </header>
@@ -40,11 +40,11 @@
         <div id="game-error" class="game-player-state game-player-error" role="alert" hidden>
           <strong>Game unavailable</strong>
           <p>This game could not be loaded.</p>
-          <a href="/games.html">Back to Games</a>
+          <div class="game-error-actions"><button id="game-retry" type="button">Try again</button><a href="/games.html">Back to Games</a></div>
         </div>
       </section>
     </main>
-    <script src="/supabase-config.js?v=0.5.0"></script>
-    <script src="/game-player.js?v=0.5.0"></script>
+    <script src="/supabase-config.js?v=0.6.0"></script>
+    <script src="/game-player.js?v=0.6.0"></script>
   </body>
 </html>

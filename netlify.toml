@@ -45,6 +45,11 @@
   status = 200
 
 [[redirects]]
+  from = "/games/collections/*"
+  to = "/game-collection.html"
+  status = 200
+
+[[redirects]]
   from = "/game-assets/*"
   to = "/.netlify/functions/game-asset?asset=:splat"
   status = 200

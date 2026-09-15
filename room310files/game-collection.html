@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Browse a Room310 browser-game collection." />
+    <title>Game collection · Room310</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+  </head>
+  <body class="game-collection-page">
+    <header class="header solid-header">
+      <a class="logo" href="/index.html">ROOM<span>310</span></a>
+      <nav aria-label="Collection navigation"><a href="/games.html">← All games</a><span data-room310-version>v0.5.0</span></nav>
+    </header>
+    <main class="game-collection-shell">
+      <section class="game-collection-heading">
+        <div><small>Room310 / Game collection</small><h1 id="collection-title">Loading collection…</h1></div>
+        <p id="collection-description">Room310 is loading the published games.</p>
+      </section>
+      <section class="game-collection-tools" aria-label="Find a game">
+        <label for="collection-search">Search games</label>
+        <input id="collection-search" type="search" placeholder="Try Retro Bowl or puzzle" autocomplete="off" disabled />
+        <span id="collection-count" role="status">Loading…</span>
+      </section>
+      <section id="collection-games" class="collection-game-grid" aria-live="polite"><div class="collection-empty"><strong>Loading games…</strong><p>Checking the published Room310 collection.</p></div></section>
+    </main>
+    <script src="/site-polish.js?v=0.6.0"></script>
+    <script src="/supabase-config.js?v=0.6.0"></script>
+    <script src="/game-collection.js?v=0.6.0"></script>
+  </body>
+</html>

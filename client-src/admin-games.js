@@ -1,9 +1,12 @@
-import { configurationMessage, getManager, isConfigured, messageFor, supabase } from "./supabase-client.js";
+import { configurationMessage, getManager, isConfigured, messageFor, projectUrl, publishableKey, supabase } from "./supabase-client.js";
 import { renderSandboxedGame } from "./embed-runner.js";
 import { gameFromRow, slugify, thumbnailExtension, validateEmbedHtml } from "./game-utils.js";
 import { coverTransform } from "./image-crop-utils.js";
+import { loadStandaloneHtml, prepareStandaloneFile, scanStandaloneHtml } from "./standalone-game.js";
+import { uploadStandaloneTus } from "./tus-upload.js";
 
 const list = document.querySelector("#admin-games-list");
+const collectionList = document.querySelector("#admin-collections-list");
 const editor = document.querySelector("#game-editor");
 const form = document.querySelector("#game-form");
 const message = document.querySelector("#game-form-message");
@@ -11,10 +14,18 @@ const hostType = form.elements.hostType;
 const statusSelect = form.elements.status;
 const embedPreview = document.querySelector("#embed-preview");
 const embedPreviewViewport = document.querySelector("#embed-preview-viewport");
+const standalonePreview = document.querySelector("#standalone-preview");
+const standalonePreviewViewport = document.querySelector("#standalone-preview-viewport");
+const standaloneScan = document.querySelector("#standalone-scan");
+const standaloneSummary = document.querySelector("#standalone-file-summary");
+const standaloneProgress = document.querySelector("#standalone-upload-progress");
 let games = [];
+let collections = [];
 let editing = null;
 let croppedThumbnail = null;
 let thumbnailPreviewUrl = "";
+let preparedStandalone = null;
+let previewedStandaloneSha = "";
 
 const cropper = document.querySelector("#thumbnail-cropper");
 const cropCanvas = cropper.querySelector("canvas");
@@ -184,13 +195,30 @@ async function hydrateGames(rows) {
 }
 
 async function loadGames() {
-  const { data, error } = await supabase
-    .from("games")
-    .select("id,title,slug,description,year,status,host_type,external_url,embed_html,thumbnail_path,bundle_path,created_at,updated_at")
-    .order("updated_at", { ascending: false });
+  const [{ data, error }, { data: collectionRows, error: collectionError }] = await Promise.all([
+    supabase
+      .from("games")
+      .select("id,title,slug,description,year,status,host_type,external_url,embed_html,thumbnail_path,bundle_path,collection_id,standalone_html_path,source_sha256,source_bytes,standalone_reviewed_sha256,created_at,updated_at")
+      .order("updated_at", { ascending: false }),
+    supabase.from("game_collections").select("id,title,slug,description,status,created_at,updated_at").order("title")
+  ]);
   if (error) throw error;
+  if (collectionError) throw collectionError;
+  collections = collectionRows || [];
   games = await hydrateGames(data || []);
+  renderCollectionOptions();
   render();
+}
+
+function renderCollectionOptions() {
+  const select = form.elements.collectionId;
+  const selected = select.value;
+  const options = [new Option("No collection", "")];
+  for (const collection of collections) {
+    options.push(new Option(`${collection.title} · ${collection.status}`, String(collection.id)));
+  }
+  select.replaceChildren(...options);
+  select.value = selected;
 }
 
 function toggleHostFields() {
@@ -200,14 +228,93 @@ function toggleHostFields() {
   form.elements.externalUrl.required = hostType.value === "external";
   form.elements.embedHtml.required = hostType.value === "embed";
   const hosted = hostType.value === "hosted";
+  const standalone = hostType.value === "standalone";
   const hostedReady = Boolean(editing?.hostType === "hosted" && editing.bundleReady);
-  statusSelect.querySelector('[value="published"]').disabled = hosted && !hostedReady;
-  if (hosted && !hostedReady) statusSelect.value = "draft";
+  const currentStandaloneReviewed = Boolean(
+    editing?.hostType === "standalone"
+    && editing.standaloneReady
+    && !preparedStandalone
+  );
+  const candidateStandaloneSha = preparedStandalone?.sha256 || editing?.sourceSha256 || "";
+  const newStandaloneReviewed = Boolean(
+    candidateStandaloneSha
+    && previewedStandaloneSha === candidateStandaloneSha
+    && form.elements.standaloneReviewed.checked
+  );
+  const sourceReady = !hosted && !standalone || hostedReady || currentStandaloneReviewed || newStandaloneReviewed;
+  statusSelect.querySelector('[value="published"]').disabled = !sourceReady;
+  if (!sourceReady) statusSelect.value = "draft";
 }
 
 function clearEmbedPreview() {
   embedPreview.hidden = true;
   embedPreviewViewport.replaceChildren();
+}
+
+function clearStandalonePreview({ keepPrepared = false } = {}) {
+  standalonePreview.hidden = true;
+  standalonePreviewViewport.replaceChildren();
+  standaloneScan.hidden = true;
+  document.querySelector("#standalone-scan-findings").replaceChildren();
+  form.elements.standaloneReviewed.checked = false;
+  previewedStandaloneSha = "";
+  if (!keepPrepared) preparedStandalone = null;
+  toggleHostFields();
+}
+
+function renderStandaloneScan(prepared) {
+  const findings = scanStandaloneHtml(prepared.html);
+  const list = document.querySelector("#standalone-scan-findings");
+  list.replaceChildren();
+  if (findings.length) {
+    for (const finding of findings) {
+      const item = document.createElement("li");
+      item.textContent = finding;
+      list.append(item);
+    }
+    document.querySelector("#standalone-scan-summary").textContent = "Review these capabilities before publishing. The player sandbox still blocks access to Room310 and top-level navigation.";
+  } else {
+    document.querySelector("#standalone-scan-summary").textContent = "No commonly risky browser capabilities were detected by the static scan. Manual preview is still required.";
+  }
+  standaloneScan.hidden = false;
+}
+
+async function selectedStandalone() {
+  const file = form.elements.standaloneFile.files[0];
+  if (file) {
+    if (!preparedStandalone || preparedStandalone.sourceName !== file.name || preparedStandalone.originalSize !== file.size) {
+      const prepared = await prepareStandaloneFile(file);
+      preparedStandalone = { ...prepared, originalSize: file.size };
+    }
+    return preparedStandalone;
+  }
+  if (editing?.hostType === "standalone" && editing.standaloneHtmlPath) {
+    const html = await loadStandaloneHtml(supabase, editing.standaloneHtmlPath);
+    return { html, sha256: editing.sourceSha256, bytes: editing.sourceBytes, uploadFile: null, sourceName: "Stored standalone HTML" };
+  }
+  throw new Error("Choose an HTML file or a one-file ZIP before previewing.");
+}
+
+async function previewStandaloneGame() {
+  const button = document.querySelector("#preview-standalone");
+  button.disabled = true;
+  showFormMessage("Checking and opening the standalone game…", "working");
+  try {
+    clearStandalonePreview({ keepPrepared: true });
+    const prepared = await selectedStandalone();
+    renderStandaloneScan(prepared);
+    renderSandboxedGame(standalonePreviewViewport, prepared.html, form.elements.title.value.trim() || "Standalone game preview");
+    standalonePreview.hidden = false;
+    previewedStandaloneSha = prepared.sha256;
+    standaloneSummary.textContent = `${prepared.sourceName} · ${(prepared.bytes / 1024 / 1024).toFixed(2)} MB · SHA-256 ${prepared.sha256.slice(0, 12)}…`;
+    showFormMessage("Preview is running in the same opaque-origin sandbox used by the published player. Review the findings before publishing.", "success");
+  } catch (error) {
+    clearStandalonePreview({ keepPrepared: true });
+    showFormMessage(error.message);
+  } finally {
+    button.disabled = false;
+    toggleHostFields();
+  }
 }
 
 function previewEmbeddedGame() {
@@ -228,6 +335,11 @@ function closeEditor() {
   form.reset();
   clearThumbnailDraft();
   clearEmbedPreview();
+  clearStandalonePreview();
+  form.elements.standaloneFile.value = "";
+  standaloneSummary.textContent = "No standalone file selected.";
+  standaloneProgress.hidden = true;
+  standaloneProgress.value = 0;
   showFormMessage("");
   toggleHostFields();
 }
@@ -237,6 +349,7 @@ function openEditor(game = null) {
   form.reset();
   clearThumbnailDraft();
   clearEmbedPreview();
+  clearStandalonePreview();
   form.elements.gameId.value = game?.id || "";
   form.elements.title.value = game?.title || "";
   form.elements.description.value = game?.description || "";
@@ -245,8 +358,18 @@ function openEditor(game = null) {
   form.elements.status.value = game?.status || "draft";
   form.elements.externalUrl.value = game?.externalUrl || "";
   form.elements.embedHtml.value = game?.embedHtml || "";
+  form.elements.collectionId.value = game?.collectionId || "";
+  form.elements.standaloneReviewed.checked = Boolean(game?.standaloneReady);
+  standaloneSummary.textContent = game?.standaloneHtmlPath
+    ? `Stored HTML · ${(game.sourceBytes / 1024 / 1024).toFixed(2)} MB · SHA-256 ${game.sourceSha256.slice(0, 12)}…`
+    : "No standalone file selected.";
   document.querySelector("#editor-mode").textContent = game ? `Editing ${game.slug}` : "New game";
-  showFormMessage(game?.bundleReady ? "A ZIP is stored for this draft. A new ZIP will replace it." : "", "info");
+  const storedMessage = game?.bundleReady
+    ? "A ZIP is stored for this game. A new ZIP will replace it."
+    : game?.standaloneHtmlPath
+      ? "Standalone HTML is stored privately. Preview it again before replacing or publishing it."
+      : "";
+  showFormMessage(storedMessage, "info");
   toggleHostFields();
   editor.hidden = false;
   editor.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -278,7 +401,9 @@ function gameCard(game) {
   const type = document.createElement("span");
   type.textContent = game.hostType === "hosted"
     ? (game.bundleReady ? "Hosted · stored" : "Hosted · ZIP needed")
-    : game.hostType === "embed" ? "Pasted HTML" : "Linked game";
+    : game.hostType === "standalone"
+      ? (game.standaloneReady ? "Standalone · reviewed" : game.standaloneHtmlPath ? "Standalone · review needed" : "Standalone · file needed")
+      : game.hostType === "embed" ? "Pasted HTML" : "Linked game";
   meta.append(status, type);
 
   const title = document.createElement("h3");
@@ -296,9 +421,10 @@ function gameCard(game) {
   const publish = Object.assign(document.createElement("button"), {
     type: "button",
     textContent: game.status === "published" ? "Unpublish" : "Publish",
-    disabled: game.hostType === "hosted" && !game.bundleReady
+    disabled: (game.hostType === "hosted" && !game.bundleReady) || (game.hostType === "standalone" && !game.standaloneReady)
   });
   if (game.hostType === "hosted" && !game.bundleReady) publish.title = "Upload a ZIP before publishing this game.";
+  if (game.hostType === "standalone" && !game.standaloneReady) publish.title = "Preview and review the exact standalone file before publishing it.";
   publish.addEventListener("click", async () => {
     publish.disabled = true;
     try {
@@ -317,11 +443,12 @@ function gameCard(game) {
   const remove = Object.assign(document.createElement("button"), { type: "button", textContent: "Delete" });
   remove.className = "danger-action";
   remove.addEventListener("click", async () => {
-    if (!confirm(`Delete “${game.title}”? Its thumbnail and ZIP will also be permanently removed.`)) return;
+    if (!confirm(`Delete “${game.title}”? Its thumbnail and uploaded game file will also be permanently removed.`)) return;
     remove.disabled = true;
     try {
       await removeObject("game-thumbnails", game.thumbnailPath);
       await removeObject("game-bundles", game.bundlePath);
+      await removeObject("game-standalone", game.standaloneHtmlPath);
       const { error } = await supabase.from("games").delete().eq("id", game.id);
       if (error) throw error;
       await loadGames();
@@ -338,6 +465,7 @@ function gameCard(game) {
 }
 
 function render() {
+  renderCollections();
   list.replaceChildren();
   if (!games.length) {
     const empty = document.createElement("div");
@@ -345,12 +473,68 @@ function render() {
     const title = document.createElement("h3");
     title.textContent = "No games have been added.";
     const copy = document.createElement("p");
-    copy.textContent = "Create an external, embedded HTML, or hosted-game draft, then publish it when it is ready.";
+    copy.textContent = "Create an external, embedded HTML, standalone HTML, or hosted-game draft, then publish it when it is ready.";
     empty.append(title, copy);
     list.append(empty);
     return;
   }
   games.forEach((game) => list.append(gameCard(game)));
+}
+
+function renderCollections() {
+  collectionList.replaceChildren();
+  if (!collections.length) {
+    const empty = document.createElement("p");
+    empty.textContent = "No collections are configured.";
+    collectionList.append(empty);
+    return;
+  }
+  for (const collection of collections) {
+    const members = games.filter((game) => game.collectionId === collection.id);
+    const published = members.filter((game) => game.status === "published");
+    const reviewed = members.filter((game) => game.hostType !== "standalone" || game.standaloneReady);
+    const isPilot = collection.slug === "100-games";
+    const ready = members.length > 0
+      && published.length === members.length
+      && reviewed.length === members.length
+      && (!isPilot || members.length >= 15);
+    const article = document.createElement("article");
+    article.className = "admin-collection-card";
+    const copy = document.createElement("div");
+    const meta = document.createElement("small");
+    meta.textContent = `${collection.status} · ${published.length}/${members.length} games published · ${reviewed.length}/${members.length} reviewed`;
+    const title = document.createElement("h3");
+    title.textContent = collection.title;
+    const description = document.createElement("p");
+    description.textContent = collection.description;
+    copy.append(meta, title, description);
+    const action = document.createElement("button");
+    action.type = "button";
+    action.textContent = collection.status === "published" ? "Unpublish collection" : isPilot ? "Publish and retire old link" : "Publish collection";
+    action.disabled = collection.status !== "published" && !ready;
+    if (action.disabled) action.title = isPilot ? "The pilot needs at least 15 reviewed, published games before cutover." : "Review and publish every member game first.";
+    action.addEventListener("click", async () => {
+      action.disabled = true;
+      try {
+        if (collection.status === "published") {
+          const { error } = await supabase.from("game_collections").update({ status: "draft" }).eq("id", collection.id);
+          if (error) throw error;
+        } else {
+          const { error } = await supabase.rpc("publish_game_collection", {
+            collection_to_publish: collection.id,
+            external_game_to_retire: isPilot ? 55 : null
+          });
+          if (error) throw error;
+        }
+        await loadGames();
+      } catch (error) {
+        alert(messageFor(error));
+        action.disabled = false;
+      }
+    });
+    article.append(copy, action);
+    collectionList.append(article);
+  }
 }
 
 async function uploadThumbnail(game, file) {
@@ -394,6 +578,48 @@ async function uploadBundle(game, file) {
   return data;
 }
 
+async function uploadStandalone(game, prepared, reviewed) {
+  if (!prepared?.uploadFile) return game;
+  const path = `${game.id}/standalone-${prepared.sha256}.html`;
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError || !sessionData.session?.access_token) throw sessionError || new Error("Your administrator session expired.");
+  standaloneProgress.hidden = false;
+  standaloneProgress.value = 0;
+  await uploadStandaloneTus({
+    projectUrl,
+    publishableKey,
+    accessToken: sessionData.session.access_token,
+    file: prepared.uploadFile,
+    objectName: path,
+    onProgress(uploaded, total) {
+      const percent = Math.round((uploaded / total) * 100);
+      standaloneProgress.value = percent;
+      standaloneProgress.textContent = `${percent}%`;
+      showFormMessage(`Uploading standalone game… ${percent}%`, "working");
+    }
+  });
+  const { data, error } = await supabase
+    .from("games")
+    .update({
+      standalone_html_path: path,
+      source_sha256: prepared.sha256,
+      source_bytes: prepared.bytes,
+      standalone_reviewed_sha256: reviewed ? prepared.sha256 : null,
+      status: "draft"
+    })
+    .eq("id", game.id)
+    .select()
+    .single();
+  if (error) {
+    if (path !== game.standalone_html_path) await removeObject("game-standalone", path).catch(() => {});
+    throw error;
+  }
+  if (game.standalone_html_path && game.standalone_html_path !== path) {
+    await removeObject("game-standalone", game.standalone_html_path).catch(() => {});
+  }
+  return data;
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const submit = form.querySelector('[type="submit"]');
@@ -402,16 +628,41 @@ form.addEventListener("submit", async (event) => {
 
   try {
     const bundle = form.elements.bundle.files[0];
+    const standaloneFile = form.elements.standaloneFile.files[0];
+    if (hostType.value === "standalone" && standaloneFile && !preparedStandalone) {
+      showFormMessage("Checking standalone game file…", "working");
+      const prepared = await prepareStandaloneFile(standaloneFile);
+      preparedStandalone = { ...prepared, originalSize: standaloneFile.size };
+    }
     const wantedStatus = statusSelect.value;
+    const exactStandaloneReviewed = Boolean(
+      form.elements.standaloneReviewed.checked
+      && previewedStandaloneSha
+      && previewedStandaloneSha === (preparedStandalone?.sha256 || editing?.sourceSha256)
+    );
+    const standaloneNeedsDraft = hostType.value === "standalone" && (
+      standaloneFile
+      || !editing?.standaloneHtmlPath
+      || (!editing?.standaloneReady && !exactStandaloneReviewed)
+    );
     const payload = {
       title: form.elements.title.value.trim(),
       description: form.elements.description.value.trim(),
       year: Number(form.elements.year.value),
       host_type: hostType.value,
-      status: hostType.value === "hosted" && (bundle || !editing?.bundleReady) ? "draft" : wantedStatus,
+      status: (hostType.value === "hosted" && (bundle || !editing?.bundleReady)) || standaloneNeedsDraft ? "draft" : wantedStatus,
       external_url: hostType.value === "external" ? form.elements.externalUrl.value.trim() : null,
       embed_html: hostType.value === "embed" ? validateEmbedHtml(form.elements.embedHtml.value) : null,
-      bundle_path: hostType.value === "hosted" ? editing?.bundlePath || null : null
+      bundle_path: hostType.value === "hosted" ? editing?.bundlePath || null : null,
+      collection_id: form.elements.collectionId.value ? Number(form.elements.collectionId.value) : null,
+      standalone_html_path: hostType.value === "standalone" ? editing?.standaloneHtmlPath || null : null,
+      source_sha256: hostType.value === "standalone" ? editing?.sourceSha256 || null : null,
+      source_bytes: hostType.value === "standalone" ? editing?.sourceBytes || null : null,
+      standalone_reviewed_sha256: hostType.value === "standalone"
+        ? standaloneFile
+          ? null
+          : exactStandaloneReviewed ? editing?.sourceSha256 : editing?.standaloneReviewedSha256 || null
+        : null
     };
     if (!editing) payload.slug = `${slugify(payload.title)}-${crypto.randomUUID().slice(0, 8)}`;
 
@@ -431,7 +682,29 @@ form.addEventListener("submit", async (event) => {
       showFormMessage("Storing hosted-game ZIP…", "working");
       row = await uploadBundle(row, bundle);
     }
+    if (hostType.value === "standalone" && preparedStandalone?.uploadFile) {
+      row = await uploadStandalone(row, preparedStandalone, exactStandaloneReviewed);
+    } else if (hostType.value === "standalone" && exactStandaloneReviewed && row.standalone_reviewed_sha256 !== row.source_sha256) {
+      const { data: reviewed, error: reviewError } = await supabase
+        .from("games")
+        .update({ standalone_reviewed_sha256: row.source_sha256 })
+        .eq("id", row.id)
+        .select()
+        .single();
+      if (reviewError) throw reviewError;
+      row = reviewed;
+    }
     if (hostType.value === "hosted" && bundle && wantedStatus === "published") {
+      const { data: published, error: publishError } = await supabase
+        .from("games")
+        .update({ status: "published" })
+        .eq("id", row.id)
+        .select()
+        .single();
+      if (publishError) throw publishError;
+      row = published;
+    }
+    if (hostType.value === "standalone" && wantedStatus === "published") {
       const { data: published, error: publishError } = await supabase
         .from("games")
         .update({ status: "published" })
@@ -443,6 +716,9 @@ form.addEventListener("submit", async (event) => {
     }
     if (editing?.bundlePath && hostType.value !== "hosted") {
       await removeObject("game-bundles", editing.bundlePath).catch(() => {});
+    }
+    if (editing?.standaloneHtmlPath && hostType.value !== "standalone") {
+      await removeObject("game-standalone", editing.standaloneHtmlPath).catch(() => {});
     }
 
     closeEditor();
@@ -456,7 +732,14 @@ form.addEventListener("submit", async (event) => {
 
 hostType.addEventListener("change", toggleHostFields);
 form.elements.embedHtml.addEventListener("input", clearEmbedPreview);
+form.elements.standaloneFile.addEventListener("change", () => {
+  clearStandalonePreview();
+  const file = form.elements.standaloneFile.files[0];
+  standaloneSummary.textContent = file ? `${file.name} · waiting for scan` : "No standalone file selected.";
+});
+form.elements.standaloneReviewed.addEventListener("change", toggleHostFields);
 document.querySelector("#preview-embed").addEventListener("click", previewEmbeddedGame);
+document.querySelector("#preview-standalone").addEventListener("click", previewStandaloneGame);
 document.querySelector("#new-game").addEventListener("click", () => openEditor());
 document.querySelector("#cancel-edit").addEventListener("click", closeEditor);
 document.querySelector("#cancel-edit-bottom").addEventListener("click", closeEditor);
