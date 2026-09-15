@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Learn with Room 310 Study AI, a guided tutor for math, science, computer science, history, English, and more." />
+    <title>Helper · Room310</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="vendor/katex/katex.min.css?v=0.6.1" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body class="helper-page">
+    <header class="header solid-header">
+      <a class="logo" href="index.html">ROOM<span>310</span></a>
+      <nav aria-label="Main navigation">
+        <a href="study.html">Study</a>
+        <a aria-current="page" href="helper.html">Helper</a>
+        <a href="games.html">Games</a>
+        <a href="/graphs">Graphs</a>
+        <a href="index.html#archive">Archive</a>
+        <a href="extended-archives.html">Extended Archives</a>
+      </nav>
+    </header>
+
+    <main class="study-hub helper-hub">
+      <section class="study-ai-section" id="study-ai" aria-labelledby="study-ai-title">
+        <header class="study-ai-heading">
+          <div>
+            <small>Room310 / Helper · Phase 01</small>
+            <h1 id="study-ai-title">Room 310<br />Study AI</h1>
+          </div>
+          <div>
+            <p>Learn it, don’t just answer it.</p>
+            <span>Guided explanations · Worked examples · Questions that help ideas stick</span>
+          </div>
+        </header>
+
+        <div class="study-ai-workspace">
+          <aside class="study-ai-controls" aria-label="Study AI controls">
+            <div class="study-ai-control-heading">
+              <span class="study-ai-online-dot" aria-hidden="true"></span>
+              <span id="study-ai-access-label">Checking access…</span>
+            </div>
+            <label for="study-ai-subject">Subject
+              <select id="study-ai-subject" disabled>
+                <option>Math</option>
+                <option>Science</option>
+                <option>Computer Science</option>
+                <option>History</option>
+                <option>English</option>
+                <option>Other</option>
+              </select>
+            </label>
+            <button class="study-ai-new-chat" id="study-ai-new-chat" type="button" disabled>+ New chat</button>
+            <div class="study-ai-privacy-note">
+              <small>This session only</small>
+              <p>Your chat disappears when this page closes. Room310 does not save Study AI conversations in Supabase.</p>
+            </div>
+            <div class="study-ai-account" id="study-ai-account" hidden>
+              <span id="study-ai-user"></span>
+              <button id="study-ai-sign-out" type="button">Sign out</button>
+            </div>
+          </aside>
+
+          <div class="study-ai-panel">
+            <section class="study-ai-auth" id="study-ai-auth" aria-labelledby="study-ai-auth-title">
+              <div>
+                <small>Room310 members</small>
+                <h2 id="study-ai-auth-title">Sign in to study.</h2>
+                <p>Use your existing Room310 account. Your session is verified again on the server before the tutor receives a question.</p>
+              </div>
+              <form id="study-ai-login-form">
+                <label>Email<input name="email" type="email" autocomplete="username" required maxlength="254" /></label>
+                <label>Password<input name="password" type="password" autocomplete="current-password" required /></label>
+                <button type="submit">Sign in <span aria-hidden="true">→</span></button>
+                <p class="study-ai-form-message" id="study-ai-login-message" role="status"></p>
+              </form>
+            </section>
+
+            <section class="study-ai-chat" id="study-ai-chat" aria-label="Room 310 Study AI chat" hidden>
+              <div class="study-ai-messages" id="study-ai-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
+              <form class="study-ai-composer" id="study-ai-form">
+                <label class="sr-only" for="study-ai-input">Ask Room 310 Study AI a question</label>
+                <textarea id="study-ai-input" rows="1" maxlength="4000" placeholder="What are you working on?" enterkeyhint="send" required></textarea>
+                <div>
+                  <span id="study-ai-status" role="status">Enter to send · Shift+Enter for a new line</span>
+                  <button id="study-ai-send" type="submit">Send <span aria-hidden="true">↑</span></button>
+                </div>
+              </form>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="site-polish.js?v=0.6.1"></script>
+    <script src="supabase-config.js?v=0.6.1"></script>
+    <script src="study-ai.js?v=0.6.1"></script>
+  </body>
+</html>

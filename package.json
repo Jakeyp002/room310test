@@ -1,6 +1,6 @@
 {
   "name": "room310",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,13 +8,17 @@
     "preview": "node scripts/preview.mjs",
     "build": "node scripts/build.mjs",
     "games:import": "node scripts/import-game-collection.mjs",
-    "test": "node --test --test-isolation=none --test-concurrency=1 tests/*.test.mjs",
     "version:bump": "node scripts/bump-version.mjs",
-    "version:sync": "node scripts/sync-version.mjs"
+    "version:sync": "node scripts/sync-version.mjs",
+    "test": "node --test --test-isolation=none --test-concurrency=1 tests/*.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.115.0",
+    "dompurify": "3.4.15",
     "fflate": "0.8.3",
+    "katex": "0.18.7",
+    "marked": "18.0.12",
+    "openai": "7.15.0",
     "prismjs": "1.30.0"
   },
   "devDependencies": {

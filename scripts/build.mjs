@@ -1,5 +1,5 @@
 import { cp, mkdir, rm, writeFile } from "node:fs/promises";
-import { build } from "esbuild";
+import { build, stop } from "esbuild";
 import { syncProjectVersion } from "./versioning.mjs";
 
 await syncProjectVersion();
@@ -25,6 +25,9 @@ await build({
   legalComments: "eof"
 });
 await cp("room310files", "dist", { recursive: true });
+await mkdir("dist/vendor/katex", { recursive: true });
+await cp("node_modules/katex/dist/katex.min.css", "dist/vendor/katex/katex.min.css");
+await cp("node_modules/katex/dist/fonts", "dist/vendor/katex/fonts", { recursive: true });
 
 await writeFile(
   "dist/supabase-config.js",
@@ -41,7 +44,9 @@ await build({
     "game-player": "client-src/game-player.js",
     graphs: "client-src/graphs.js",
     graph: "client-src/graph.js",
-    "admin-graphs": "client-src/admin-graphs.js"
+    "admin-graphs": "client-src/admin-graphs.js",
+    "study-ai": "client-src/study-ai.js",
+    "assignment-help": "client-src/assignment-help.js"
   },
   bundle: true,
   format: "iife",
@@ -54,3 +59,5 @@ await build({
 if (!publishableKey) {
   console.warn("SUPABASE_PUBLISHABLE_KEY is not set; the static site will build, but Supabase features will show a configuration message.");
 }
+
+stop();

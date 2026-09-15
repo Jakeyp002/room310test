@@ -1219,6 +1219,262 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
   .assignment-workspace-inline-launch small { display: none; }
 }
 
+/* Assignment Help — v1.9 */
+.assignment-help-launch,
+.assignment-help-panel button,
+.assignment-help-panel input,
+.assignment-help-panel textarea { font: inherit; }
+.assignment-help-launch,
+.assignment-help-panel button { cursor: pointer; }
+.assignment-help-launch {
+  position: fixed;
+  right: 22px;
+  bottom: 84px;
+  z-index: 191;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 18px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--accent);
+  box-shadow: 0 10px 30px rgba(23, 23, 20, 0.2);
+  font: 700 12px "Courier New", monospace;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.assignment-help-launch > span:first-child {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 14px;
+}
+.assignment-help-launch:hover,
+.assignment-help-launch:focus-visible { color: var(--paper); background: var(--ink); }
+.assignment-help-open .assignment-help-launch,
+.assignment-help-open .assignment-workspace-launch,
+.assignment-workspace-open .assignment-help-launch { display: none; }
+.assignment-help-panel[hidden],
+.assignment-help-auth[hidden],
+.assignment-help-chat[hidden] { display: none !important; }
+.assignment-help-panel {
+  --assignment-help-border: rgba(241, 239, 231, 0.2);
+  position: fixed;
+  inset: 0 0 0 auto;
+  z-index: 310;
+  width: var(--assignment-help-width, clamp(420px, 38vw, 560px));
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  color: var(--paper);
+  background: #171714;
+  border-left: 1px solid #000;
+  box-shadow: -16px 0 45px rgba(0, 0, 0, 0.22);
+  font-family: Arial, Helvetica, sans-serif;
+}
+.assignment-help-header {
+  min-height: 73px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 13px 16px 13px 20px;
+  border-bottom: 1px solid var(--assignment-help-border);
+}
+.assignment-help-header > div:first-child { min-width: 0; display: grid; gap: 4px; }
+.assignment-help-header strong { font-size: 19px; letter-spacing: -0.02em; }
+.assignment-help-kicker,
+.assignment-help-version,
+.assignment-help-context span,
+.assignment-help-context small,
+.assignment-help-chatbar,
+.assignment-help-message-label,
+.assignment-help-suggestions,
+.assignment-help-form > div,
+.assignment-help-privacy,
+.assignment-help-auth small,
+.assignment-help-auth label,
+.assignment-help-confirmation > span { font-family: "Courier New", monospace; text-transform: uppercase; }
+.assignment-help-kicker { color: var(--accent); font-size: 10px; letter-spacing: 0.05em; }
+.assignment-help-header-actions { display: flex; align-items: center; gap: 10px; }
+.assignment-help-version { padding: 6px 8px; border: 1px solid var(--assignment-help-border); color: var(--accent); font-size: 10px; }
+.assignment-help-close {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--assignment-help-border);
+  border-radius: 50%;
+  color: var(--paper);
+  background: transparent;
+  font-size: 25px !important;
+  line-height: 1;
+}
+.assignment-help-close:hover,
+.assignment-help-close:focus-visible { color: var(--ink); background: var(--accent); }
+.assignment-help-context {
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--assignment-help-border);
+  background: #20201c;
+}
+.assignment-help-context > div { min-width: 0; display: grid; gap: 5px; }
+.assignment-help-context span { color: #aaa89f; font-size: 9px; letter-spacing: 0.05em; }
+.assignment-help-context strong { overflow: hidden; font-size: 15px; line-height: 1.22; text-overflow: ellipsis; white-space: nowrap; }
+.assignment-help-context small { color: var(--accent); font-size: 9px; }
+.assignment-help-switch,
+.assignment-help-chatbar button,
+.assignment-help-suggestions button,
+.assignment-help-form button,
+.assignment-help-auth button,
+.assignment-help-confirmation button {
+  min-height: 38px;
+  padding: 0 11px;
+  border: 1px solid #77756d;
+  border-radius: 0;
+  color: var(--paper);
+  background: transparent;
+  font: 700 9px "Courier New", monospace !important;
+  text-transform: uppercase;
+}
+.assignment-help-switch { flex: 0 0 auto; border-color: var(--accent); color: var(--ink); background: var(--accent); }
+.assignment-help-panel button:hover,
+.assignment-help-panel button:focus-visible { border-color: var(--accent); color: var(--ink); background: var(--accent); }
+.assignment-help-panel button:disabled { cursor: wait; opacity: 0.5; }
+.assignment-help-auth {
+  min-height: 0;
+  display: grid;
+  align-content: end;
+  gap: 28px;
+  padding: 30px 26px;
+  overflow-y: auto;
+}
+.assignment-help-auth small { color: var(--accent); font-size: 9px; }
+.assignment-help-auth h2 { margin: 14px 0 12px; font-size: clamp(42px, 5.4vw, 72px); line-height: 0.82; letter-spacing: -0.06em; }
+.assignment-help-auth > div p { margin: 0; color: #c8c6be; font-size: 14px; line-height: 1.45; }
+.assignment-help-auth form { display: grid; gap: 14px; }
+.assignment-help-auth label { display: grid; gap: 7px; color: #c8c6be; font-size: 9px; }
+.assignment-help-auth input,
+.assignment-help-form textarea {
+  width: 100%;
+  border: 1px solid #77756d;
+  border-radius: 0;
+  color: var(--paper);
+  background: #11110f;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.assignment-help-auth input { min-height: 44px; padding: 10px 11px; font-size: 15px; }
+.assignment-help-auth button { color: var(--ink); background: var(--accent); }
+.assignment-help-form-message { min-height: 18px; margin: 0; color: #ff9c8d; font-size: 12px; line-height: 1.4; }
+.assignment-help-form-message[data-state="working"] { color: var(--paper); }
+.assignment-help-chat { min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto auto; }
+.assignment-help-chatbar {
+  min-height: 45px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--assignment-help-border);
+  color: #aaa89f;
+  font-size: 9px;
+}
+.assignment-help-account { min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; text-transform: none; white-space: nowrap; }
+.assignment-help-chatbar button { min-height: 31px; padding: 0 8px; font-size: 8px !important; }
+.assignment-help-messages { min-height: 0; padding: 20px 18px 8px; overflow-y: auto; overscroll-behavior: contain; scroll-behavior: smooth; }
+.assignment-help-message { width: min(90%, 470px); margin-bottom: 19px; }
+.assignment-help-message-user { margin-left: auto; }
+.assignment-help-message-label { display: block; margin-bottom: 6px; color: #aaa89f; font-size: 8px; letter-spacing: 0.04em; }
+.assignment-help-message-user .assignment-help-message-label { text-align: right; }
+.assignment-help-message-body {
+  padding: 15px 16px;
+  border: 1px solid #77756d;
+  color: var(--ink);
+  background: #fffdf7;
+  font-size: 14px;
+  line-height: 1.52;
+  overflow-wrap: anywhere;
+}
+.assignment-help-message-assistant .assignment-help-message-body { border-left: 6px solid var(--accent); }
+.assignment-help-message-user .assignment-help-message-body { border-color: #77756d; color: var(--paper); background: #292924; }
+.assignment-help-message[data-state="error"] .assignment-help-message-body { border-left-color: #ff795f; }
+.assignment-help-message-body > :first-child { margin-top: 0; }
+.assignment-help-message-body > :last-child { margin-bottom: 0; }
+.assignment-help-message-body p,
+.assignment-help-message-body ul,
+.assignment-help-message-body ol,
+.assignment-help-message-body blockquote { margin: 0 0 12px; }
+.assignment-help-message-body li + li { margin-top: 5px; }
+.assignment-help-message-body h1,
+.assignment-help-message-body h2,
+.assignment-help-message-body h3 { margin: 20px 0 10px; line-height: 1; }
+.assignment-help-message-body pre { max-width: 100%; margin: 14px 0; padding: 13px; overflow-x: auto; color: var(--paper); background: var(--ink); font: 12px/1.5 "Courier New", monospace; }
+.assignment-help-message-body code { padding: 0.12em 0.28em; background: #dedbd0; font: 0.86em "Courier New", monospace; }
+.assignment-help-message-body pre code { padding: 0; color: inherit; background: transparent; font: inherit; }
+.assignment-help-message-body a { text-decoration: underline; text-underline-offset: 3px; }
+.assignment-help-message-body .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+.assignment-help-confirmation {
+  margin: 2px 0 20px;
+  padding: 16px;
+  border: 1px solid var(--accent);
+  color: var(--ink);
+  background: var(--accent);
+}
+.assignment-help-confirmation > span { display: block; margin-bottom: 8px; font-size: 8px; }
+.assignment-help-confirmation strong { display: block; font-size: 16px; }
+.assignment-help-confirmation p { margin: 8px 0 13px; font-size: 13px; line-height: 1.4; }
+.assignment-help-confirmation > div { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.assignment-help-confirmation button { min-height: 42px; border-color: var(--ink); color: var(--ink); background: #fffdf7; }
+.assignment-help-confirmation button:last-child { color: var(--paper); background: var(--ink); }
+.assignment-help-suggestions { display: flex; gap: 6px; padding: 8px 12px; overflow-x: auto; border-top: 1px solid var(--assignment-help-border); }
+.assignment-help-suggestions button { flex: 0 0 auto; min-height: 34px; padding: 0 9px; font-size: 8px !important; }
+.assignment-help-form { padding: 10px 12px 9px; border-top: 1px solid var(--assignment-help-border); background: #20201c; }
+.assignment-help-form textarea { min-height: 52px; max-height: 132px; padding: 12px; resize: none; font-size: 14px; line-height: 1.4; }
+.assignment-help-form textarea:focus { outline: 2px solid var(--accent); outline-offset: -2px; }
+.assignment-help-form > div { min-height: 38px; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 7px; color: #aaa89f; font-size: 8px; }
+.assignment-help-form button { min-width: 78px; border-color: var(--accent); color: var(--ink); background: var(--accent); }
+.assignment-help-privacy { margin: 0; padding: 8px 12px 10px; color: #77756d; font-size: 8px; line-height: 1.35; text-transform: none; }
+
+@media (min-width: 981px) {
+  body.assignment-help-open { padding-right: var(--assignment-help-width, clamp(420px, 38vw, 560px)); }
+  body.assignment-help-open .header { width: calc(100% - var(--assignment-help-width, clamp(420px, 38vw, 560px))); }
+  body.assignment-help-open .lesson-page { padding-left: 22px; padding-right: 22px; }
+}
+
+@media (max-width: 980px) {
+  .assignment-help-panel { width: 100%; border-left: 0; }
+  .assignment-help-launch { right: 14px; bottom: 72px; }
+}
+
+@media (max-width: 620px) {
+  .assignment-help-launch { min-height: 46px; padding: 0 14px; }
+  .assignment-help-header { min-height: 59px; padding: 9px 10px 9px 14px; }
+  .assignment-help-header strong { font-size: 16px; }
+  .assignment-help-version { padding: 4px; font-size: 9px; }
+  .assignment-help-context { min-height: 78px; padding: 10px 12px; }
+  .assignment-help-context strong { max-width: 58vw; font-size: 13px; }
+  .assignment-help-switch { min-height: 36px; max-width: 112px; }
+  .assignment-help-chatbar { padding: 5px 8px; }
+  .assignment-help-messages { padding: 16px 12px 6px; }
+  .assignment-help-message { width: 96%; }
+  .assignment-help-message-body { padding: 13px; font-size: 13px; }
+  .assignment-help-suggestions { padding: 7px 8px; }
+  .assignment-help-form { padding: 8px; }
+  .assignment-help-form > div { align-items: flex-end; }
+  .assignment-help-status { max-width: 200px; line-height: 1.35; }
+  .assignment-help-privacy { padding: 5px 8px 7px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .assignment-help-messages { scroll-behavior: auto; }
+}
+
 /* Graph library and embedded workspace — v0.8 */
 .graphs-heading { display: flex; align-items: end; justify-content: space-between; gap: 32px; margin-bottom: 36px; }
 .graphs-heading h1 { margin: 18px 0 0; font-size: clamp(48px, 7vw, 96px); line-height: .9; letter-spacing: -.065em; }
@@ -1614,4 +1870,198 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
   .game-player-info h1 { font-size: 28px; }
   .game-player-info p { display: none; }
   .game-player-info button { min-height: 30px; }
+}
+
+/* Helper / Study AI — v1.9 */
+.helper-hub { padding-bottom: 28px; }
+.study-ai-section {
+  margin-bottom: 80px;
+  border: 1px solid var(--ink);
+  background: #dedbd0;
+}
+.study-ai-heading {
+  min-height: 420px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 28px;
+  align-items: end;
+  padding: 34px 28px 30px;
+  border-bottom: 8px solid var(--accent);
+}
+.study-ai-heading small,
+.study-ai-heading span,
+.study-ai-controls,
+.study-ai-message-label,
+.study-ai-composer > div,
+.study-ai-auth small,
+.study-ai-auth label {
+  font-family: "Courier New", monospace;
+  text-transform: uppercase;
+}
+.study-ai-heading h1 {
+  margin: 30px 0 0;
+  font-size: clamp(70px, 10vw, 150px);
+  line-height: 0.74;
+  letter-spacing: -0.075em;
+}
+.study-ai-heading > div:last-child { display: grid; gap: 22px; }
+.study-ai-heading p { margin: 0; font-size: clamp(24px, 3vw, 43px); line-height: 0.95; letter-spacing: -0.045em; }
+.study-ai-heading span { font-size: 10px; line-height: 1.5; }
+.study-ai-workspace {
+  height: min(760px, calc(100svh - 85px));
+  min-height: 620px;
+  display: grid;
+  grid-template-columns: 255px minmax(0, 1fr);
+  background: var(--paper);
+}
+.study-ai-controls {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 22px;
+  border-right: 1px solid var(--ink);
+  font-size: 10px;
+}
+.study-ai-control-heading { display: flex; gap: 9px; align-items: center; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.study-ai-online-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 1px var(--ink); }
+.study-ai-controls label { display: grid; gap: 9px; }
+.study-ai-controls select,
+.study-ai-auth input,
+.study-ai-composer textarea {
+  width: 100%;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  color: var(--ink);
+  background: #fffdf7;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.study-ai-controls select { min-height: 46px; padding: 0 10px; font-size: 14px; }
+.study-ai-controls button,
+.study-ai-auth button,
+.study-ai-composer button {
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  color: var(--ink);
+  background: transparent;
+  font: 700 10px "Courier New", monospace;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.study-ai-controls button:hover,
+.study-ai-controls button:focus-visible,
+.study-ai-auth button:hover,
+.study-ai-auth button:focus-visible,
+.study-ai-composer button:hover,
+.study-ai-composer button:focus-visible { color: var(--paper); background: var(--ink); }
+.study-ai-controls button:disabled,
+.study-ai-auth button:disabled,
+.study-ai-composer button:disabled { cursor: wait; opacity: 0.5; }
+.study-ai-new-chat { width: 100%; background: var(--accent) !important; }
+.study-ai-new-chat:hover,
+.study-ai-new-chat:focus-visible { color: var(--paper) !important; background: var(--ink) !important; }
+.study-ai-privacy-note { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--line); text-transform: none; }
+.study-ai-privacy-note small { font-size: 9px; text-transform: uppercase; }
+.study-ai-privacy-note p { margin: 8px 0 0; color: #5e5c55; font: 12px/1.45 Arial, sans-serif; }
+.study-ai-account { display: grid; gap: 8px; padding-top: 18px; border-top: 1px solid var(--line); }
+.study-ai-account span { overflow: hidden; font-size: 9px; text-overflow: ellipsis; text-transform: none; }
+.study-ai-account button { min-height: 38px; }
+.study-ai-panel { min-width: 0; min-height: 0; }
+.study-ai-auth {
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+  gap: 50px;
+  align-items: end;
+  padding: 42px;
+  background: var(--ink);
+  color: var(--paper);
+}
+.study-ai-auth[hidden],
+.study-ai-chat[hidden],
+.study-ai-account[hidden] { display: none !important; }
+.study-ai-auth small { color: var(--accent); font-size: 10px; }
+.study-ai-auth h2 { margin: 20px 0 24px; font-size: clamp(52px, 7vw, 100px); line-height: 0.8; letter-spacing: -0.065em; }
+.study-ai-auth > div p { max-width: 510px; margin: 0; color: #c8c6be; font-size: 17px; line-height: 1.45; }
+.study-ai-auth form { display: grid; gap: 17px; }
+.study-ai-auth label { display: grid; gap: 8px; font-size: 10px; }
+.study-ai-auth input { min-height: 49px; padding: 11px 12px; font-size: 15px; }
+.study-ai-auth button { color: var(--ink); background: var(--accent); }
+.study-ai-form-message { min-height: 38px; margin: 0; color: #ff9c8d; font: 12px/1.45 Arial, sans-serif; text-transform: none; }
+.study-ai-form-message[data-state="working"] { color: var(--paper); }
+.study-ai-chat { height: 100%; min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+.study-ai-messages { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scroll-behavior: smooth; padding: 32px; }
+.study-ai-message { width: min(82%, 740px); margin-bottom: 30px; }
+.study-ai-message-user { margin-left: auto; }
+.study-ai-message-label { display: block; margin-bottom: 8px; font-size: 9px; letter-spacing: 0.05em; }
+.study-ai-message-user .study-ai-message-label { text-align: right; }
+.study-ai-message-body { padding: 20px 22px; border: 1px solid var(--ink); background: #fffdf7; font-size: 16px; line-height: 1.55; overflow-wrap: anywhere; }
+.study-ai-message-assistant .study-ai-message-body { border-left: 7px solid var(--accent); }
+.study-ai-message-user .study-ai-message-body { color: var(--paper); background: var(--ink); }
+.study-ai-message[data-state="error"] .study-ai-message-body { border-left-color: #ff795f; }
+.study-ai-message-body > :first-child { margin-top: 0; }
+.study-ai-message-body > :last-child { margin-bottom: 0; }
+.study-ai-message-body p,
+.study-ai-message-body ul,
+.study-ai-message-body ol,
+.study-ai-message-body blockquote { margin: 0 0 15px; }
+.study-ai-message-body li + li { margin-top: 6px; }
+.study-ai-message-body h1,
+.study-ai-message-body h2,
+.study-ai-message-body h3 { margin: 25px 0 12px; line-height: 1; letter-spacing: -0.035em; }
+.study-ai-message-body pre { max-width: 100%; overflow-x: auto; margin: 18px 0; padding: 16px; color: var(--paper); background: var(--ink); font: 13px/1.55 "Courier New", monospace; }
+.study-ai-message-user .study-ai-message-body pre { border: 1px solid #5a5a52; }
+.study-ai-message-body code { padding: 0.12em 0.3em; background: #dedbd0; font: 0.86em "Courier New", monospace; }
+.study-ai-message-body pre code { padding: 0; color: inherit; background: transparent; font: inherit; }
+.study-ai-message-body a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.study-ai-message-body blockquote { padding-left: 15px; border-left: 3px solid var(--ink); color: #55534d; }
+.study-ai-message-body .katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; padding: 5px 0; }
+.study-ai-composer { padding: 18px 20px 20px; border-top: 1px solid var(--ink); background: #dedbd0; }
+.study-ai-composer textarea { min-height: 62px; max-height: 160px; resize: none; padding: 15px; font-size: 16px; line-height: 1.4; }
+.study-ai-composer > div { display: flex; justify-content: space-between; gap: 20px; align-items: center; margin-top: 10px; font-size: 9px; text-transform: uppercase; }
+.study-ai-composer button { min-width: 100px; background: var(--accent); }
+.study-ai-typing { display: inline-flex; gap: 6px; align-items: center; min-height: 24px; }
+.study-ai-typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--ink); animation: study-ai-pulse 1.05s infinite ease-in-out; }
+.study-ai-typing i:nth-child(2) { animation-delay: 0.14s; }
+.study-ai-typing i:nth-child(3) { animation-delay: 0.28s; }
+@keyframes study-ai-pulse { 0%, 70%, 100% { opacity: 0.2; transform: translateY(0); } 35% { opacity: 1; transform: translateY(-3px); } }
+
+@media (max-width: 900px) {
+  .study-ai-heading { grid-template-columns: 1fr; min-height: 520px; }
+  .study-ai-heading > div:last-child { max-width: 520px; }
+  .study-ai-workspace { height: auto; min-height: 0; grid-template-columns: 1fr; }
+  .study-ai-controls { display: grid; grid-template-columns: 1fr 1fr; border-right: 0; border-bottom: 1px solid var(--ink); }
+  .study-ai-control-heading { grid-column: 1 / -1; }
+  .study-ai-privacy-note { display: none; }
+  .study-ai-account { grid-column: 1 / -1; grid-template-columns: 1fr auto; align-items: center; padding-top: 12px; }
+  .study-ai-panel { height: 650px; }
+  .study-ai-auth { grid-template-columns: 1fr; align-content: end; }
+}
+
+@media (max-width: 620px) {
+  .study-ai-section { margin: 0 -12px 55px; }
+  .study-ai-heading { min-height: 430px; padding: 27px 18px 24px; }
+  .study-ai-heading h1 { font-size: clamp(58px, 19vw, 88px); }
+  .study-ai-controls { grid-template-columns: minmax(0, 1fr) auto; gap: 15px; padding: 16px; }
+  .study-ai-controls label { min-width: 0; }
+  .study-ai-new-chat { align-self: end; width: auto; white-space: nowrap; }
+  .study-ai-account { grid-template-columns: minmax(0, 1fr) auto; }
+  .study-ai-panel { height: min(670px, 78svh); min-height: 540px; }
+  .study-ai-auth { padding: 28px 20px; gap: 32px; }
+  .study-ai-auth h2 { font-size: clamp(52px, 17vw, 76px); }
+  .study-ai-auth > div p { font-size: 15px; }
+  .study-ai-messages { padding: 22px 15px; }
+  .study-ai-message { width: 94%; margin-bottom: 22px; }
+  .study-ai-message-body { padding: 16px; font-size: 15px; }
+  .study-ai-composer { padding: 12px; }
+  .study-ai-composer > div { align-items: flex-end; }
+  .study-ai-composer > div > span { max-width: 205px; line-height: 1.35; }
+  .study-ai-composer button { min-width: 84px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .study-ai-messages { scroll-behavior: auto; }
+  .study-ai-typing i { animation: none; opacity: 0.65; }
 }

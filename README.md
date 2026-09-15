@@ -1,6 +1,6 @@
 # Room310
 
-Room310 is an HTML/CSS/JavaScript learning site. Version 0.5.0 gives linked games a reliable open-on-original-site button and an opt-in experimental Room310 player, while pasted HTML and uploaded web-game ZIPs run in the responsive Room310 player. ZIP assets stay in private Supabase Storage and are served through a CSP-sandboxed asset function. It retains the featured Apex Trails embed, the deep learning and PyTorch course, assignment formatting and syntax highlighting, the Extended Archives notice, and compiler fixes. The held admin-request form remains unpublished.
+Room310 is an HTML/CSS/JavaScript learning site. Version 0.5.0 adds assignment-aware help to coding lessons, reusing the authenticated Room 310 Study AI tutor through Netlify AI Gateway and OpenAI GPT-5 mini. It retains the course library, linked and hosted games, interactive graphs, the deep learning and PyTorch course, assignment formatting and syntax highlighting, and the existing protected administration tools.
 
 ## Versioning
 
@@ -49,6 +49,32 @@ The production site is built from `room310files/` into `dist/`. Supabase supplie
 4. Run `npm run build`. Never put a Supabase secret or `service_role` key in Netlify's frontend build variables.
 5. In Supabase Authentication, create the first user with `jacob.bradford.aleo@gmail.com`. The database trigger approves that address as the initial administrator; other new users remain unapproved editors.
 6. Open `/admin/login`, sign in, and choose the Games or Graphs management tab. Only published records appear in the public catalogs.
+
+## Room 310 Study AI
+
+Open `/helper` to use Study AI. Helper appears directly between Study and Games in the main navigation, while `/study` remains the course catalog. Existing Supabase sessions are reused; a student without a session can sign in on the Helper page. Any non-anonymous authenticated Supabase user may use the tutor. Manager approval is still required for Games and Graphs administration, but is not required for Study AI.
+
+The browser sends the selected subject and at most the latest 20 in-memory messages to `/api/study`. The Netlify Function verifies the bearer token with Supabase Auth, atomically consumes the user's hourly quota, and only then calls GPT-5 mini through Netlify AI Gateway. The browser cannot select a model and receives no provider or Gateway credential. Responses use streamed NDJSON and render as sanitized Markdown with local KaTeX math support. `store: false` is sent to OpenAI, and Room310 stores no prompts or answers in Supabase.
+
+Production setup:
+
+1. Apply `supabase/migrations/20260912161948_study_ai_rate_limit.sql` along with the other pending migrations. It stores only hourly user IDs and request counts in the private schema; it stores no chat content.
+2. If the Supabase project's Data API settings require explicit exposure for new functions, enable `public.consume_study_ai_request` for the Data API. Its SQL privileges still permit only the `authenticated` role, and the function derives the user ID from the verified JWT.
+3. Deploy the site to production once on a Netlify credit-based plan. Netlify AI Gateway activates after a production deploy and injects `NETLIFY_AI_GATEWAY_KEY` and `NETLIFY_AI_GATEWAY_URL` into the Function automatically. Keep Netlify AI Features enabled. No OpenAI API key should be added to this project.
+4. Check the deploy log for the `/api/study` code-based rate-limit rule. The Function adds a coarse 40 requests per 180 seconds per domain/IP guard; Supabase enforces the primary 30 requests per authenticated user per UTC hour limit.
+5. Sign in at `/helper` and send a short test question. A local live-AI test requires `netlify dev` with the directory linked to the already deployed Netlify site so the CLI can supply Gateway variables.
+
+`STUDY_AI_MODEL` is an optional server-side-only override. Leave it unset to use `gpt-5-mini`. Before changing it, confirm that the exact model is supported by Netlify AI Gateway and the OpenAI Responses API. The response cap is 1,600 tokens; questions are limited to 4,000 characters and aggregate recent context to 40,000 characters.
+
+### Assignment Help on coding lessons
+
+Coding lesson pages with a supported Assignment Workspace now show an **Assignment Help** control directly above the workspace launcher. The two panels are mutually exclusive on desktop and mobile: opening either one closes the other. Assignment Help uses the same Supabase session, `/api/study` function, Netlify AI Gateway configuration, GPT-5 mini model, streamed sanitized Markdown renderer, and 30-request hourly user quota as the main Helper page.
+
+`window.Room310AssignmentWorkspace.getContext()` constructs a versioned, text-only context object for the assignment nearest the student's current viewport position. It includes the assignment and lesson titles, instructions, relevant preceding lesson text, starter code, expected/sample output, bounded examples, language, assignment position, and the editor's current code/input/output. It never sends page HTML. The frontend calls this interface again for every question, so edits made in the workspace are included in the next request. Context fields are independently validated and length-limited again in the Netlify Function, leaving a clean interface that can support future assignment types.
+
+Normal Assignment Help responses are forced into a hints-first tutoring mode. When the latest request explicitly asks for the completed current-assignment answer or code, the server returns a confirmation choice before consuming quota or calling the model. The choice token is short-lived, HMAC-signed, tied to the authenticated user, assignment, current code, and exact question, and permits a full solution for only that response. Choosing another hint keeps the no-solution tutor rules. Changing the code or question invalidates the old token.
+
+Assignment Help needs no additional database migration, environment variable, provider key, or model setting beyond the existing Study AI setup. It intentionally does not mount on external-PyTorch lessons because those pages do not use the supported in-browser Assignment Workspace. Chats remain in memory only and disappear when the page closes or reloads.
 
 Hosted ZIPs can be stored privately, but cannot be published until a separate restricted game origin is deployed. This prevents untrusted uploaded JavaScript from sharing the website or admin origin.
 

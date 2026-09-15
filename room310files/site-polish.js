@@ -60,10 +60,44 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", loadCourseLab, { once: true });
   else loadCourseLab();
 
-  const loadAssignmentWorkspace = () => {
-    if (!needsAssignmentWorkspace || document.documentElement.dataset.assignmentWorkspace || document.querySelector('script[src^="assignment-workspace.js"]')) return;
+  const loadAssignmentHelpBundle = () => {
+    if (!window.Room310AssignmentWorkspace?.hasAssignment || document.documentElement.dataset.assignmentHelp || document.querySelector('script[data-room310-assignment-help]')) return;
     const script = document.createElement("script");
-    script.src = `assignment-workspace.js?v=${siteVersion}`;
+    script.src = `/assignment-help.js?v=${siteVersion}`;
+    script.dataset.room310AssignmentHelp = "true";
+    document.body.append(script);
+  };
+  const loadAssignmentHelp = () => {
+    if (!window.Room310AssignmentWorkspace?.hasAssignment) return;
+    if (window.ROOM310_SUPABASE_CONFIG) {
+      loadAssignmentHelpBundle();
+      return;
+    }
+    const existing = document.querySelector('script[data-room310-supabase-config], script[src^="/supabase-config.js"], script[src^="supabase-config.js"]');
+    if (existing) {
+      existing.addEventListener("load", loadAssignmentHelpBundle, { once: true });
+      return;
+    }
+    const configScript = document.createElement("script");
+    configScript.src = `/supabase-config.js?v=${siteVersion}`;
+    configScript.dataset.room310SupabaseConfig = "true";
+    configScript.addEventListener("load", loadAssignmentHelpBundle, { once: true });
+    document.body.append(configScript);
+  };
+  const loadAssignmentWorkspace = () => {
+    if (!needsAssignmentWorkspace) return;
+    if (window.Room310AssignmentWorkspace) {
+      loadAssignmentHelp();
+      return;
+    }
+    const existing = document.querySelector('script[src^="assignment-workspace.js"], script[src^="/assignment-workspace.js"]');
+    if (existing) {
+      existing.addEventListener("load", loadAssignmentHelp, { once: true });
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = `/assignment-workspace.js?v=${siteVersion}`;
+    script.addEventListener("load", loadAssignmentHelp, { once: true });
     document.body.append(script);
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", loadAssignmentWorkspace, { once: true });

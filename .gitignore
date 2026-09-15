@@ -9,3 +9,6 @@ __pycache__/
 .runtime/
 .venv/
 room310files.zip
+
+# Local Netlify folder
+.netlify

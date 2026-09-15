@@ -8,7 +8,7 @@ export function markdown(text) {
 }
 const version = JSON.parse(await readFile(new URL("../package.json", import.meta.url))).version;
 const output = new URL("../room310files/", import.meta.url);
-const header = `<header class="header solid-header"><a class="logo" href="index.html">ROOM<span>310</span></a><nav aria-label="Main navigation"><a aria-current="page" href="study.html">Study</a><a href="games.html">Games</a><a href="/graphs">Graphs</a><a href="index.html#archive">Archive</a><a href="extended-archives.html">Extended Archives</a></nav></header>`;
+const header = `<header class="header solid-header"><a class="logo" href="index.html">ROOM<span>310</span></a><nav aria-label="Main navigation"><a aria-current="page" href="study.html">Study</a><a href="helper.html">Helper</a><a href="games.html">Games</a><a href="/graphs">Graphs</a><a href="index.html#archive">Archive</a><a href="extended-archives.html">Extended Archives</a></nav></header>`;
 const shell = (title, description, classes, content, extra = "", attributes = "") => `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="${escapeHTML(description)}"><title>${escapeHTML(title)} · Room310</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="deep-learning.css?v=${version}"><link rel="icon" type="image/png" href="favicon.png"></head>
 <body class="${classes}" ${attributes}>${header}${content}<script src="site-polish.js?v=${version}"></script>${extra}</body></html>\n`;

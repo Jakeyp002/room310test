@@ -124,6 +124,137 @@ Console.WriteLine($"Hello from {course}!");`
   filename.textContent = filenames[currentLanguage];
 
   const assignmentTarget = document.querySelector(".assignment-section, .chapter-project") || [...document.querySelectorAll(".lesson-content h1, .lesson-content h2, .lesson-content h3")].find((heading) => /\b(assignments?|projects?|challenge|exercises?)\b/i.test(heading.textContent));
+
+  const cleanContextText = (value) => String(value || "").replace(/\s+/g, " ").trim();
+  const clipContext = (value, limit, keepEnd = false) => {
+    const text = cleanContextText(value);
+    if (text.length <= limit) return text;
+    return keepEnd ? `…${text.slice(-(limit - 1))}` : `${text.slice(0, limit - 1)}…`;
+  };
+  const assignmentHeadingPattern = /^(?:a\s*\d+(?:\.\d+)*\b|ch(?:apter)?\.?\s*\d+\s+project\b|assignment\b|project\b|challenge\b|exercise\b)/i;
+
+  const legacyAssignmentBlock = (heading) => {
+    const level = Number(heading.tagName.slice(1));
+    const nodes = [heading];
+    let sibling = heading.nextElementSibling;
+    while (sibling) {
+      if (/^H[1-3]$/.test(sibling.tagName) && Number(sibling.tagName.slice(1)) <= level) break;
+      nodes.push(sibling);
+      sibling = sibling.nextElementSibling;
+    }
+    return nodes;
+  };
+
+  const assignmentCandidates = () => {
+    const candidates = [
+      ...document.querySelectorAll(".assignment-section .dl-task, .assignment-section .curriculum-assignments > li, .chapter-project")
+    ];
+    document.querySelectorAll(".lesson-content > h1, .lesson-content > h2, .lesson-content > h3").forEach((heading) => {
+      if (assignmentHeadingPattern.test(cleanContextText(heading.textContent))) candidates.push(heading);
+    });
+    if (!candidates.length && assignmentTarget) candidates.push(assignmentTarget);
+    return [...new Set(candidates)];
+  };
+
+  const activeAssignment = () => {
+    const candidates = assignmentCandidates();
+    if (!candidates.length) return null;
+    const marker = Math.max(140, window.innerHeight * 0.46);
+    const measured = candidates.map((element, index) => ({ element, index, rect: element.getBoundingClientRect() }));
+    const nearViewport = measured.filter(({ rect }) => rect.top <= marker && rect.bottom >= 0);
+    if (nearViewport.length) return nearViewport.at(-1);
+    return measured.find(({ rect }) => rect.top > marker) || measured.at(-1);
+  };
+
+  const contextNodes = (element) => element.matches(".dl-task, .chapter-project, li") ? [element] : legacyAssignmentBlock(element);
+  const textFromNodes = (nodes, selector, limit, keepEnd = false) => {
+    const values = [];
+    nodes.forEach((node) => {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll(".code-panel, pre, code").forEach((excluded) => excluded.remove());
+      if (clone.matches(selector)) values.push(clone.textContent);
+      else clone.querySelectorAll(selector).forEach((match) => {
+        if (!match.parentElement?.closest(selector)) values.push(match.textContent);
+      });
+    });
+    return clipContext(values.join("\n"), limit, keepEnd);
+  };
+
+  const assignmentTitleFor = (element) => {
+    const heading = element.matches("h1, h2, h3") ? element : element.querySelector("h1, h2, h3");
+    if (heading) return clipContext(heading.textContent, 220);
+    const label = element.querySelector(":scope > strong")?.textContent;
+    const firstInstruction = element.querySelector(":scope > p")?.textContent;
+    return clipContext([label, firstInstruction].filter(Boolean).join(" · "), 220) || "Current coding assignment";
+  };
+
+  const examplesFromNodes = (nodes) => {
+    const examples = [];
+    const seen = new Set();
+    for (const node of nodes) {
+      for (const code of node.querySelectorAll("pre code, .assignment-example pre, .authored-code-panel pre")) {
+        const content = String(code.textContent || "").trim();
+        if (!content || seen.has(content)) continue;
+        seen.add(content);
+        const previousLabel = code.closest("pre")?.previousElementSibling;
+        const panel = code.closest(".assignment-example, .authored-code-panel, .code-panel");
+        const label = cleanContextText(
+          (previousLabel?.matches(".assignment-example-label, .panel-label") ? previousLabel.textContent : "")
+          || panel?.querySelector(".assignment-example-label, .panel-label")?.textContent
+          || "Relevant example"
+        );
+        examples.push({ label: clipContext(label, 80), content: content.slice(0, 3_500) });
+        if (examples.length === 6) return examples;
+      }
+    }
+    return examples;
+  };
+
+  const lessonContextBefore = (activeElement) => {
+    const lesson = document.querySelector(".lesson-content");
+    if (!lesson) return "";
+    const nodes = [...lesson.querySelectorAll("h1, h2, h3, p, li")].filter((node) => {
+      if (node.closest(".assignment-section, .chapter-project, .code-panel, pre, code, .lesson-toc")) return false;
+      return Boolean(node.compareDocumentPosition(activeElement) & 4);
+    });
+    return clipContext(nodes.map((node) => node.textContent).join("\n"), 6_000, true);
+  };
+
+  const getAssignmentContext = () => {
+    const active = activeAssignment();
+    if (!active) return null;
+    const nodes = contextNodes(active.element);
+    const assignmentTitle = assignmentTitleFor(active.element);
+    const examples = examplesFromNodes(nodes);
+    const starter = examples.find(({ label }) => /starter|program structure|starting code/i.test(label));
+    const expected = examples.filter(({ label }) => /output|result|sample run|expected|behavior/i.test(label));
+    const anchor = active.element.querySelector("[id]")?.id || active.element.id || "";
+    const lessonTitle = cleanContextText(document.querySelector(".lesson-hero h1")?.textContent || document.title.replace(/\s*·\s*Room310.*$/, ""));
+    const language = languages[currentLanguage];
+    return {
+      schemaVersion: 1,
+      kind: "coding_assignment",
+      pagePath: location.pathname,
+      lessonTitle: clipContext(lessonTitle, 220),
+      assignmentId: clipContext(anchor || `${location.pathname}#assignment-${active.index + 1}`, 320),
+      assignmentTitle,
+      instructions: textFromNodes(nodes, "h1, h2, h3, p, li", 6_000),
+      lessonContext: lessonContextBefore(active.element),
+      language: currentLanguage,
+      languageLabel: language.label,
+      starterCode: String(starter?.content || language.starter).slice(0, 10_000),
+      currentCode: String(editor.value || "").slice(0, 16_000),
+      currentInput: String(input.value || "").slice(0, 2_000),
+      currentOutput: String(output.textContent || "").slice(0, 4_000),
+      expectedBehavior: expected.map(({ label, content }) => `${label}:\n${content}`).join("\n\n").slice(0, 6_000),
+      examples,
+      metadata: {
+        assignmentNumber: active.index + 1,
+        assignmentCount: assignmentCandidates().length,
+        source: active.element.matches(".dl-task, .curriculum-assignments > li, .chapter-project") ? "structured" : "legacy-heading"
+      }
+    };
+  };
   if (assignmentTarget) {
     const inline = document.createElement("button");
     inline.type = "button";
@@ -135,20 +266,23 @@ Console.WriteLine($"Hello from {course}!");`
   }
 
   const openWorkspace = (opener, keepAssignmentVisible = false) => {
+    window.Room310AssignmentHelp?.close?.({ restoreFocus: false });
     lastOpener = opener || document.activeElement;
     panel.hidden = false;
     document.body.classList.add("assignment-workspace-open");
     launcher.setAttribute("aria-expanded", "true");
     panel.querySelector(".assignment-workspace-close").focus();
+    window.dispatchEvent(new CustomEvent("room310:assignment-workspace-opened"));
     if (keepAssignmentVisible && assignmentTarget) requestAnimationFrame(() => assignmentTarget.scrollIntoView({ behavior: "smooth", block: "start" }));
   };
 
-  const closeWorkspace = () => {
+  const closeWorkspace = ({ restoreFocus = true } = {}) => {
     if (controller) stopRun();
     panel.hidden = true;
     document.body.classList.remove("assignment-workspace-open");
     launcher.setAttribute("aria-expanded", "false");
-    lastOpener?.focus?.();
+    if (restoreFocus) lastOpener?.focus?.();
+    window.dispatchEvent(new CustomEvent("room310:assignment-workspace-closed"));
   };
 
   const setRunning = (running) => {
@@ -257,7 +391,7 @@ Console.WriteLine($"Hello from {course}!");`
     }
   });
   launcher.addEventListener("click", () => openWorkspace(launcher));
-  panel.querySelector(".assignment-workspace-close").addEventListener("click", closeWorkspace);
+  panel.querySelector(".assignment-workspace-close").addEventListener("click", () => closeWorkspace());
   runButton.addEventListener("click", () => controller ? stopRun() : run());
   panel.querySelector(".assignment-workspace-clear").addEventListener("click", () => { output.textContent = "Output cleared. Press Run when you are ready."; output.parentElement.removeAttribute("data-result"); });
   panel.querySelector(".assignment-workspace-reset").addEventListener("click", () => {
@@ -273,5 +407,13 @@ Console.WriteLine($"Hello from {course}!");`
   launcher.setAttribute("aria-expanded", "false");
   launcher.setAttribute("aria-controls", "assignment-workspace");
   panel.id = "assignment-workspace";
+  window.Room310AssignmentWorkspace = {
+    hasAssignment: Boolean(assignmentTarget),
+    isOpen: () => !panel.hidden,
+    open: (opener = launcher) => openWorkspace(opener),
+    close: (options) => closeWorkspace(options),
+    getContext: getAssignmentContext,
+    getState: () => ({ language: currentLanguage, code: editor.value, input: input.value, output: output.textContent })
+  };
   document.body.append(launcher, panel);
 })();
