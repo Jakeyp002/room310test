@@ -17,8 +17,18 @@ export function validateImportManifest(manifest) {
     if (slugs.has(game.slug)) throw new Error(`Duplicate game slug: ${game.slug}`);
     slugs.add(game.slug);
     if (!game.description?.trim() || !Number.isInteger(game.year) || !game.source || !game.cover) throw new Error(`Complete the metadata for ${game.title}.`);
+    if (game.sourceSha256 && !/^[a-f0-9]{64}$/.test(game.sourceSha256)) throw new Error(`${game.title} has an invalid source hash.`);
+    if (game.sourceBytes != null && (!Number.isInteger(game.sourceBytes) || game.sourceBytes < 1)) throw new Error(`${game.title} has an invalid source byte size.`);
+    if (game.originalSourceSha256 && !/^[a-f0-9]{64}$/.test(game.originalSourceSha256)) throw new Error(`${game.title} has an invalid original source hash.`);
+    if (game.originalSourceBytes != null && (!Number.isInteger(game.originalSourceBytes) || game.originalSourceBytes < 1)) throw new Error(`${game.title} has an invalid original source byte size.`);
+    if ((game.originalSourceSha256 || game.originalSourceBytes) && !game.compatibilityPreparation?.trim()) throw new Error(`${game.title} needs a compatibility preparation note.`);
   }
   return manifest;
+}
+
+export function assertPreparedMatchesManifest(game, prepared) {
+  if (game.sourceBytes != null && prepared.bytes !== game.sourceBytes) throw new Error(`${game.title} does not match its recorded source byte size.`);
+  if (game.sourceSha256 && prepared.sha256 !== game.sourceSha256) throw new Error(`${game.title} does not match its recorded SHA-256 hash.`);
 }
 
 async function sourceFile(path) {
@@ -31,6 +41,7 @@ async function importCollection({ manifestPath, assetsDirectory, apply }) {
   const preparedGames = [];
   for (const game of manifest.games) {
     const prepared = await prepareStandaloneFile(await sourceFile(resolve(assetsDirectory, game.source)));
+    assertPreparedMatchesManifest(game, prepared);
     const coverPath = resolve(assetsDirectory, game.cover);
     const coverBytes = await readFile(coverPath);
     const coverType = IMAGE_TYPES.get(extname(coverPath).toLowerCase());
@@ -39,7 +50,10 @@ async function importCollection({ manifestPath, assetsDirectory, apply }) {
   }
 
   console.log(`Validated ${preparedGames.length} standalone games for ${manifest.collection.title}.`);
-  for (const item of preparedGames) console.log(`- ${item.game.title}: ${item.prepared.bytes} bytes, ${item.findings.length} scan finding(s), ${item.prepared.sha256}`);
+  for (const item of preparedGames) {
+    const findings = item.findings.length ? item.findings.join(", ") : "none";
+    console.log(`- ${item.game.title}: ${item.prepared.bytes} bytes, scan findings: ${findings}, ${item.prepared.sha256}`);
+  }
   if (!apply) {
     console.log("Dry run complete. Re-run with --apply after reviewing the scan output.");
     return;

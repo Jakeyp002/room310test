@@ -1,13 +1,16 @@
 {
   "name": "room310",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "npm run build && npm run preview",
     "preview": "node scripts/preview.mjs",
     "build": "node scripts/build.mjs",
+    "games:covers": "node scripts/generate-pilot-covers.mjs",
+    "games:prepare": "node scripts/prepare-pilot-games.mjs",
     "games:import": "node scripts/import-game-collection.mjs",
+    "games:preview": "node scripts/preview-standalone-import.mjs",
     "version:bump": "node scripts/bump-version.mjs",
     "version:sync": "node scripts/sync-version.mjs",
     "test": "node --test --test-isolation=none --test-concurrency=1 tests/*.test.mjs"

@@ -28,6 +28,14 @@ export function nextVersion(current, significance) {
   throw new TypeError(`Unknown update significance: ${significance}`);
 }
 
+export function synchronizeHtmlVersion(source, version) {
+  parseVersion(version);
+  return source
+    .replace(/([?&]v=)\d+\.\d+(?:\.\d+)?/g, `$1${version}`)
+    .replace(/(<[^>]*\bdata-room310-version(?:\s[^>]*)?>)v\d+\.\d+\.\d+(?=<)/g, `$1v${version}`)
+    .replace(/(<[^>]*\bdata-room310-version-prefix="([^"]*)"[^>]*>)[^<]*(?=<)/g, (_match, opening, prefix) => `${opening}${prefix}v${version}`);
+}
+
 export async function syncProjectVersion(versionOverride) {
   const packagePath = resolve(root, "package.json");
   const packageJson = JSON.parse(await readFile(packagePath, "utf8"));
@@ -40,10 +48,7 @@ export async function syncProjectVersion(versionOverride) {
   await Promise.all(htmlNames.map(async (name) => {
     const path = resolve(sourceDir, name);
     const before = await readFile(path, "utf8");
-    const after = before
-      .replace(/([?&]v=)\d+\.\d+(?:\.\d+)?/g, `$1${version}`)
-      .replace(/(<[^>]*\bdata-room310-version(?:\s|>)[^>]*>)v\d+\.\d+\.\d+(?=<)/g, `$1v${version}`)
-      .replace(/(<[^>]*\bdata-room310-version-prefix="([^"]*)"[^>]*>)[^<]*(?=<)/g, (_match, opening, prefix) => `${opening}${prefix}v${version}`);
+    const after = synchronizeHtmlVersion(before, version);
     if (after !== before) await writeFile(path, after, "utf8");
   }));
   return version;

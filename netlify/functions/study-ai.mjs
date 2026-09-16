@@ -1,5 +1,4 @@
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
-import OpenAI from "openai";
 import { createClient } from "@supabase/supabase-js";
 
 export const STUDY_MODEL = process.env.STUDY_AI_MODEL || "gpt-5-mini";
@@ -299,7 +298,10 @@ export async function handleStudyRequest(request, dependencies = {}) {
 
   const env = dependencies.env || process.env;
   const createSupabaseClient = dependencies.createSupabaseClient || createClient;
-  const createOpenAIClient = dependencies.createOpenAIClient || ((settings) => new OpenAI(settings));
+  const createOpenAIClient = dependencies.createOpenAIClient || (async (settings) => {
+    const { default: OpenAI } = await import("openai");
+    return new OpenAI(settings);
+  });
 
   let auth;
   try {
@@ -354,7 +356,7 @@ export async function handleStudyRequest(request, dependencies = {}) {
   }
 
   try {
-    const openai = createOpenAIClient(gateway);
+    const openai = await createOpenAIClient(gateway);
     const assignmentContextMessage = payload.mode === "assignment_help"
       ? [{
           role: "user",
