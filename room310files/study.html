@@ -3,33 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Explore Room310 programming, database, and beginner deep learning courses." />
-    <title>Study · Room310 Study</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta name="description" content="Choose a Room310 course in programming, databases, or beginner deep learning." />
+    <title>Courses · Room310</title>
     <link rel="stylesheet" href="deep-learning.css?v=0.7.0" />
+    <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
   </head>
   <body class="study-hub-page">
-  <header class="header solid-header">
-    <a class="logo" href="index.html">ROOM<span>310</span></a>
-    <nav aria-label="Main navigation">
+    <header class="header solid-header">
+      <a class="logo" href="index.html" aria-label="Room310 home">ROOM<span>310</span></a>
+      <nav aria-label="Main navigation">
         <a aria-current="page" href="study.html">Study</a>
         <a href="helper.html">Helper</a>
         <a href="games.html">Games</a>
         <a href="/graphs">Graphs</a>
-        <a href="index.html#archive">Archive</a>
-        <a href="extended-archives.html">Extended Archives</a>
+        <a href="extended-archives.html">Archives</a>
       </nav>
-  </header>
-  <main class="study-hub">
-    <section class="study-hub-hero">
-      <small>Room310 / Study</small>
-      <h1>Choose your next step.</h1>
-      <p>Learn a programming language, explore databases, or build your first neural network with Python and PyTorch. Each course has its own lessons, practice, and reading path.</p>
-    </section>
-    <section class="language-choices" aria-label="Choose a course"><a class="language-choice python-choice" href="python-study.html"><span>Course 01</span><h2>Learn<br />Python</h2><p>Foundations and advanced material · 16 lessons</p><strong>Open Python →</strong></a><a class="language-choice java-choice" href="java-study.html"><span>Course 02</span><h2>Learn<br />Java</h2><p>AP Java curriculum · 7 lessons</p><strong>Open Java →</strong></a><a class="language-choice cpp-choice" href="cpp-study.html"><span>Course 03</span><h2>Learn<br />C++</h2><p>Build fast programs and understand how software uses memory. · 6 lessons</p><strong>Open C++ →</strong></a><a class="language-choice sql-choice" href="sql-study.html"><span>Course 04</span><h2>Learn<br />SQL</h2><p>Ask precise questions of structured data and design reliable databases. · 6 lessons</p><strong>Open SQL →</strong></a><a class="language-choice javascript-choice" href="javascript-study.html"><span>Course 05</span><h2>Learn<br />JavaScript</h2><p>Create interactive web experiences and work confidently with asynchronous data. · 6 lessons</p><strong>Open JavaScript →</strong></a><a class="language-choice csharp-choice" href="csharp-study.html"><span>Course 06</span><h2>Learn<br />C#</h2><p>Build clear .NET applications with strong types, objects, LINQ, files, and asynchronous work. · 6 lessons</p><strong>Open C# →</strong></a></section>
-    <section class="dl-finish" aria-label="Deep learning course"><p class="dl-eyebrow">New / Beyond Python</p><h2>Your first neural network.</h2><p>Six hands-on lessons for Python learners: understand a neuron, learn with gradients, then build, train, test, and save a small PyTorch model.</p><a class="dl-button dl-primary" href="deep-learning-study.html">Explore deep learning →</a></section>
-  </main>
+    </header>
+    <main class="study-hub" id="main-content">
+      <section class="study-hub-hero" aria-labelledby="study-title">
+        <p class="eyebrow">Room310 courses</p>
+        <h1 id="study-title">Choose a course.</h1>
+        <p>Start with a language or continue into databases and machine learning. Every course is organized into focused lessons.</p>
+      </section>
+
+      <section class="language-choices" aria-label="Available courses">
+        <a class="language-choice python-choice" href="python-study.html"><span>01 · 16 lessons</span><h2>Python</h2><p>Programming foundations through advanced concepts.</p><strong>Open course →</strong></a>
+        <a class="language-choice java-choice" href="java-study.html"><span>02 · 7 lessons</span><h2>Java</h2><p>Core Java concepts aligned with AP coursework.</p><strong>Open course →</strong></a>
+        <a class="language-choice cpp-choice" href="cpp-study.html"><span>03 · 6 lessons</span><h2>C++</h2><p>Programs, memory, classes, and resource safety.</p><strong>Open course →</strong></a>
+        <a class="language-choice sql-choice" href="sql-study.html"><span>04 · 6 lessons</span><h2>SQL</h2><p>Query, organize, and design reliable databases.</p><strong>Open course →</strong></a>
+        <a class="language-choice javascript-choice" href="javascript-study.html"><span>05 · 6 lessons</span><h2>JavaScript</h2><p>Build interactive experiences for the web.</p><strong>Open course →</strong></a>
+        <a class="language-choice csharp-choice" href="csharp-study.html"><span>06 · 6 lessons</span><h2>C#</h2><p>Strong types, objects, LINQ, files, and async work.</p><strong>Open course →</strong></a>
+      </section>
+
+      <section class="dl-finish compact-feature" aria-labelledby="deep-learning-title">
+        <p class="dl-eyebrow">Next step · 6 lessons</p>
+        <h2 id="deep-learning-title">Build your first neural network.</h2>
+        <p>Learn neurons, gradients, PyTorch, training, testing, and model saving.</p>
+        <a class="dl-button dl-primary" href="deep-learning-study.html">Explore deep learning →</a>
+      </section>
+    </main>
     <script src="site-polish.js?v=0.7.0"></script>
   </body>
 </html>

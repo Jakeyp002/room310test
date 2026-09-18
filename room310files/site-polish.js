@@ -18,23 +18,19 @@
     element.textContent = `${element.dataset.room310VersionPrefix}v${siteVersion}`;
   });
 
-  const logo = document.querySelector(".header .logo");
-  let version = document.querySelector(".site-version-badge");
-  if (logo && !version) {
-    version = document.createElement("span");
-    version.className = "site-version-badge";
-    version.textContent = `v${siteVersion}`;
-    version.setAttribute("aria-label", `Room310 version ${siteVersion}`);
-    logo.after(version);
-  }
+  const version = document.createElement("span");
+  version.hidden = true;
+  version.setAttribute("aria-hidden", "true");
+  version.textContent = `v${siteVersion}`;
 
-  if (logo && !document.querySelector(".admin-login-link")) {
-    const adminLogin = document.createElement("a");
-    adminLogin.className = "admin-login-link";
-    adminLogin.href = "/admin/login";
-    adminLogin.textContent = "Admin login";
-    adminLogin.setAttribute("aria-label", "Log in to Room310 administration");
-    (version || logo).after(adminLogin);
+  const main = document.querySelector("main");
+  if (main && !main.id) main.id = "main-content";
+  if (main && !document.querySelector(".skip-link")) {
+    const skipLink = document.createElement("a");
+    skipLink.className = "skip-link";
+    skipLink.href = `#${main.id}`;
+    skipLink.textContent = "Skip to main content";
+    document.body.prepend(skipLink);
   }
 
   const needsCourseLab = document.body.matches(".java-page, .cpp-page, .sql-page, .javascript-page, .csharp-page");

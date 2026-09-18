@@ -1,156 +1,102 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <link rel="icon" type="image/png" href="/Door.png">
+    <link rel="icon" type="image/png" href="/Door.png" />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Room310 — projects, people, and experiments." />
-    <title>Room310</title>
+    <meta name="description" content="Learn programming, use interactive study tools, and play community-made games at Room310." />
+    <title>Room310 · Learn, build, and play</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-
-  <body>
-    <!-- EDIT THE SITE TEXT IN THIS FILE. The design lives in style.css. -->
+  <body class="home-page">
     <header class="header">
-      <a class="logo" href="#top">ROOM<span>310</span></a>
+      <a class="logo" href="#top" aria-label="Room310 home">ROOM<span>310</span></a>
       <nav aria-label="Main navigation">
         <a href="study.html">Study</a>
         <a href="helper.html">Helper</a>
         <a href="games.html">Games</a>
         <a href="/graphs">Graphs</a>
-        <a href="#archive">Archive</a>
-        <a href="extended-archives.html">Extended Archives</a>
+        <a href="extended-archives.html">Archives</a>
       </nav>
     </header>
 
-    <main>
-      <section class="hero" id="top">
-        <div class="hero-note">
-          <span>Independent creative practice</span>
-          <span>Est. 2023</span>
-        </div>
-
-        <!-- This title automatically fits the screen. -->
-        <h1><span>ROOM</span><span class="outline">310</span></h1>
-
+    <main id="main-content">
+      <section class="hero" id="top" aria-labelledby="home-title">
+        <p class="eyebrow">Room310 learning lab</p>
+        <h1 id="home-title">Learn.<br />Build. <span>Play.</span></h1>
         <div class="hero-bottom">
-          <p>
-            A shared room for independent projects, ongoing experiments, and
-            work made with people we admire.
-          </p>
-          <a href="games.html">Explore the room ↓</a>
+          <p>Practical coding courses, focused study tools, and games made by our community.</p>
+          <div class="hero-actions">
+            <a class="button primary-button" href="study.html">Browse courses <span aria-hidden="true">→</span></a>
+            <a class="button secondary-button" href="helper.html">Ask Study AI <span aria-hidden="true">→</span></a>
+          </div>
         </div>
       </section>
 
-      <div class="status">
-        <span class="dot"></span>
-        <span>Room310 is open</span>
-        <span>Courses · games · archives · bulletin</span>
-      </div>
-
-      <section class="section home-study" id="study">
-        <div class="section-title">
-          <small>01 / Study</small>
-          <h2>Learn Python.</h2>
-          <p>The complete five-chapter curriculum now has its own reading space.</p>
+      <section class="home-launchpad section" aria-labelledby="start-title">
+        <div class="compact-heading">
+          <p class="eyebrow">Start here</p>
+          <h2 id="start-title">What do you want to do?</h2>
         </div>
-        <a class="study-link" href="python-study.html">
-          <span>Foundations and advanced Python</span>
-          <strong>Open Python →</strong>
-        </a>
-      </section>
-
-      <section class="section home-study home-java" id="java">
-        <div class="section-title">
-          <small>02 / Study</small>
-          <h2>Learn Java.</h2>
-          <p>The complete AP Java curriculum has its own separate reading space.</p>
-        </div>
-        <a class="study-link" href="java-study.html">
-          <span>Seven AP Java chapters</span>
-          <strong>Open Java →</strong>
-        </a>
-      </section>
-
-      <!-- EXTRA COURSES START -->
-
-      <section class="section home-study home-cpp" id="cpp">
-        <div class="section-title"><small>03 / Study</small><h2>Learn C++.</h2><p>Build fast programs and understand how software uses memory.</p></div>
-        <a class="study-link" href="cpp-study.html"><span>Six complete chapters</span><strong>Open C++ →</strong></a>
-      </section>
-
-      <section class="section home-study home-sql" id="sql">
-        <div class="section-title"><small>04 / Study</small><h2>Learn SQL.</h2><p>Ask precise questions of structured data and design reliable databases.</p></div>
-        <a class="study-link" href="sql-study.html"><span>Six complete chapters</span><strong>Open SQL →</strong></a>
-      </section>
-
-      <section class="section home-study home-javascript" id="javascript">
-        <div class="section-title"><small>05 / Study</small><h2>Learn JavaScript.</h2><p>Create interactive web experiences and work confidently with asynchronous data.</p></div>
-        <a class="study-link" href="javascript-study.html"><span>Six complete chapters</span><strong>Open JavaScript →</strong></a>
-      </section>
-
-      <section class="section home-study home-csharp" id="csharp">
-        <div class="section-title"><small>06 / Study</small><h2>Learn C#.</h2><p>Build clear .NET applications with strong types, objects, LINQ, files, and asynchronous work.</p></div>
-        <a class="study-link" href="csharp-study.html"><span>Six complete chapters</span><strong>Open C# →</strong></a>
-      </section>
-      <!-- EXTRA COURSES END -->
-
-
-
-      <!-- ARCHIVE: duplicate a row to add an item. -->
-      <section class="section dark" id="archive">
-        <div class="section-title">
-          <small>07 / Archive</small>
-          <h2>Things we’ve made.</h2>
-          <p>Finished, paused, and pleasantly unresolved work.</p>
-        </div>
-
-        <div class="archive">
-          <div class="row"><span>2025</span><strong>Soft Systems</strong><span>Exhibition / Publication</span></div>
-          <div class="row"><span>2025</span><strong>Room Tone 02</strong><span>Listening session</span></div>
-          <div class="row"><span>2024</span><strong>A Useful Distance</strong><span>Short film</span></div>
-          <div class="row"><span>2024</span><strong>Temporary Index</strong><span>Website / Workshop</span></div>
-          <div class="row"><span>2023</span><strong>Room Tone 01</strong><span>Compilation</span></div>
+        <div class="launchpad-grid">
+          <a class="launch-card launch-study" href="study.html">
+            <span>01 · Learn</span>
+            <h3>Take a course</h3>
+            <p>Follow structured lessons in Python, Java, C++, SQL, JavaScript, C#, or deep learning.</p>
+            <strong>Choose a course <span aria-hidden="true">→</span></strong>
+          </a>
+          <a class="launch-card launch-helper" href="helper.html">
+            <span>02 · Get help</span>
+            <h3>Ask Study AI</h3>
+            <p>Work through a question with guided explanations instead of receiving only an answer.</p>
+            <strong>Open the helper <span aria-hidden="true">→</span></strong>
+          </a>
+          <a class="launch-card launch-games" href="games.html">
+            <span>03 · Explore</span>
+            <h3>Play games</h3>
+            <p>Browse projects and games published by the Room310 community.</p>
+            <strong>Browse games <span aria-hidden="true">→</span></strong>
+          </a>
         </div>
       </section>
 
-      <!-- CONTRIBUTORS: duplicate a person article to add someone. -->
+      <section class="home-tools section" id="archive" aria-labelledby="tools-title">
+        <div class="compact-heading">
+          <p class="eyebrow">More tools</p>
+          <h2 id="tools-title">Keep exploring.</h2>
+        </div>
+        <div class="tool-links">
+          <a href="/graphs"><span>Interactive graphs</span><strong>Visualize math and science <span aria-hidden="true">↗</span></strong></a>
+          <a href="extended-archives.html"><span>Extended archives</span><strong>Browse notes, projects, and resources <span aria-hidden="true">→</span></strong></a>
+        </div>
+      </section>
+
       <section class="section" id="contributors">
-        <div class="section-title">
-          <small>08 / Contributors</small>
-          <h2>The door stays open.</h2>
-          <p>Room310 changes shape with every collaboration.</p>
+        <div class="compact-heading">
+          <p class="eyebrow">Room310 team</p>
+          <h2 id="contributors-title">People behind the room.</h2>
         </div>
-
-        <div class="people">
-          <article class="person"><h3>Tarek G. Sidki</h3><p>Founder/President, Fullstack Developer</p></article>
-          <article class="person"><h3>Ethan DeSwert</h3><p>Co-Founder/Vice-President, Fullstack Developer</p></article>
-          <article class="person"><h3>Olivier Sadler</h3><p>Chief Financial Officer, Head of AI</p></article>
-          <article class="person"><h3>Sam Visser</h3><p>Head of Math, Co-Head of Games</p></article>
-          <article class="person"><h3>Jacob Aleo</h3><p>Production</p></article>
-          <article class="person"><h3>Friends of 310</h3><p>Everything else</p></article>
-        </div>
-      </section>
-
-      <section class="about" id="about">
-        <small>09 / About</small>
-        <p>
-          Room310 is an independent creative practice interested in publishing,
-          identity, moving image, sound, and the spaces between disciplines.
-        </p>
+        <ul class="team-list">
+          <li><strong>Tarek G. Sidki</strong><span>Founder/President · Full-stack developer</span></li>
+          <li><strong>Ethan DeSwert</strong><span>Co-Founder/Vice-President · Full-stack developer</span></li>
+          <li><strong>Olivier Sadler</strong><span>Chief Financial Officer · Head of AI</span></li>
+          <li><strong>Sam Visser</strong><span>Head of Math · Co-Head of Games</span></li>
+          <li><strong>Jacob Aleo</strong><span>Production</span></li>
+        </ul>
       </section>
     </main>
 
     <footer>
-      <small>Have something in mind?</small>
-      <!-- Change this email address in both places below. -->
-      <a class="contact" href="mailto:hello@room310.studio">Let’s make room.</a>
+      <div>
+        <strong>Room310</strong>
+        <p>Courses, tools, and community projects.</p>
+      </div>
       <div class="footer-line">
         <a href="mailto:hello@room310.studio">hello@room310.studio</a>
         <span>© 2026 Room310</span>
         <a href="#top">Back to top ↑</a>
       </div>
     </footer>
-      <script src="site-polish.js?v=0.7.0"></script>
+    <script src="site-polish.js?v=0.7.0"></script>
   </body>
 </html>
