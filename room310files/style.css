@@ -1994,6 +1994,7 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
 .study-ai-chat { height: 100%; min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; }
 .study-ai-messages { min-height: 0; overflow-y: auto; overscroll-behavior: contain; scroll-behavior: smooth; padding: 32px; }
 .study-ai-message { width: min(82%, 740px); margin-bottom: 30px; }
+.study-ai-message-graph { width: min(100%, 940px); }
 .study-ai-message-user { margin-left: auto; }
 .study-ai-message-label { display: block; margin-bottom: 8px; font-size: 9px; letter-spacing: 0.05em; }
 .study-ai-message-user .study-ai-message-label { text-align: right; }
@@ -2022,6 +2023,11 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
 .study-ai-composer textarea { min-height: 62px; max-height: 160px; resize: none; padding: 15px; font-size: 16px; line-height: 1.4; }
 .study-ai-composer > div { display: flex; justify-content: space-between; gap: 20px; align-items: center; margin-top: 10px; font-size: 9px; text-transform: uppercase; }
 .study-ai-composer button { min-width: 100px; background: var(--accent); }
+.study-ai-composer-actions { display: flex; gap: 8px; }
+.study-ai-composer #study-ai-graph { background: #fffdf7; }
+.study-ai-composer #study-ai-graph[hidden] { display: none; }
+.study-ai-graph-caption { margin: 18px 0 8px; color: #66635b; font: 700 10px/1.4 "Courier New", monospace; text-transform: uppercase; }
+.study-ai-graph-frame { display: block; width: 100%; height: min(430px, 56vh); min-height: 300px; border: 1px solid var(--ink); background: #fffdf7; }
 .study-ai-typing { display: inline-flex; gap: 6px; align-items: center; min-height: 24px; }
 .study-ai-typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--ink); animation: study-ai-pulse 1.05s infinite ease-in-out; }
 .study-ai-typing i:nth-child(2) { animation-delay: 0.14s; }
@@ -2053,10 +2059,14 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
   .study-ai-auth h2 { font-size: clamp(52px, 17vw, 76px); }
   .study-ai-auth > div p { font-size: 15px; }
   .study-ai-messages { padding: 22px 15px; }
+  .study-ai-graph-frame { height: min(390px, 52svh); min-height: 270px; }
+  .study-ai-composer-actions { width: 100%; }
+  .study-ai-composer-actions button { flex: 1; }
   .study-ai-message { width: 94%; margin-bottom: 22px; }
+  .study-ai-message-graph { width: 100%; }
   .study-ai-message-body { padding: 16px; font-size: 15px; }
   .study-ai-composer { padding: 12px; }
-  .study-ai-composer > div { align-items: flex-end; }
+  .study-ai-composer > div { align-items: flex-start; flex-direction: column; gap: 8px; }
   .study-ai-composer > div > span { max-width: 205px; line-height: 1.35; }
   .study-ai-composer button { min-width: 84px; }
 }

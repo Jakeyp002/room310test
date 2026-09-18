@@ -6,7 +6,7 @@
     <meta name="description" content="Learn with Room 310 Study AI, a guided tutor for math, science, computer science, history, English, and more." />
     <title>Helper · Room310</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="vendor/katex/katex.min.css?v=0.6.2" />
+    <link rel="stylesheet" href="vendor/katex/katex.min.css?v=0.7.0" />
     <link rel="icon" type="image/png" href="favicon.png" />
   </head>
   <body class="helper-page">
@@ -31,7 +31,7 @@
           </div>
           <div>
             <p>Learn it, don’t just answer it.</p>
-            <span>Guided explanations · Worked examples · Questions that help ideas stick</span>
+            <span>Guided explanations · Interactive Math and Science graphs · Questions that help ideas stick</span>
           </div>
         </header>
 
@@ -81,10 +81,13 @@
               <div class="study-ai-messages" id="study-ai-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
               <form class="study-ai-composer" id="study-ai-form">
                 <label class="sr-only" for="study-ai-input">Ask Room 310 Study AI a question</label>
-                <textarea id="study-ai-input" rows="1" maxlength="4000" placeholder="What are you working on?" enterkeyhint="send" required></textarea>
+                <textarea id="study-ai-input" rows="1" maxlength="4000" placeholder="Ask a question or describe a graph…" enterkeyhint="send" required></textarea>
                 <div>
                   <span id="study-ai-status" role="status">Enter to send · Shift+Enter for a new line</span>
-                  <button id="study-ai-send" type="submit">Send <span aria-hidden="true">↑</span></button>
+                  <div class="study-ai-composer-actions">
+                    <button id="study-ai-graph" type="button" title="Create an interactive graph with GPT-5 nano" hidden disabled>Graph ↗</button>
+                    <button id="study-ai-send" type="submit">Send <span aria-hidden="true">↑</span></button>
+                  </div>
                 </div>
               </form>
             </section>
@@ -92,8 +95,8 @@
         </div>
       </section>
     </main>
-    <script src="site-polish.js?v=0.6.2"></script>
-    <script src="supabase-config.js?v=0.6.2"></script>
-    <script src="study-ai.js?v=0.6.2"></script>
+    <script src="site-polish.js?v=0.7.0"></script>
+    <script src="supabase-config.js?v=0.7.0"></script>
+    <script src="study-ai.js?v=0.7.0"></script>
   </body>
 </html>

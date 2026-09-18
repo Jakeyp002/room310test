@@ -1,13 +1,14 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
-import handler, { STUDY_MODEL, config, validateStudyPayload, wantsDirectAssignmentSolution } from "../netlify/functions/study-ai.mjs";
+import handler, { STUDY_GRAPH_MODEL, STUDY_MODEL, config, validateGraphPlan, validateStudyPayload, wantsDirectAssignmentSolution } from "../netlify/functions/study-ai.mjs";
 
 const env = {
   SUPABASE_URL: "https://room310-study-test.supabase.co",
   SUPABASE_PUBLISHABLE_KEY: "test-publishable-key",
   NETLIFY_AI_GATEWAY_KEY: "test-netlify-gateway-key",
-  NETLIFY_AI_GATEWAY_URL: "https://gateway.netlify.test/v1"
+  NETLIFY_AI_GATEWAY_URL: "https://gateway.netlify.test/v1",
+  DESMOS_API_KEY: "test-desmos-api-key-123456"
 };
 
 function request(body, token = "test-session-token") {
@@ -18,7 +19,11 @@ function request(body, token = "test-session-token") {
   });
 }
 
-function dependencies({ quota = 29, validUser = true, chunks = ["Let’s ", "work it out."] } = {}) {
+function dependencies({ quota = 29, validUser = true, chunks = ["Let’s ", "work it out."], graphPlan = {
+  explanation: "The parabola opens upward and crosses the x-axis at -2 and 2.",
+  expressions: [{ latex: "y=x^2-4" }],
+  bounds: { left: -5, right: 5, bottom: -6, top: 10 }
+} } = {}) {
   const seen = { authTokens: [], rpc: [], gateway: null, response: null };
   const createSupabaseClient = () => ({
     auth: {
@@ -40,6 +45,7 @@ function dependencies({ quota = 29, validUser = true, chunks = ["Let’s ", "wor
       responses: {
         async create(payload) {
           seen.response = payload;
+          if (payload.stream === false) return { output_text: JSON.stringify(graphPlan) };
           return (async function* stream() {
             for (const delta of chunks) yield { type: "response.output_text.delta", delta };
           })();
@@ -82,6 +88,68 @@ test("Study AI payload validation restricts subjects, roles, message size, and c
     { subject: "Math", messages: [{ role: "user", content: "x".repeat(4001) }] },
     { subject: "Math", messages: [{ role: "assistant", content: "Not the latest student question" }] }
   ]) assert.throws(() => validateStudyPayload(payload));
+});
+
+test("graph requests are limited to Math and Science and validate generated expressions", () => {
+  const graphPayload = validateStudyPayload({ mode: "graph", subject: "Math", messages: [{ role: "user", content: "Graph y=x²-4" }] });
+  assert.equal(graphPayload.mode, "graph");
+  assert.equal(validateStudyPayload({ mode: "graph", subject: "Science", messages: [{ role: "user", content: "Plot the trend" }] }).subject, "Science");
+  assert.throws(() => validateStudyPayload({ mode: "graph", subject: "History", messages: [{ role: "user", content: "Plot it" }] }));
+  const valid = validateGraphPlan({ explanation: " A parabola. ", expressions: [{ latex: " y=x^2 " }], bounds: { left: -10, right: 10, bottom: -10, top: 10 } });
+  assert.equal(valid.expressions[0].latex, "y=x^2");
+  for (const invalid of [
+    { explanation: "Oops", expressions: [], bounds: { left: -10, right: 10, bottom: -10, top: 10 } },
+    { explanation: "Oops", expressions: [{ latex: "x\u0000" }], bounds: { left: -10, right: 10, bottom: -10, top: 10 } },
+    { explanation: "Oops", expressions: [{ latex: "y=x" }], bounds: { left: 10, right: -10, bottom: -10, top: 10 } }
+  ]) assert.throws(() => validateGraphPlan(invalid));
+});
+
+test("graph requests reuse authentication and quota, then ask GPT-5 nano for structured Desmos equations", async () => {
+  const mock = dependencies({ quota: 12 });
+  const response = await handler(request({ mode: "graph", subject: "Math", messages: [{ role: "user", content: "Graph y=x²-4" }] }), mock.options);
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type"), /application\/json/);
+  assert.deepEqual(mock.seen.authTokens, ["test-session-token"]);
+  assert.deepEqual(mock.seen.rpc, ["consume_study_ai_request"]);
+  assert.equal(mock.seen.response.model, "gpt-5-nano");
+  assert.equal(STUDY_GRAPH_MODEL, "gpt-5-nano");
+  assert.equal(mock.seen.response.text.format.type, "json_schema");
+  assert.equal(mock.seen.response.store, false);
+  assert.equal(mock.seen.response.stream, false);
+  const body = await response.json();
+  assert.equal(body.expressions[0].latex, "y=x^2-4");
+  assert.equal(body.remaining, 12);
+  assert.equal(body.desmosApiKey, env.DESMOS_API_KEY);
+
+  const unauthenticated = dependencies();
+  const blocked = await handler(request({ mode: "graph", subject: "Math", messages: [{ role: "user", content: "Graph x" }] }, ""), unauthenticated.options);
+  assert.equal(blocked.status, 401);
+  assert.equal(unauthenticated.seen.response, null);
+  const limited = dependencies({ quota: -1 });
+  assert.equal((await handler(request({ mode: "graph", subject: "Math", messages: [{ role: "user", content: "Graph x" }] }), limited.options)).status, 429);
+  assert.equal(limited.seen.response, null);
+  const unconfigured = dependencies();
+  assert.equal((await handler(request({ mode: "graph", subject: "Math", messages: [{ role: "user", content: "Graph x" }] }), {
+    ...unconfigured.options, env: { ...env, DESMOS_API_KEY: "" }
+  })).status, 503);
+  assert.equal(unconfigured.seen.rpc.length, 0);
+});
+
+test("malformed graph output is rejected instead of being sent to Desmos", async () => {
+  const mock = dependencies({ graphPlan: { explanation: "bad", expressions: [{ latex: "x\n<script>" }], bounds: { left: -10, right: 10, bottom: -10, top: 10 } } });
+  const response = await handler(request({ mode: "graph", subject: "Math", messages: [{ role: "user", content: "Graph x" }] }), mock.options);
+  assert.equal(response.status, 422);
+  assert.equal((await response.json()).desmosApiKey, undefined);
+});
+
+test("the generated graph runs in an opaque-origin sandbox without Room310 auth access", async () => {
+  const client = await readFile(new URL("../client-src/study-ai.js", import.meta.url), "utf8");
+  const runner = await readFile(new URL("../room310files/study-graph-runner.js", import.meta.url), "utf8");
+  assert.match(client, /setAttribute\("sandbox", "allow-scripts"\)/);
+  assert.doesNotMatch(client, /allow-same-origin|allow-top-navigation|allow-popups/);
+  assert.match(runner, /event\.source !== window\.parent/);
+  assert.match(runner, /calculator\.setExpressions/);
+  assert.doesNotMatch(runner, /innerHTML|localStorage|document\.cookie/);
 });
 
 test("Study AI rejects unauthenticated and expired sessions before quota or AI calls", async () => {
