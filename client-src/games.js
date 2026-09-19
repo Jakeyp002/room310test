@@ -1,8 +1,9 @@
-import { configurationMessage, isConfigured, messageFor, supabase } from "./supabase-client.js";
+import { configurationMessage, isConfigured, messageFor, setupPublicAdminAccess, supabase } from "./supabase-client.js";
 import { collectionPlayUrl, gameFromRow, gamePlayUrl, isApexTrailsUrl } from "./game-utils.js";
 
 const container = document.querySelector(".games-list");
 const heroCopy = document.querySelector(".games-hero > p");
+setupPublicAdminAccess("/admin/games").catch(() => {});
 
 function makeCard(game, index) {
   const article = document.createElement("article");

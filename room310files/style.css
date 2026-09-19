@@ -2344,6 +2344,88 @@ summary:focus-visible {
   .study-ai-auth { min-height: 520px; }
 }
 
+/* Public admin entry and view/edit mode */
+.header nav .admin-login-link {
+  gap: 7px;
+  margin: 0 0 0 8px;
+  padding: 0 15px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  color: var(--paper);
+  background: var(--ink);
+  font-size: 10px;
+  white-space: nowrap;
+}
+.header nav .admin-login-link:hover,
+.header nav .admin-login-link:focus-visible {
+  color: var(--ink);
+  background: var(--accent);
+  text-decoration: none;
+}
+.admin-login-link svg,
+.admin-mode-switch svg { width: 17px; height: 17px; flex: 0 0 17px; }
+.header .site-version-badge {
+  flex: 0 0 auto;
+  margin-left: 8px;
+  border-color: var(--line);
+  border-radius: 6px;
+  color: #575a69;
+  background: transparent;
+}
+.admin-mode-switch {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 3px;
+  width: max-content;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  font: 700 10px/1 "Courier New", monospace;
+  letter-spacing: .025em;
+  text-transform: uppercase;
+}
+.admin-mode-switch > a,
+.admin-mode-switch > span {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 13px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.admin-mode-switch .admin-mode-current {
+  color: #fff;
+  background: var(--ink);
+}
+.admin-mode-switch .admin-mode-edit { color: #4e5060; }
+.admin-mode-switch .admin-mode-edit.is-unlocked { color: #26398f; }
+.admin-mode-switch > a:hover,
+.admin-mode-switch > a:focus-visible { color: #fff; background: #454da7; text-decoration: none; }
+.games-hero-meta { align-items: center; }
+.games-hero-meta [data-room310-version] { margin-left: auto; }
+.graphs-heading .admin-mode-switch { align-self: flex-start; }
+.admin-mode-switch-header { background: transparent; }
+.admin-header nav { gap: 12px; }
+.admin-header nav .admin-mode-switch a { display: inline-flex; }
+
+@media (max-width: 900px) {
+  .header { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+  .header nav { grid-column: 1 / -1; grid-row: 2; flex-wrap: wrap; overflow-x: visible; }
+  .header .site-version-badge { grid-column: 2; grid-row: 1; margin-left: 0; }
+  .header nav .admin-login-link { margin-left: 0; }
+  .graphs-heading { flex-wrap: wrap; }
+}
+@media (max-width: 760px) {
+  .admin-header nav .admin-mode-switch a { display: inline-flex; }
+  .games-hero-meta { flex-wrap: wrap; }
+  .games-hero-meta .admin-mode-switch { margin-left: auto; }
+  .graphs-heading .admin-mode-switch { align-self: flex-end; }
+}
+
 @media (max-width: 700px) {
   .header { padding: 12px 16px; }
   .header nav { justify-content: flex-start; gap: 2px; }

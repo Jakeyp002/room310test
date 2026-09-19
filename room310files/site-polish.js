@@ -18,10 +18,35 @@
     element.textContent = `${element.dataset.room310VersionPrefix}v${siteVersion}`;
   });
 
-  const version = document.createElement("span");
-  version.hidden = true;
-  version.setAttribute("aria-hidden", "true");
-  version.textContent = `v${siteVersion}`;
+  const header = document.querySelector(".header");
+  const headerNav = header?.querySelector('nav[aria-label="Main navigation"]');
+  if (headerNav && !headerNav.querySelector(".admin-login-link")) {
+    const adminLink = document.createElement("a");
+    adminLink.className = "admin-login-link";
+    adminLink.href = "/admin/login";
+    adminLink.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>Admin sign in</span>';
+    headerNav.append(adminLink);
+  }
+  if (headerNav && !header.querySelector(".site-version-badge")) {
+    const badge = document.createElement("span");
+    badge.className = "site-version-badge";
+    badge.textContent = `v${siteVersion}`;
+    header.append(badge);
+  }
+
+  const editDestination = document.body.classList.contains("games-page") ? "/admin/games"
+    : document.body.classList.contains("graphs-page") ? "/admin/graphs" : null;
+  if (editDestination) {
+    const heading = document.querySelector(".games-hero-meta, .graphs-heading");
+    if (heading) {
+      const mode = document.createElement("nav");
+      mode.className = "admin-mode-switch";
+      mode.setAttribute("aria-label", "Content mode");
+      const loginUrl = `/admin/login?next=${encodeURIComponent(editDestination)}`;
+      mode.innerHTML = `<span class="admin-mode-current" aria-current="page">Viewing</span><a class="admin-mode-edit" data-admin-edit-link href="${loginUrl}" aria-label="Editing is locked. Sign in to edit."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>Editing</span></a>`;
+      heading.append(mode);
+    }
+  }
 
   const main = document.querySelector("main");
   if (main && !main.id) main.id = "main-content";

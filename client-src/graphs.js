@@ -1,7 +1,8 @@
-import { configurationMessage, isConfigured, messageFor, supabase } from "./supabase-client.js";
+import { configurationMessage, isConfigured, messageFor, setupPublicAdminAccess, supabase } from "./supabase-client.js";
 import { graphPageUrl } from "./graph-utils.js";
 
 const list = document.querySelector("#graphs-list");
+setupPublicAdminAccess("/admin/graphs").catch(() => {});
 
 function card(graph, cover) {
   const article = document.createElement("article");

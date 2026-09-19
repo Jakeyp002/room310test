@@ -19,6 +19,7 @@ let rows = [];
 let nextId = 1;
 let uploads = 0;
 let loginRequests = 0;
+let allowLogin = false;
 const errors = [];
 const diagnostics = [];
 
@@ -58,7 +59,10 @@ await context.route("https://room310-graph-qa.supabase.co/**", async route => {
   const method = request.method();
   const reply = (body, status = 200) => route.fulfill({ status, contentType: "application/json", body: JSON.stringify(body) });
   if (url.pathname.endsWith("/auth/v1/user")) return reply(user);
-  if (url.pathname.endsWith("/auth/v1/token")) { loginRequests++; return reply({ code: "invalid_credentials", msg: "Invalid login credentials" }, 400); }
+  if (url.pathname.endsWith("/auth/v1/token")) {
+    loginRequests++;
+    return allowLogin ? reply(session) : reply({ code: "invalid_credentials", msg: "Invalid login credentials" }, 400);
+  }
   if (url.pathname.endsWith("/rest/v1/profiles")) return reply({ ...user, display_name: "UI test administrator", approved: true, role: "admin" });
   if (url.pathname.endsWith("/rest/v1/graphs")) {
     const matching = () => rows.filter(row => ["id", "slug", "status"].every(key => !url.searchParams.has(key) || String(row[key]) === url.searchParams.get(key).replace(/^eq\./, "")));
@@ -89,6 +93,10 @@ const visible = async selector => { await page.locator(selector).waitFor({ state
 const noOverflow = async () => assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, "Horizontal overflow");
 
 try {
+  await page.goto(`${base}/graphs`);
+  await visible("[data-admin-edit-link]");
+  assert.match(await page.locator("[data-admin-edit-link]").getAttribute("href"), /^\/admin\/login\?next=/);
+  assert.equal(await page.locator("[data-admin-edit-link]").getAttribute("aria-label"), "Editing is locked. Sign in to edit.");
   await page.goto(`${base}/admin/graphs`);
   await page.waitForURL("**/admin/login?next=**");
   await page.locator('[name="email"]').fill("qa@example.test");
@@ -96,7 +104,16 @@ try {
   await page.locator('button[type="submit"]').click();
   await page.waitForFunction(() => document.body.textContent.includes("Invalid login credentials"));
   assert.equal(loginRequests, 1, "Short existing passwords must reach sign-in, not length validation");
-  await page.evaluate(session => localStorage.setItem("sb-room310-graph-qa-auth-token", JSON.stringify(session)), session);
+  allowLogin = true;
+  await page.locator('button[type="submit"]').click();
+  await page.waitForURL("**/admin/graphs");
+  assert.equal(loginRequests, 2, "A valid administrator can sign in after a failed attempt");
+  await page.goto(`${base}/graphs`);
+  await page.locator("[data-admin-edit-link].is-unlocked").waitFor();
+  await page.locator("[data-admin-edit-link]").click();
+  await page.waitForURL("**/admin/graphs");
+  await page.getByRole("link", { name: "Viewing" }).click();
+  await page.waitForURL("**/graphs");
   await page.goto(`${base}/admin/graphs`);
   await page.getByRole("button", { name: "+ Add graph" }).click();
   await visible("#graph-editor");

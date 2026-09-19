@@ -11,12 +11,12 @@
   <body class="games-admin-page">
     <header class="header solid-header admin-header">
       <a class="logo" href="/index.html">ROOM<span>310</span></a>
-      <nav aria-label="Admin navigation"><a href="/games.html">Public games</a><button id="admin-logout" type="button">Sign out</button></nav>
+      <nav aria-label="Admin navigation"><div class="admin-mode-switch admin-mode-switch-header" aria-label="Games mode"><a href="/games.html">Viewing</a><span class="admin-mode-current" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 7.8-1.2"/></svg>Editing</span></div><button id="admin-logout" type="button">Sign out</button></nav>
     </header>
     <main class="games-admin-shell">
       <nav class="admin-content-tabs" aria-label="Manage content"><a href="/admin/games" aria-current="page">Games</a><a href="/admin/graphs">Graphs</a></nav>
       <section class="games-admin-heading">
-        <div><small data-room310-version-prefix="Games administration / ">Games administration / v0.7.0</small><h1>Manage games.</h1></div>
+        <div><small data-room310-version-prefix="Games administration / ">Games administration / v0.8.0</small><h1>Manage games.</h1></div>
         <div><p>Add a game from a link, pasted HTML, a self-contained HTML file, or a static web-game ZIP. Every source opens in the Room310 player.</p><button type="button" id="new-game">+ Add game</button></div>
       </section>
 
@@ -79,7 +79,7 @@
       <div class="thumbnail-cropper-stage"><canvas width="1280" height="720" aria-label="Cover crop preview"></canvas><p>Drag the image to position it inside the frame.</p></div>
       <div class="thumbnail-cropper-controls"><label for="crop-zoom">Zoom<input id="crop-zoom" type="range" min="1" max="3" value="1" step="0.01" /></label><div><button type="button" id="crop-reset">Reset</button><button type="button" id="crop-apply" class="primary-action">Use this crop</button></div></div>
     </dialog>
-    <script src="/supabase-config.js?v=0.7.0"></script>
-    <script src="/admin-games.js?v=0.7.0"></script>
+    <script src="/supabase-config.js?v=0.8.0"></script>
+    <script src="/admin-games.js?v=0.8.0"></script>
   </body>
 </html>

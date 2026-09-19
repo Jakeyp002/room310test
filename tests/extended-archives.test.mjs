@@ -26,10 +26,11 @@ test("the interested invitation links to the existing Room310 staff section", ()
   assert.match(home, /Jacob Aleo/);
 });
 
-test("the current release does not accidentally publish the held admin-request feature", async () => {
+test("admin entry uses the existing sign-in and does not publish the held access-request feature", async () => {
   const polish = await read("../room310files/site-polish.js");
-  assert.match(polish, /version\.textContent = `v\$\{siteVersion\}`/);
+  assert.match(polish, /badge\.textContent = `v\$\{siteVersion\}`/);
   assert.match(polish, /window\.ROOM310_VERSION = siteVersion/);
+  assert.match(polish, /adminLink\.href = "\/admin\/login"/);
   assert.doesNotMatch(polish, /admin-request-link/);
   assert.doesNotMatch(await read("../netlify.toml"), /\/admin\/request/);
   await assert.rejects(access(new URL("../room310files/admin-request.html", import.meta.url)), { code: "ENOENT" });
