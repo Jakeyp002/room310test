@@ -1,6 +1,6 @@
 # Room310
 
-Room310 is an HTML/CSS/JavaScript learning site. Version 0.10.0 adds distinctive code-and-robot covers to all six language courses and simplifies the colorful games library by removing redundant card badges. It retains assignment-aware Study AI help, linked and hosted games, interactive graphs, the deep learning and PyTorch course, assignment formatting and syntax highlighting, and the existing protected administration tools.
+Room310 is an HTML/CSS/JavaScript learning site. Version 0.11.0 adds an oversized, four-thumbnail collection preview for internally hosted games, opening into the existing searchable collection page. It retains the six language-course covers, assignment-aware Study AI help, linked and hosted games, interactive graphs, the deep learning and PyTorch course, assignment formatting and syntax highlighting, and the existing protected administration tools.
 
 ## Versioning
 

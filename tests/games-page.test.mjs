@@ -20,6 +20,15 @@ test("Games presents a searchable, growing card library", () => {
   assert.doesNotMatch(script, /Browser game|public-game-badge|`\$\{gameCount\} games`/);
 });
 
+test("internally hosted collections preview four games in a four-card feature", () => {
+  assert.match(script, /for \(let slot = 0; slot < 4; slot \+= 1\)/);
+  assert.match(script, /select\("collection_id,title,thumbnail_path,created_at"\)/);
+  assert.match(script, /createSignedUrl\(preview\.thumbnail_path, 3600\)/);
+  assert.match(script, /className = "collection-preview-grid"/);
+  assert.match(css, /\.public-collection-card \{ grid-column: span 2; grid-row: span 2; \}/);
+  assert.match(css, /\.collection-preview-grid[^}]*grid-template-columns: repeat\(2/);
+});
+
 test("Game cards keep names, focus treatment, and minimum play targets", () => {
   assert.match(script, /setAttribute\("aria-label", `Play \$\{name\}`\)/);
   assert.match(script, /image\.alt = ""/);

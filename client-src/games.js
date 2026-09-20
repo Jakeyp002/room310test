@@ -63,12 +63,39 @@ function makeCard({ title: name, description: copy, year, thumbnailUrl, slug }, 
   return article;
 }
 
-function makeCollectionCard({ title: name, description: copy, slug }, index) {
+function makeCollectionVisual(previews, index) {
+  const visual = document.createElement("div");
+  visual.className = "public-game-cover public-collection-cover";
+  visual.style.setProperty("--game-color", colors[index % colors.length]);
+  const grid = document.createElement("div");
+  grid.className = "collection-preview-grid";
+  grid.setAttribute("aria-hidden", "true");
+  for (let slot = 0; slot < 4; slot += 1) {
+    const preview = previews[slot];
+    const tile = document.createElement("div");
+    tile.className = "collection-preview-tile";
+    if (preview?.thumbnailUrl) {
+      const image = document.createElement("img");
+      image.src = preview.thumbnailUrl;
+      image.alt = "";
+      image.loading = "lazy";
+      tile.append(image);
+    } else {
+      const icon = document.createElement("span");
+      icon.textContent = preview ? iconFor(preview.title) : "🎮";
+      tile.append(icon);
+    }
+    grid.append(tile);
+  }
+  visual.append(grid);
+  return visual;
+}
+
+function makeCollectionCard({ title: name, description: copy, slug, previews = [] }, index) {
   const article = document.createElement("article");
   article.className = "public-game-card public-collection-card";
   article.style.setProperty("--game-color", colors[index % colors.length]);
-  const visual = makeVisual(name, "", index);
-  visual.querySelector(".public-game-icon").textContent = "🎲";
+  const visual = makeCollectionVisual(previews, index);
   const body = document.createElement("div");
   body.className = "public-game-body";
   const title = document.createElement("h3");
@@ -110,11 +137,27 @@ async function loadGames() {
   if (error) throw error;
   if (collectionError) throw collectionError;
   const collections = collectionRows || [];
-  const counts = new Map();
+  const previewsByCollection = new Map();
   if (collections.length) {
-    const { data: members, error: memberError } = await supabase.from("games").select("collection_id").in("collection_id", collections.map((collection) => collection.id));
+    const { data: members, error: memberError } = await supabase
+      .from("games")
+      .select("collection_id,title,thumbnail_path,created_at")
+      .in("collection_id", collections.map((collection) => collection.id))
+      .order("created_at", { ascending: false });
     if (memberError) throw memberError;
-    for (const member of members || []) counts.set(member.collection_id, (counts.get(member.collection_id) || 0) + 1);
+    for (const member of members || []) {
+      const previews = previewsByCollection.get(member.collection_id) || [];
+      if (previews.length < 4) previews.push(member);
+      previewsByCollection.set(member.collection_id, previews);
+    }
+    await Promise.all([...previewsByCollection.entries()].map(async ([collectionId, previews]) => {
+      const signedPreviews = await Promise.all(previews.map(async (preview) => {
+        if (!preview.thumbnail_path) return { title: preview.title, thumbnailUrl: "" };
+        const { data: signed } = await supabase.storage.from("game-thumbnails").createSignedUrl(preview.thumbnail_path, 3600);
+        return { title: preview.title, thumbnailUrl: signed?.signedUrl || "" };
+      }));
+      previewsByCollection.set(collectionId, signedPreviews);
+    }));
   }
   const games = await Promise.all((data || []).map(async (row) => {
     const game = gameFromRow(row);
@@ -123,7 +166,7 @@ async function loadGames() {
     return { ...game, thumbnailUrl: signed?.signedUrl || "", kind: "game" };
   }));
   entries = [
-    ...collections.map((collection) => ({ ...collection, gameCount: counts.get(collection.id) || 0, kind: "collection" })),
+    ...collections.map((collection) => ({ ...collection, previews: previewsByCollection.get(collection.id) || [], kind: "collection" })),
     ...games
   ];
   renderEntries(entries);
