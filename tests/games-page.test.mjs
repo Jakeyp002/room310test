@@ -4,27 +4,26 @@ import { readFile } from "node:fs/promises";
 
 const read = path => readFile(new URL(path, import.meta.url), "utf8");
 const page = await read("../room310files/games.html");
-const script = await read("../room310files/game-embed.js");
+const script = await read("../client-src/games.js");
 const css = await read("../room310files/style.css");
 
-test("Games embeds Apex Trails with a restricted fallback-friendly frame", () => {
-  assert.match(page, /id="apex-trails-frame"/);
-  assert.match(page, /src="https:\/\/oneshotstudios\.org\/"/);
-  assert.match(page, /sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"/);
-  assert.doesNotMatch(page, /allow-top-navigation|allow-popups|clipboard-read|clipboard-write/);
-  assert.match(page, /referrerpolicy="no-referrer"/);
-  assert.match(page, /Open separately/);
-  assert.match(page, /data-game-state hidden/);
+test("Games presents a searchable, growing card library", () => {
+  assert.match(page, /class="games-library"/);
+  assert.match(page, /data-game-search/);
+  assert.match(page, /data-games-count/);
+  assert.match(page, /aria-live="polite" aria-busy="true"/);
+  assert.match(page, /More games are on the way/);
+  assert.match(css, /repeat\(auto-fill, minmax/);
+  assert.match(css, /--game-color/);
+  assert.match(script, /search\?\.addEventListener\("input"/);
+  assert.match(script, /entries\.filter/);
 });
 
-test("Apex Trails supplies accessible fullscreen behavior and responsive layout", () => {
-  assert.match(script, /requestFullscreen/);
-  assert.match(script, /aria-pressed/);
-  assert.match(script, /fullscreenchange/);
-  assert.match(script, /mode: "no-cors"/);
-  assert.match(script, /frame\.hidden = true/);
-  assert.match(script, /Apex Trails is currently unavailable/);
-  assert.match(css, /\.featured-game-frame/);
-  assert.match(css, /iframe:fullscreen/);
-  assert.match(css, /68svh/);
+test("Game cards keep names, focus treatment, and minimum play targets", () => {
+  assert.match(script, /setAttribute\("aria-label", `Play \$\{name\}`\)/);
+  assert.match(script, /image\.alt = ""/);
+  assert.match(script, /aria-hidden/);
+  assert.match(css, /min-height: 44px/);
+  assert.match(css, /\.public-game-link:focus-visible/);
+  assert.match(css, /prefers-reduced-motion: no-preference/);
 });

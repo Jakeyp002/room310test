@@ -2474,3 +2474,76 @@ summary:focus-visible {
   textarea:focus-visible,
   summary:focus-visible { outline-color: Highlight; }
 }
+
+/* Colorful, scalable games library — v0.15 */
+.games-page { background: #f3f1ff; }
+.games-hub { max-width: 1500px; margin: 0 auto; }
+.games-page .games-hero {
+  min-height: 360px;
+  margin-bottom: 54px;
+  padding: 48px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 28px;
+  color: #fff;
+  background: linear-gradient(125deg, #6c5ce7, #2d9cdb);
+  box-shadow: 0 24px 60px rgba(46, 41, 104, 0.18);
+}
+.games-page .games-hero h1 { margin: 52px 0 20px; font-size: clamp(72px, 10vw, 148px); }
+.games-page .games-hero > p { max-width: 650px; font-size: clamp(18px, 2vw, 25px); }
+.games-library { display: grid; gap: 24px; }
+.games-library-heading { display: flex; align-items: end; justify-content: space-between; gap: 28px; }
+.games-library-heading small { font: 700 10px "Courier New", monospace; letter-spacing: 0.09em; text-transform: uppercase; }
+.games-library-heading h2 { margin: 8px 0 6px; font-size: clamp(44px, 6vw, 78px); line-height: 0.9; letter-spacing: -0.055em; }
+.games-library-heading p { margin: 0; color: #575a69; font-size: 16px; }
+.games-count { flex: 0 0 auto; padding: 11px 15px; border: 1px solid #d9d5f2; border-radius: 999px; background: #fff; font: 700 10px "Courier New", monospace; letter-spacing: 0.05em; text-transform: uppercase; }
+.games-search { min-height: 52px; display: flex; align-items: center; gap: 10px; padding: 0 16px; border: 1px solid #d9d5f2; border-radius: 16px; background: #fff; }
+.games-search > span { color: #6c5ce7; font-size: 27px; line-height: 1; }
+.games-search input { width: 100%; min-width: 0; border: 0; outline: 0; color: var(--ink); background: transparent; font: 16px Arial, sans-serif; }
+.games-search:focus-within { outline: 3px solid #182033; outline-offset: 3px; }
+.games-hub .games-list { min-height: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 18px; margin: 0; padding: 0; border: 0; align-items: stretch; }
+.games-loading { grid-column: 1 / -1; margin: 0; padding: 50px 24px; border: 1px solid #d9d5f2; border-radius: 18px; background: #fff; text-align: center; }
+.games-hub .public-game-card { position: relative; min-height: 0; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #d9d5f2; border-radius: 20px; background: #fff; box-shadow: 0 14px 30px rgba(41, 36, 87, 0.1); }
+.games-hub .public-game-cover { position: relative; min-height: 0; aspect-ratio: 4 / 3; color: #182033; background: var(--game-color); }
+.games-hub .public-game-cover img { transition: transform 180ms ease; }
+.public-game-icon { font-size: clamp(58px, 7vw, 92px); filter: drop-shadow(0 8px 10px rgba(24, 32, 51, 0.12)); }
+.public-game-badge { position: absolute; left: 12px; bottom: 12px; padding: 7px 9px; border-radius: 999px; color: #182033; background: rgba(255,255,255,0.86); font: 700 9px "Courier New", monospace; letter-spacing: 0.04em; text-transform: uppercase; }
+.games-hub .public-game-body { flex: 1; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto 1fr auto; gap: 8px 12px; align-content: stretch; min-height: 150px; padding: 16px; }
+.games-hub .public-game-body h3 { grid-column: 1 / -1; margin: 0; font-size: 21px; line-height: 1.05; letter-spacing: -0.035em; }
+.games-hub .public-game-body p { grid-column: 1 / -1; display: -webkit-box; overflow: hidden; margin: 0; color: #575a69; font-size: 13px; line-height: 1.4; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.games-hub .public-game-meta { align-self: center; display: block; color: #575a69; font: 700 9px "Courier New", monospace; letter-spacing: 0.04em; }
+.games-hub .public-game-link { position: static; min-width: 76px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 13px; border: 0; border-radius: 999px; color: #fff; background: #182033; font: 700 10px "Courier New", monospace; text-transform: uppercase; }
+.games-hub .public-game-link::after { content: ""; position: absolute; inset: 0; border-radius: 20px; }
+.games-hub .public-game-link:focus-visible { outline: 3px solid #182033; outline-offset: 4px; }
+.games-hub .public-game-card:hover { transform: translateY(-4px); box-shadow: 0 20px 38px rgba(41, 36, 87, 0.16); }
+.games-hub .public-game-card:hover .public-game-cover img { transform: scale(1.04); }
+.games-empty { grid-column: 1 / -1; display: grid; gap: 8px; padding: 52px 24px; border: 1px solid #d9d5f2; border-radius: 18px; background: #fff; text-align: center; }
+.games-empty strong { font-size: 24px; }
+.games-empty span { color: #575a69; }
+.games-library-footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px 22px; border-radius: 18px; background: #e6e1ff; }
+.games-library-footer > div { display: grid; gap: 5px; }
+.games-library-footer strong { font-size: 17px; }
+.games-library-footer span { color: #575a69; font-size: 13px; }
+.games-library-plus { width: 44px; height: 44px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; color: #fff !important; background: #6c5ce7; font-size: 24px !important; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .games-hub .public-game-card { transition: transform 180ms ease, box-shadow 180ms ease; }
+}
+
+@media (max-width: 700px) {
+  .games-page .games-hero { min-height: 300px; margin-bottom: 38px; padding: 32px 24px; border-radius: 20px; }
+  .games-page .games-hero h1 { margin-top: 44px; }
+  .games-library-heading { align-items: flex-start; flex-direction: column; gap: 18px; }
+  .games-hub .games-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .games-hub .public-game-body { min-height: 140px; padding: 13px; }
+  .games-hub .public-game-body h3 { font-size: 18px; }
+  .games-hub .public-game-body p { display: none; }
+  .games-hub .public-game-link { min-width: 44px; width: 44px; padding: 0; }
+  .games-hub .public-game-link span:first-child { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+  .games-library-footer span:not(.games-library-plus) { font-size: 12px; }
+}
+
+@media (max-width: 390px) {
+  .games-hub .games-list { grid-template-columns: 1fr; }
+  .games-hub .public-game-body p { display: -webkit-box; }
+}

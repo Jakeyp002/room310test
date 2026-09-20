@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Play Apex Trails and discover browser games selected for Room310." />
+    <meta name="description" content="Discover colorful browser games and interactive projects selected for Room310." />
     <title>Games · Room310</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
@@ -21,54 +21,45 @@
       </nav>
     </header>
 
-    <main class="collection-page">
+    <main class="collection-page games-hub">
       <section class="collection-hero games-hero">
-        <div class="games-hero-meta"><small>Room310 / Games</small><small data-room310-version>v0.8.0</small></div>
+        <div class="games-hero-meta"><small>Room310 / Games</small><small data-room310-version>v0.9.0</small></div>
         <h1>Play here.</h1>
-        <p>Play Apex Trails without leaving Room310, then explore more student games below.</p>
+        <p>Pick a browser game or interactive project and jump right in.</p>
       </section>
 
-      <section id="apex-trails" class="featured-game" aria-labelledby="apex-trails-title">
-        <div class="featured-game-heading">
+      <section class="games-library" aria-labelledby="games-library-title">
+        <header class="games-library-heading">
           <div>
-            <small>Featured game / OneShot Studios</small>
-            <h2 id="apex-trails-title">Apex Trails</h2>
+            <small>Room310 collection</small>
+            <h2 id="games-library-title">Popular games</h2>
+            <p>Colorful challenges, creative sandboxes, and quick breaks.</p>
           </div>
-          <div class="featured-game-actions">
-            <a href="https://oneshotstudios.org/" target="_blank" rel="noopener noreferrer">Open separately ↗</a>
-            <button type="button" class="featured-game-fullscreen" data-game-fullscreen aria-controls="apex-trails-frame" aria-pressed="false">Fullscreen</button>
-          </div>
-        </div>
-        <div class="featured-game-frame">
-          <div class="featured-game-state" data-game-state hidden>
-            <strong>Apex Trails is not responding.</strong>
-            <p>The game’s website could not be reached. Room310 is still working; try opening the game separately or come back later.</p>
-          </div>
-          <iframe
-            id="apex-trails-frame"
-            src="https://oneshotstudios.org/"
-            title="Play Apex Trails"
-            sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock"
-            allow="fullscreen; gamepad"
-            allowfullscreen
-            referrerpolicy="no-referrer"
-            loading="eager"
-          ></iframe>
-        </div>
-        <p class="featured-game-note">Apex Trails runs on its own website inside this restricted frame. Use “Open separately” if your browser blocks embedded play. <span class="sr-only" data-fullscreen-status aria-live="polite"></span></p>
-      </section>
+          <span class="games-count" data-games-count>Loading games…</span>
+        </header>
 
-      <section class="games-list" aria-label="More games" aria-live="polite">
-        <div>
-          <small>More games</small>
-          <h2>Next up.</h2>
+        <form class="games-search" role="search">
+          <label class="sr-only" for="game-search">Search games</label>
+          <span aria-hidden="true">⌕</span>
+          <input id="game-search" type="search" autocomplete="off" placeholder="Search games" data-game-search />
+        </form>
+
+        <div class="games-list" aria-live="polite" aria-busy="true">
+          <p class="games-loading">Loading the game library…</p>
         </div>
-        <p>More Room310 games and interactive projects will appear here as they are released.</p>
+        <p class="sr-only" role="status" data-games-status></p>
+
+        <footer class="games-library-footer">
+          <div>
+            <strong>More games are on the way</strong>
+            <span>The library grows automatically as new games are published.</span>
+          </div>
+          <span class="games-library-plus" aria-hidden="true">+</span>
+        </footer>
       </section>
     </main>
-      <script src="site-polish.js?v=0.8.0"></script>
-      <script src="supabase-config.js?v=0.8.0"></script>
-      <script src="games.js?v=0.8.0"></script>
-      <script src="game-embed.js?v=0.8.0"></script>
+    <script src="site-polish.js?v=0.9.0"></script>
+    <script src="supabase-config.js?v=0.9.0"></script>
+    <script src="games.js?v=0.9.0"></script>
   </body>
 </html>

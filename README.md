@@ -1,6 +1,6 @@
 # Room310
 
-Room310 is an HTML/CSS/JavaScript learning site. Version 0.5.0 adds assignment-aware help to coding lessons, reusing the authenticated Room 310 Study AI tutor through Netlify AI Gateway and OpenAI GPT-5 mini. It retains the course library, linked and hosted games, interactive graphs, the deep learning and PyTorch course, assignment formatting and syntax highlighting, and the existing protected administration tools.
+Room310 is an HTML/CSS/JavaScript learning site. Version 0.9.0 introduces a colorful, searchable games library that expands automatically as games and collections are published. It retains assignment-aware Study AI help, linked and hosted games, interactive graphs, the deep learning and PyTorch course, assignment formatting and syntax highlighting, and the existing protected administration tools.
 
 ## Versioning
 
