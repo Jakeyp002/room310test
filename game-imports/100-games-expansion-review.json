@@ -1,0 +1,98 @@
+{
+  "reviewedAt": "2026-09-20",
+  "method": "Static capability scan followed by two production-sandbox browser boot passes, bounded pointer and keyboard interaction, console review, and screenshot review.",
+  "securityBoundary": "allow-scripts allow-pointer-lock; no same-origin, popups, downloads, forms, or top-level navigation",
+  "approved": [
+    "sandgame",
+    "trapthecat",
+    "oppositeday",
+    "doodlejump",
+    "bitplanes",
+    "minesweeper",
+    "2048-cupcakes",
+    "pacman",
+    "flappybird",
+    "ironsnout",
+    "chess",
+    "bubbleshooter",
+    "webecomewhatwebehold",
+    "run-2",
+    "spaceiskey",
+    "ducklife",
+    "run",
+    "floodrunner-2",
+    "thisistheonlyleveltoo",
+    "ducklife-2",
+    "bloxorz",
+    "vex-6",
+    "spaceiskey-2",
+    "vexx-3-m",
+    "timeshooter-3",
+    "papasburgeria",
+    "earntodie",
+    "vexx-3-m-2",
+    "timeshooter-2",
+    "wheely",
+    "floodrunner-4",
+    "ducklife-5",
+    "angrybirds",
+    "redball-4-vol-3",
+    "redball-4-vol-2",
+    "wheely-8",
+    "earntodie-2",
+    "retrohighway",
+    "stickmerge",
+    "fruitninja",
+    "geometrydash"
+  ],
+  "titleOverrides": {
+    "sandgame": "Sand Game",
+    "trapthecat": "Trap the Cat",
+    "oppositeday": "Opposite Day",
+    "bitplanes": "Bit Planes",
+    "pacman": "Pac-Man",
+    "flappybird": "Flappy Bird",
+    "ironsnout": "Iron Snout",
+    "bubbleshooter": "Bubble Shooter",
+    "webecomewhatwebehold": "We Become What We Behold",
+    "spaceiskey": "Space Is Key",
+    "ducklife": "Duck Life",
+    "floodrunner-2": "Flood Runner 2",
+    "thisistheonlyleveltoo": "This Is the Only Level Too",
+    "ducklife-2": "Duck Life 2",
+    "spaceiskey-2": "Space Is Key 2",
+    "timeshooter-3": "Time Shooter 3",
+    "papasburgeria": "Papa's Burgeria",
+    "earntodie": "Earn to Die",
+    "timeshooter-2": "Time Shooter 2",
+    "ducklife-5": "Duck Life 5",
+    "angrybirds": "Angry Birds",
+    "redball-4-vol-3": "Red Ball 4 Vol. 3",
+    "redball-4-vol-2": "Red Ball 4 Vol. 2",
+    "earntodie-2": "Earn to Die 2",
+    "retrohighway": "Retro Highway",
+    "stickmerge": "Stick Merge",
+    "fruitninja": "Fruit Ninja",
+    "geometrydash": "Geometry Dash"
+  },
+  "rejected": [
+    {
+      "reason": "Required blocked same-origin browser features or missing runtime assets, so the game was incompatible with the secure Room310 sandbox.",
+      "slugs": [
+        "evilglitch", "wordleunlimited", "elasticface", "johnnytrigger", "drawclimber", "idlebreakout", "wheeliebike", "tinyfishing", "unicyclehero", "zombierush", "jumpingshell", "circloo", "monstertracks", "blumgirocket", "stacktris", "drivemad", "mergeroundracers", "motox-3-mpoolparty", "plonky", "circloo-2", "motox-3-mspookyland", "parkingfury", "polytrack", "bloonstd", "riddleschool", "bloonstd-2", "motox-3-mwinter", "parkingfury-2", "thisistheonlylevel", "bloonstd-3", "worldshardestgame-3", "riddleschool-2", "parkingfury-3", "motox-3-m-2", "motox-3-m-3", "papaspizzeria", "breakingthebank", "bloonstd-4", "floodrunner-3", "motox-3-m", "crazycars", "papastacomia", "eagleride", "papasfreezeria", "ducklife-3", "riddleschool-4", "crazymotorcycle", "candycrush", "blumgiracers", "leveldevil", "capybaraclicker", "vex-4"
+      ]
+    },
+    {
+      "reason": "The game remained blank or did not reach a usable start screen within the bounded review window.",
+      "slugs": [
+        "clashofvikings", "poorbunny", "worldshardestgame", "learntofly", "freerider-3", "fancypantsadventure", "picosschool", "worldshardestgame-2", "badpiggies", "helixjump", "learntoflyidle", "ageofwar", "bobtherobber-2", "happywheels", "learntofly-2", "papaspancakeria", "vex-5"
+      ]
+    },
+    {
+      "reason": "Skipped because it was multiplayer-oriented or substantially more complex than this single-player expansion.",
+      "slugs": [
+        "tag", "sm-64", "deathrun-3-d", "agesofconflict", "1-5", "carkingarena"
+      ]
+    }
+  ]
+}

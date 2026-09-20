@@ -1,6 +1,7 @@
 .env
 node_modules/
 dist/
+output/
 supabase/.temp/
 data/
 __pycache__/

@@ -53,6 +53,27 @@ test("the pilot manifest identifies all 15 games and requires provenance", async
   }
 });
 
+test("the authorized expansion publishes only the browser-reviewed partition", async () => {
+  const [prepared, approved, review, importer] = await Promise.all([
+    read("../game-imports/100-games-expansion.json").then(JSON.parse),
+    read("../game-imports/100-games-expansion-approved.json").then(JSON.parse),
+    read("../game-imports/100-games-expansion-review.json").then(JSON.parse),
+    read("../scripts/import-game-collection.mjs")
+  ]);
+  const rejected = review.rejected.flatMap((group) => group.slugs);
+  assert.equal(prepared.games.length, 116);
+  assert.equal(review.approved.length, 41);
+  assert.equal(rejected.length, 75);
+  assert.equal(new Set([...review.approved, ...rejected]).size, prepared.games.length);
+  assert.deepEqual(approved.games.map((game) => game.slug), review.approved);
+  assert.equal(validateImportManifest(approved).games.length, 41);
+  assert.match(review.securityBoundary, /allow-scripts allow-pointer-lock/);
+  assert.match(review.securityBoundary, /no same-origin/);
+  assert.match(importer, /standalone_reviewed_sha256: publishReviewed \? prepared\.sha256 : null/);
+  assert.match(importer, /status: publishReviewed \? "published" : "draft"/);
+  assert.doesNotMatch(importer, /description: manifest\.collection\.description, status: "draft"/);
+});
+
 test("compatibility preparation fails closed when a supplied game layout changes", () => {
   assert.throws(() => prepareOvo2("<html></html>"), /layout changed/);
   assert.throws(() => prepareStickmanHook("<html><head></head></html>"), /layout changed/);

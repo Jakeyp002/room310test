@@ -1,0 +1,2133 @@
+{
+  "collection": {
+    "title": "100+ Games",
+    "slug": "100-games",
+    "description": "A searchable collection of browser games hosted directly for Room310."
+  },
+  "permission": {
+    "sourceOwner": "Shea O'Neil",
+    "note": "I am Shea O'Neil. I authorize Room310 to download and use my game files.",
+    "suppliedInConversation": true
+  },
+  "sourceManifest": {
+    "filename": "single-file.html",
+    "sha256": "71f1718326031097adeb8fbe1beb574e64d25fa68e699287b1e9383dd51959d5"
+  },
+  "selection": {
+    "requestedCandidates": 150,
+    "prepared": 116,
+    "skipped": 34,
+    "rules": "Single-player leaning, <=18 MiB, no obvious multiplayer/online titles, fail-fast range extraction, opaque-origin blocker scan."
+  },
+  "games": [
+    {
+      "title": "Evil Glitch",
+      "slug": "evilglitch",
+      "description": "Play Evil Glitch directly in Room310.",
+      "year": 2026,
+      "source": "html/evilglitch.html",
+      "cover": "covers/evilglitch.png",
+      "sourceBytes": 33033,
+      "sourceSha256": "fb0ae0bdc588b55720e7db1e9d6ce335307b6193eeffa577a40d4f8b91002137",
+      "sourcePackage": "bakerspalace@1.0.0/part2.zip",
+      "sourceEntry": "evilglitch.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Browser storage access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Sandgame",
+      "slug": "sandgame",
+      "description": "Play Sandgame directly in Room310.",
+      "year": 2026,
+      "source": "html/sandgame.html",
+      "cover": "covers/sandgame.png",
+      "sourceBytes": 60330,
+      "sourceSha256": "ead3d5ba7fe9423c54dd5bd034d70104254845fe08103fa0511b563f5a96da61",
+      "sourcePackage": "first-project-train@1.0.0/part30.zip",
+      "sourceEntry": "sandgame.html",
+      "reviewFindings": [
+        "Browser storage access"
+      ]
+    },
+    {
+      "title": "Trapthecat",
+      "slug": "trapthecat",
+      "description": "Play Trapthecat directly in Room310.",
+      "year": 2026,
+      "source": "html/trapthecat.html",
+      "cover": "covers/trapthecat.png",
+      "sourceBytes": 76414,
+      "sourceSha256": "76cbff95f7af62b7923b416ad6ae4c2b23da5d297174cd445683fc0f25c1fe80",
+      "sourcePackage": "webpxr2@1.0.0/part15.zip",
+      "sourceEntry": "trapthecat.html",
+      "reviewFindings": []
+    },
+    {
+      "title": "Oppositeday",
+      "slug": "oppositeday",
+      "description": "Play Oppositeday directly in Room310.",
+      "year": 2026,
+      "source": "html/oppositeday.html",
+      "cover": "covers/oppositeday.png",
+      "sourceBytes": 168147,
+      "sourceSha256": "3225f3a959b39038992af4cb45a948d2312e76b39480128d25ea6b2352e804db",
+      "sourcePackage": "readfortheapple@1.0.0/part48.zip",
+      "sourceEntry": "oppositeday.html",
+      "reviewFindings": [
+        "Browser storage access"
+      ]
+    },
+    {
+      "title": "Wordleunlimited",
+      "slug": "wordleunlimited",
+      "description": "Play Wordleunlimited directly in Room310.",
+      "year": 2026,
+      "source": "html/wordleunlimited.html",
+      "cover": "covers/wordleunlimited.png",
+      "sourceBytes": 184648,
+      "sourceSha256": "71929aad283a782f015eea05a606b2ba06aa7c44f96c88c96da08178acf7bfd6",
+      "sourcePackage": "readfortheapple@1.0.0/part48.zip",
+      "sourceEntry": "wordleunlimited.html",
+      "reviewFindings": [
+        "Browser storage access"
+      ]
+    },
+    {
+      "title": "Doodle Jump",
+      "slug": "doodlejump",
+      "description": "Play Doodle Jump directly in Room310.",
+      "year": 2026,
+      "source": "html/doodlejump.html",
+      "cover": "covers/doodlejump.png",
+      "sourceBytes": 423484,
+      "sourceSha256": "fbe6425a863ad8de15f6236ba6b1e0f1a4d1bfe95114f865a63dfa8262f0f6c1",
+      "sourcePackage": "readfortheapple@1.0.0/part48.zip",
+      "sourceEntry": "doodlejump.html",
+      "reviewFindings": [
+        "Form submission"
+      ]
+    },
+    {
+      "title": "Elastic Face",
+      "slug": "elasticface",
+      "description": "Play Elastic Face directly in Room310.",
+      "year": 2026,
+      "source": "html/elasticface.html",
+      "cover": "covers/elasticface.png",
+      "sourceBytes": 655762,
+      "sourceSha256": "e9b9bfdfcf98b8b83b1b8a56b4e35353657cf54f9f739521ef3759f9ae40b0a1",
+      "sourcePackage": "juicepotting@1.0.0/part1.zip",
+      "sourceEntry": "elasticface.htm",
+      "reviewFindings": [
+        "Remote network access"
+      ]
+    },
+    {
+      "title": "Bitplanes",
+      "slug": "bitplanes",
+      "description": "Play Bitplanes directly in Room310.",
+      "year": 2026,
+      "source": "html/bitplanes.html",
+      "cover": "covers/bitplanes.png",
+      "sourceBytes": 757322,
+      "sourceSha256": "a1254c33b0112f2fe904c3931996f7cc41c115f6600d9d22db5776bfb191fed7",
+      "sourcePackage": "juicepotting@1.0.0/part1.zip",
+      "sourceEntry": "bitplanes.htm",
+      "reviewFindings": [
+        "Browser storage access",
+        "Remote network access",
+        "Form submission"
+      ]
+    },
+    {
+      "title": "Minesweeper",
+      "slug": "minesweeper",
+      "description": "Play Minesweeper directly in Room310.",
+      "year": 2026,
+      "source": "html/minesweeper.html",
+      "cover": "covers/minesweeper.png",
+      "sourceBytes": 1230632,
+      "sourceSha256": "6fa4768c9c4ebe4b78641a4b516c4fffaf58e8ae247e9a35264d84c83d0ca494",
+      "sourcePackage": "first-project-train@1.0.0/part30.zip",
+      "sourceEntry": "minesweeper.html",
+      "reviewFindings": [
+        "Form submission"
+      ]
+    },
+    {
+      "title": "Johnnytrigger",
+      "slug": "johnnytrigger",
+      "description": "Play Johnnytrigger directly in Room310.",
+      "year": 2026,
+      "source": "html/johnnytrigger.html",
+      "cover": "covers/johnnytrigger.png",
+      "sourceBytes": 1427482,
+      "sourceSha256": "41eb8dee164a1e9b6dacf87666eff1eb1d0b3eca032a73b2827dd8ca399fad27",
+      "sourcePackage": "readfortheapple@1.0.0/part48.zip",
+      "sourceEntry": "johnnytrigger.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution",
+        "Form submission"
+      ]
+    },
+    {
+      "title": "Draw Climber",
+      "slug": "drawclimber",
+      "description": "Play Draw Climber directly in Room310.",
+      "year": 2026,
+      "source": "html/drawclimber.html",
+      "cover": "covers/drawclimber.png",
+      "sourceBytes": 1830547,
+      "sourceSha256": "910b8e7c342902437174dbde908268769a11cb370a63ab17c38720a81df0280e",
+      "sourcePackage": "readfortheapple@1.0.0/part48.zip",
+      "sourceEntry": "drawclimber.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Idle Breakout",
+      "slug": "idlebreakout",
+      "description": "Play Idle Breakout directly in Room310.",
+      "year": 2026,
+      "source": "html/idlebreakout.html",
+      "cover": "covers/idlebreakout.png",
+      "sourceBytes": 2052938,
+      "sourceSha256": "8c3ee3037412a89424a938b8af441a0488a0433f8df9c381c682d02bec026003",
+      "sourcePackage": "readfortheapple@1.0.0/part48.zip",
+      "sourceEntry": "idlebreakout.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Top-level navigation",
+        "Popup creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Wheeliebike",
+      "slug": "wheeliebike",
+      "description": "Play Wheeliebike directly in Room310.",
+      "year": 2026,
+      "source": "html/wheeliebike.html",
+      "cover": "covers/wheeliebike.png",
+      "sourceBytes": 2135516,
+      "sourceSha256": "c3e40e4e3cc7b5423a2fe23c5e0aa82c70a67085a433261b3f82f269ef5ef7bf",
+      "sourcePackage": "readfortheapple@1.0.0/part48.zip",
+      "sourceEntry": "wheeliebike.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Tiny Fishing",
+      "slug": "tinyfishing",
+      "description": "Play Tiny Fishing directly in Room310.",
+      "year": 2026,
+      "source": "html/tinyfishing.html",
+      "cover": "covers/tinyfishing.png",
+      "sourceBytes": 2451912,
+      "sourceSha256": "9d7bb48f07216bd7dbfd3c249ca6c004f080a5b5f6cd12ba340dc8acce179a28",
+      "sourcePackage": "first-project-train@1.0.0/part30.zip",
+      "sourceEntry": "tinyfishing.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Unicyclehero",
+      "slug": "unicyclehero",
+      "description": "Play Unicyclehero directly in Room310.",
+      "year": 2026,
+      "source": "html/unicyclehero.html",
+      "cover": "covers/unicyclehero.png",
+      "sourceBytes": 2573728,
+      "sourceSha256": "e823177de3844fb25563e9693bb3b26e067e0a82119b904ceea0d830cc753dd7",
+      "sourcePackage": "first-project-train@1.0.0/part30.zip",
+      "sourceEntry": "unicyclehero.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "2048 Cupcakes",
+      "slug": "2048-cupcakes",
+      "description": "Play 2048 Cupcakes directly in Room310.",
+      "year": 2026,
+      "source": "html/2048-cupcakes.html",
+      "cover": "covers/2048-cupcakes.png",
+      "sourceBytes": 2607527,
+      "sourceSha256": "dcf32811f2a76630ef9bbe2a7a981565c4e48e4172f48b4d26c612c3dbad8d0a",
+      "sourcePackage": "readfortheapple@1.0.0/part48.zip",
+      "sourceEntry": "2048cupcakes.html",
+      "reviewFindings": [
+        "Browser storage access"
+      ]
+    },
+    {
+      "title": "Zombierush",
+      "slug": "zombierush",
+      "description": "Play Zombierush directly in Room310.",
+      "year": 2026,
+      "source": "html/zombierush.html",
+      "cover": "covers/zombierush.png",
+      "sourceBytes": 2827151,
+      "sourceSha256": "5eda50d8d13eb6bcc884252708bb3c07d43e6e6deb3204ff7564586db1529896",
+      "sourcePackage": "readfortheapple@1.0.0/part48.zip",
+      "sourceEntry": "zombierush.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Jumping Shell",
+      "slug": "jumpingshell",
+      "description": "Play Jumping Shell directly in Room310.",
+      "year": 2026,
+      "source": "html/jumpingshell.html",
+      "cover": "covers/jumpingshell.png",
+      "sourceBytes": 3253052,
+      "sourceSha256": "83a42c59d59a3b705eef382d556e4e1243b861aaaa84ddf5153d75f7239ff4a4",
+      "sourcePackage": "krabsandshoe@1.0.0/part9.zip",
+      "sourceEntry": "jumpingshell.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "CircloO",
+      "slug": "circloo",
+      "description": "Play CircloO directly in Room310.",
+      "year": 2026,
+      "source": "html/circloo.html",
+      "cover": "covers/circloo.png",
+      "sourceBytes": 3299705,
+      "sourceSha256": "d9bfa1dd99f1e4f0d468c1576bfdc594a4c84716b4da9e5a759a6e8cd3380d53",
+      "sourcePackage": "first-project-train@1.0.0/part30.zip",
+      "sourceEntry": "circloO.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Pacman",
+      "slug": "pacman",
+      "description": "Play Pacman directly in Room310.",
+      "year": 2026,
+      "source": "html/pacman.html",
+      "cover": "covers/pacman.png",
+      "sourceBytes": 3364269,
+      "sourceSha256": "cd3fe4b7cb98d8a786c3a6e8ac720e610ad567681b503c9dc00072e72f45e1c0",
+      "sourcePackage": "first-project-train@1.0.0/part30.zip",
+      "sourceEntry": "pacman.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution",
+        "Form submission"
+      ]
+    },
+    {
+      "title": "Monster Tracks",
+      "slug": "monstertracks",
+      "description": "Play Monster Tracks directly in Room310.",
+      "year": 2026,
+      "source": "html/monstertracks.html",
+      "cover": "covers/monstertracks.png",
+      "sourceBytes": 3505443,
+      "sourceSha256": "a7d464256b84f363cfb8710a196be43f778600723e0e1acf18d202ef6e17811e",
+      "sourcePackage": "first-project-train@1.0.0/part30.zip",
+      "sourceEntry": "monstertracks.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Top-level navigation",
+        "Popup creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Blumgi Rocket",
+      "slug": "blumgirocket",
+      "description": "Play Blumgi Rocket directly in Room310.",
+      "year": 2026,
+      "source": "html/blumgirocket.html",
+      "cover": "covers/blumgirocket.png",
+      "sourceBytes": 3638371,
+      "sourceSha256": "cb01fad00dabfbc1e93e7fa109c43712d05f16c6b9e94ebfd9eca9c1401c7384",
+      "sourcePackage": "readfortheapple@1.0.0/part48.zip",
+      "sourceEntry": "blumgirocket.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Stacktris",
+      "slug": "stacktris",
+      "description": "Play Stacktris directly in Room310.",
+      "year": 2026,
+      "source": "html/stacktris.html",
+      "cover": "covers/stacktris.png",
+      "sourceBytes": 3747835,
+      "sourceSha256": "b9c680aec7a90c6c14266da40c76062c96811e258427056dc546e20d2e4854ec",
+      "sourcePackage": "readfortheapple@1.0.0/part48.zip",
+      "sourceEntry": "stacktris.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Top-level navigation",
+        "Popup creation",
+        "Browser storage access",
+        "Remote network access"
+      ]
+    },
+    {
+      "title": "Clashofvikings",
+      "slug": "clashofvikings",
+      "description": "Play Clashofvikings directly in Room310.",
+      "year": 2026,
+      "source": "html/clashofvikings.html",
+      "cover": "covers/clashofvikings.png",
+      "sourceBytes": 3789093,
+      "sourceSha256": "dd4881ae8189ddfbdca382a212732238431e44a7569a06934a744a06019b50c0",
+      "sourcePackage": "readfortheapple@1.0.0/part48.zip",
+      "sourceEntry": "clashofvikings.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Tag",
+      "slug": "tag",
+      "description": "Play Tag directly in Room310.",
+      "year": 2026,
+      "source": "html/tag.html",
+      "cover": "covers/tag.png",
+      "sourceBytes": 4199359,
+      "sourceSha256": "77c11623f52ba9f8c3e5b5c08ad1d7daaedc44a2da1d2302424d9742c2f932d2",
+      "sourcePackage": "first-project-train@1.0.0/part30.zip",
+      "sourceEntry": "tag.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Flappy Bird",
+      "slug": "flappybird",
+      "description": "Play Flappy Bird directly in Room310.",
+      "year": 2026,
+      "source": "html/flappybird.html",
+      "cover": "covers/flappybird.png",
+      "sourceBytes": 4341092,
+      "sourceSha256": "ef6bfbcec3bfc7e3ab076377caefe31ef2a5531c276fa9c5fe439c31895ab7f2",
+      "sourcePackage": "juicepotting@1.0.0/part1.zip",
+      "sourceEntry": "flappybird.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution",
+        "Form submission"
+      ]
+    },
+    {
+      "title": "Candycrush",
+      "slug": "candycrush",
+      "description": "Play Candycrush directly in Room310.",
+      "year": 2026,
+      "source": "html/candycrush.html",
+      "cover": "covers/candycrush.png",
+      "sourceBytes": 4528477,
+      "sourceSha256": "8fecfa78ac72fbcb1794573158fbd518d2552bc1f2ec511d3af120b481352666",
+      "sourcePackage": "first-project-train@1.0.0/part30.zip",
+      "sourceEntry": "candycrush.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Retro Highway",
+      "slug": "retrohighway",
+      "description": "Play Retro Highway directly in Room310.",
+      "year": 2026,
+      "source": "html/retrohighway.html",
+      "cover": "covers/retrohighway.png",
+      "sourceBytes": 4963215,
+      "sourceSha256": "1cb518ee4f3ba072041803c5296ecc2b86af70eccdb0eb0b7d870335b8444129",
+      "sourcePackage": "readfortheapple@1.0.0/part49.zip",
+      "sourceEntry": "retrohighway.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Drive Mad",
+      "slug": "drivemad",
+      "description": "Play Drive Mad directly in Room310.",
+      "year": 2026,
+      "source": "html/drivemad.html",
+      "cover": "covers/drivemad.png",
+      "sourceBytes": 4999037,
+      "sourceSha256": "b4a05a2909fe93984e445697192a252a5f664f57ee39110f319ab754bf8f4d7b",
+      "sourcePackage": "juicepotting@1.0.0/part1.zip",
+      "sourceEntry": "drivemad.htm",
+      "reviewFindings": [
+        "Parent-page access",
+        "Top-level navigation",
+        "Popup creation",
+        "Browser storage access",
+        "Remote network access"
+      ]
+    },
+    {
+      "title": "Mergeroundracers",
+      "slug": "mergeroundracers",
+      "description": "Play Mergeroundracers directly in Room310.",
+      "year": 2026,
+      "source": "html/mergeroundracers.html",
+      "cover": "covers/mergeroundracers.png",
+      "sourceBytes": 5027270,
+      "sourceSha256": "5b561781a32ff5c992a2d9eb2bd78ceb54af6f81263590715656134328c700e3",
+      "sourcePackage": "readfortheapple@1.0.0/part49.zip",
+      "sourceEntry": "mergeroundracers.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Blumgi Racers",
+      "slug": "blumgiracers",
+      "description": "Play Blumgi Racers directly in Room310.",
+      "year": 2026,
+      "source": "html/blumgiracers.html",
+      "cover": "covers/blumgiracers.png",
+      "sourceBytes": 5060939,
+      "sourceSha256": "7f4729cb7c7146d96038f579fde1e8ec908d64bb3d2375403b9bd2ba020abda3",
+      "sourcePackage": "readfortheapple@1.0.0/part49.zip",
+      "sourceEntry": "blumgiracers.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Moto X3M Pool Party",
+      "slug": "motox-3-mpoolparty",
+      "description": "Play Moto X3M Pool Party directly in Room310.",
+      "year": 2026,
+      "source": "html/motox-3-mpoolparty.html",
+      "cover": "covers/motox-3-mpoolparty.png",
+      "sourceBytes": 5105874,
+      "sourceSha256": "7e35a2251ab59e8928f38088934232b1c58e3703117c1271d00fa0242ce8a957",
+      "sourcePackage": "readfortheapple@1.0.0/part49.zip",
+      "sourceEntry": "motox3mpoolparty.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Plonky",
+      "slug": "plonky",
+      "description": "Play Plonky directly in Room310.",
+      "year": 2026,
+      "source": "html/plonky.html",
+      "cover": "covers/plonky.png",
+      "sourceBytes": 5381242,
+      "sourceSha256": "ce8e2067b49501e6b28c5a4d90b8502e7f7540b44b775b2aed7f6013a7409ca0",
+      "sourcePackage": "readfortheapple@1.0.0/part49.zip",
+      "sourceEntry": "plonky.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "CircloO 2",
+      "slug": "circloo-2",
+      "description": "Play CircloO 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/circloo-2.html",
+      "cover": "covers/circloo-2.png",
+      "sourceBytes": 5841500,
+      "sourceSha256": "3ef86fa54055d845d7ff50f9a48af39092448cb3bbfec18f011a0767d49b6eac",
+      "sourcePackage": "first-project-train@1.0.0/part30.zip",
+      "sourceEntry": "circloO2.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Top-level navigation",
+        "Popup creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Moto X3M Spooky Land",
+      "slug": "motox-3-mspookyland",
+      "description": "Play Moto X3M Spooky Land directly in Room310.",
+      "year": 2026,
+      "source": "html/motox-3-mspookyland.html",
+      "cover": "covers/motox-3-mspookyland.png",
+      "sourceBytes": 5946258,
+      "sourceSha256": "7cbd380faf090c37d45caf198d64b3b72d8e1e59d6ee1c96a0efb74ebceba999",
+      "sourcePackage": "readfortheapple@1.0.0/part49.zip",
+      "sourceEntry": "motox3mspookyland.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Ironsnout",
+      "slug": "ironsnout",
+      "description": "Play Ironsnout directly in Room310.",
+      "year": 2026,
+      "source": "html/ironsnout.html",
+      "cover": "covers/ironsnout.png",
+      "sourceBytes": 5951082,
+      "sourceSha256": "4a11ccdb91c305c5113b0e209c8c0d59303f17c27658495e911893df868ec98e",
+      "sourcePackage": "readfortheapple@1.0.0/part49.zip",
+      "sourceEntry": "ironsnout.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Top-level navigation",
+        "Popup creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Poorbunny",
+      "slug": "poorbunny",
+      "description": "Play Poorbunny directly in Room310.",
+      "year": 2026,
+      "source": "html/poorbunny.html",
+      "cover": "covers/poorbunny.png",
+      "sourceBytes": 5970262,
+      "sourceSha256": "6316214fa0a8009f374ae4dbc98a559ec94768cb4fc6f26f02058fbb98b333a8",
+      "sourcePackage": "readfortheapple@1.0.0/part49.zip",
+      "sourceEntry": "poorbunny.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Level Devil",
+      "slug": "leveldevil",
+      "description": "Play Level Devil directly in Room310.",
+      "year": 2026,
+      "source": "html/leveldevil.html",
+      "cover": "covers/leveldevil.png",
+      "sourceBytes": 6800668,
+      "sourceSha256": "76b7a1eb230a8f9212e13f2d92158cde7733279706f010b66da4ce346310a289",
+      "sourcePackage": "juicepotting@1.0.0/part1.zip",
+      "sourceEntry": "leveldevil.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Parkingfury",
+      "slug": "parkingfury",
+      "description": "Play Parkingfury directly in Room310.",
+      "year": 2026,
+      "source": "html/parkingfury.html",
+      "cover": "covers/parkingfury.png",
+      "sourceBytes": 6887156,
+      "sourceSha256": "fa45e5795da16d0716eb01b73cf3468c9dedf7c7392777a6a04af39eeafef0a8",
+      "sourcePackage": "solarandpluto@1.0.0/part21.zip",
+      "sourceEntry": "parkingfury.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Chess",
+      "slug": "chess",
+      "description": "Play Chess directly in Room310.",
+      "year": 2026,
+      "source": "html/chess.html",
+      "cover": "covers/chess.png",
+      "sourceBytes": 6915152,
+      "sourceSha256": "84d08c4a220b5afb266a0a5573ccaf590f4129b66c1f1a225dd78615301a6027",
+      "sourcePackage": "first-project-train@1.0.0/part30.zip",
+      "sourceEntry": "chess.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Bubbleshooter",
+      "slug": "bubbleshooter",
+      "description": "Play Bubbleshooter directly in Room310.",
+      "year": 2026,
+      "source": "html/bubbleshooter.html",
+      "cover": "covers/bubbleshooter.png",
+      "sourceBytes": 7076553,
+      "sourceSha256": "36856c8d9cb2e920c074aa21a47974b7bd0b1a663f3c37cb705ae2c8b149401d",
+      "sourcePackage": "flytothemoon2@1.0.0/part19.zip",
+      "sourceEntry": "bubbleshooter.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Polytrack",
+      "slug": "polytrack",
+      "description": "Play Polytrack directly in Room310.",
+      "year": 2026,
+      "source": "html/polytrack.html",
+      "cover": "covers/polytrack.png",
+      "sourceBytes": 7174330,
+      "sourceSha256": "e490a5676cba73d6568e678ea8b60a1060ef5b939d45d9907a255888d89f1303",
+      "sourcePackage": "chairandokay@1.0.0/part7.zip",
+      "sourceEntry": "polytrack.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Bloons TD",
+      "slug": "bloonstd",
+      "description": "Play Bloons TD directly in Room310.",
+      "year": 2026,
+      "source": "html/bloonstd.html",
+      "cover": "covers/bloonstd.png",
+      "sourceBytes": 7512645,
+      "sourceSha256": "5ad27f087432d38af1b3dc915778f249da323b748c38960cd1a552dae5ce461d",
+      "sourcePackage": "happyok7@1.0.0/part12.zip",
+      "sourceEntry": "bloonsTD.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Riddle School",
+      "slug": "riddleschool",
+      "description": "Play Riddle School directly in Room310.",
+      "year": 2026,
+      "source": "html/riddleschool.html",
+      "cover": "covers/riddleschool.png",
+      "sourceBytes": 7641687,
+      "sourceSha256": "8aa77db23fdf8f556484042997ab7b5028d0ad79f95dc5d83d35009079edf9f9",
+      "sourcePackage": "webpxr@1.0.0/part13.zip",
+      "sourceEntry": "riddleschool.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Worldshardestgame",
+      "slug": "worldshardestgame",
+      "description": "Play Worldshardestgame directly in Room310.",
+      "year": 2026,
+      "source": "html/worldshardestgame.html",
+      "cover": "covers/worldshardestgame.png",
+      "sourceBytes": 7797079,
+      "sourceSha256": "8a891071d5f10fbfcd4db626c77df5fc0082cf60b51c24292475ef2c451491d4",
+      "sourcePackage": "solarandpluto@1.0.0/part21.zip",
+      "sourceEntry": "worldshardestgame.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Bloons TD 2",
+      "slug": "bloonstd-2",
+      "description": "Play Bloons TD 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/bloonstd-2.html",
+      "cover": "covers/bloonstd-2.png",
+      "sourceBytes": 7852517,
+      "sourceSha256": "5a71ad9e7a16319c228bf11c39ad93d2d84ffdbf749c1a4a87c709ff8213c0b4",
+      "sourcePackage": "happyok7@1.0.0/part12.zip",
+      "sourceEntry": "bloonsTD2.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Learntofly",
+      "slug": "learntofly",
+      "description": "Play Learntofly directly in Room310.",
+      "year": 2026,
+      "source": "html/learntofly.html",
+      "cover": "covers/learntofly.png",
+      "sourceBytes": 7994644,
+      "sourceSha256": "49de51ca750665ea55e08bbafd074abf7e8696fc1a0653fa82c9c4b9416e9697",
+      "sourcePackage": "web-dev-pxj@1.0.0/part29.zip",
+      "sourceEntry": "learntofly.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Moto X3M Winter",
+      "slug": "motox-3-mwinter",
+      "description": "Play Moto X3M Winter directly in Room310.",
+      "year": 2026,
+      "source": "html/motox-3-mwinter.html",
+      "cover": "covers/motox-3-mwinter.png",
+      "sourceBytes": 7994665,
+      "sourceSha256": "7bf52127bc2de57b5195fd0bc97f3bf5d7b2c296138fcfd14d38fa2ed677c3ed",
+      "sourcePackage": "readfortheapple@1.0.0/part49.zip",
+      "sourceEntry": "motox3mwinter.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Webecomewhatwebehold",
+      "slug": "webecomewhatwebehold",
+      "description": "Play Webecomewhatwebehold directly in Room310.",
+      "year": 2026,
+      "source": "html/webecomewhatwebehold.html",
+      "cover": "covers/webecomewhatwebehold.png",
+      "sourceBytes": 8045029,
+      "sourceSha256": "7344b5fa9f563888ef3c225b890940710f5b7a775db96b7f54d13ac97ec9f456",
+      "sourcePackage": "solarandpluto@1.0.0/part21.zip",
+      "sourceEntry": "webecomewhatwebehold.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Run 2",
+      "slug": "run-2",
+      "description": "Play Run 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/run-2.html",
+      "cover": "covers/run-2.png",
+      "sourceBytes": 8097620,
+      "sourceSha256": "4e6aef6ca8f98ff9dc0809749635e4139b9faf9573c76798f883a0eb059fface",
+      "sourcePackage": "jungleanteaters@1.0.0/part33.zip",
+      "sourceEntry": "run2.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Free Rider 3",
+      "slug": "freerider-3",
+      "description": "Play Free Rider 3 directly in Room310.",
+      "year": 2026,
+      "source": "html/freerider-3.html",
+      "cover": "covers/freerider-3.png",
+      "sourceBytes": 8174213,
+      "sourceSha256": "4fccbfd5acfbb86ae97280bb3dcc3ac6fe746d433ec6fb5f8c16fec6ada7785f",
+      "sourcePackage": "scooterandbanana@1.0.0/part52.zip",
+      "sourceEntry": "freerider3.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Spaceiskey",
+      "slug": "spaceiskey",
+      "description": "Play Spaceiskey directly in Room310.",
+      "year": 2026,
+      "source": "html/spaceiskey.html",
+      "cover": "covers/spaceiskey.png",
+      "sourceBytes": 8247101,
+      "sourceSha256": "66cdd5b2168497b5f52eaa27ddcf49959db6efd6abb16610497fd4a34b143259",
+      "sourcePackage": "scooterandbanana@1.0.0/part52.zip",
+      "sourceEntry": "spaceiskey.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Stick Merge",
+      "slug": "stickmerge",
+      "description": "Play Stick Merge directly in Room310.",
+      "year": 2026,
+      "source": "html/stickmerge.html",
+      "cover": "covers/stickmerge.png",
+      "sourceBytes": 8285969,
+      "sourceSha256": "d31cd0b1a568a9f71cae6592f5de50e59d85a4a7dd54250168fcb81b1287bdd5",
+      "sourcePackage": "scooterandbanana@1.0.0/part52.zip",
+      "sourceEntry": "stickmerge.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Super Mario 64",
+      "slug": "sm-64",
+      "description": "Play Super Mario 64 directly in Room310.",
+      "year": 2026,
+      "source": "html/sm-64.html",
+      "cover": "covers/sm-64.png",
+      "sourceBytes": 8376747,
+      "sourceSha256": "4b38ee60da331dda6061c8d2bcf9fe0b5990b7d5912c2b108362c267ae773d4c",
+      "sourcePackage": "chairandokay@1.0.0/part7.zip",
+      "sourceEntry": "sm64.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Fruitninja",
+      "slug": "fruitninja",
+      "description": "Play Fruitninja directly in Room310.",
+      "year": 2026,
+      "source": "html/fruitninja.html",
+      "cover": "covers/fruitninja.png",
+      "sourceBytes": 8404819,
+      "sourceSha256": "81139574b755e1fff3126b2dc16702801f836323788ad55e1c9df2711aa32a6f",
+      "sourcePackage": "bakerspalace@1.0.0/part2.zip",
+      "sourceEntry": "fruitninja.html",
+      "reviewFindings": [
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Death Run 3D",
+      "slug": "deathrun-3-d",
+      "description": "Play Death Run 3D directly in Room310.",
+      "year": 2026,
+      "source": "html/deathrun-3-d.html",
+      "cover": "covers/deathrun-3-d.png",
+      "sourceBytes": 8437080,
+      "sourceSha256": "f694c834f0e7ead07aaa99c32249d379eadd0f2d464ed36dbef8c5d9d0bd0c2e",
+      "sourcePackage": "jungleanteaters@1.0.0/part33.zip",
+      "sourceEntry": "deathrun3D.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Parkingfury 2",
+      "slug": "parkingfury-2",
+      "description": "Play Parkingfury 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/parkingfury-2.html",
+      "cover": "covers/parkingfury-2.png",
+      "sourceBytes": 8566823,
+      "sourceSha256": "866a0667a0bc842d66ca477919fdd52684c7e3b4c00f87a4ca1bf8a443433aaf",
+      "sourcePackage": "solarandpluto@1.0.0/part21.zip",
+      "sourceEntry": "parkingfury2.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Duck Life",
+      "slug": "ducklife",
+      "description": "Play Duck Life directly in Room310.",
+      "year": 2026,
+      "source": "html/ducklife.html",
+      "cover": "covers/ducklife.png",
+      "sourceBytes": 8590717,
+      "sourceSha256": "4516318affdece636a5ce0ad4b0a6b1968c4012bc72b91bfe9f561a052ad4ab3",
+      "sourcePackage": "happyok7@1.0.0/part12.zip",
+      "sourceEntry": "ducklife.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Thisistheonlylevel",
+      "slug": "thisistheonlylevel",
+      "description": "Play Thisistheonlylevel directly in Room310.",
+      "year": 2026,
+      "source": "html/thisistheonlylevel.html",
+      "cover": "covers/thisistheonlylevel.png",
+      "sourceBytes": 8650025,
+      "sourceSha256": "757ee40d3f25870b4ce84cc765decf12af6ad2ed479d0f025e2e2a76eb69cf68",
+      "sourcePackage": "scooterandbanana@1.0.0/part52.zip",
+      "sourceEntry": "thisistheonlylevel.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Bloons TD 3",
+      "slug": "bloonstd-3",
+      "description": "Play Bloons TD 3 directly in Room310.",
+      "year": 2026,
+      "source": "html/bloonstd-3.html",
+      "cover": "covers/bloonstd-3.png",
+      "sourceBytes": 8665053,
+      "sourceSha256": "2e86d7c9a12650ad26e23df2ca38a0bba6181f3180796ecc70513603cc1f3230",
+      "sourcePackage": "happyok7@1.0.0/part12.zip",
+      "sourceEntry": "bloonsTD3.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Worldshardestgame 3",
+      "slug": "worldshardestgame-3",
+      "description": "Play Worldshardestgame 3 directly in Room310.",
+      "year": 2026,
+      "source": "html/worldshardestgame-3.html",
+      "cover": "covers/worldshardestgame-3.png",
+      "sourceBytes": 8672736,
+      "sourceSha256": "383d35537bd45736af52de4fd4f77af8110abaed1789d635160156da42033d03",
+      "sourcePackage": "solarandpluto@1.0.0/part21.zip",
+      "sourceEntry": "worldshardestgame3.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Riddle School 2",
+      "slug": "riddleschool-2",
+      "description": "Play Riddle School 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/riddleschool-2.html",
+      "cover": "covers/riddleschool-2.png",
+      "sourceBytes": 8799087,
+      "sourceSha256": "500f7bcdc0842485c06bd5ac1cee5eecbf3d2bb8c4bce9f6c5e98ac9e0c19153",
+      "sourcePackage": "webpxr2@1.0.0/part14.zip",
+      "sourceEntry": "riddleschool2.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Parkingfury 3",
+      "slug": "parkingfury-3",
+      "description": "Play Parkingfury 3 directly in Room310.",
+      "year": 2026,
+      "source": "html/parkingfury-3.html",
+      "cover": "covers/parkingfury-3.png",
+      "sourceBytes": 8825394,
+      "sourceSha256": "be53ac7bcc25a623e8c49b16137c5a96f3e8040fe945b603ac12bb2135f5e2d0",
+      "sourcePackage": "solarandpluto@1.0.0/part21.zip",
+      "sourceEntry": "parkingfury3.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Run",
+      "slug": "run",
+      "description": "Play Run directly in Room310.",
+      "year": 2026,
+      "source": "html/run.html",
+      "cover": "covers/run.png",
+      "sourceBytes": 8895652,
+      "sourceSha256": "a20fd31d948bfe6e5bb1c4616ac5931ff11f74b733177cf836d1bc5e394a6f37",
+      "sourcePackage": "jungleanteaters@1.0.0/part33.zip",
+      "sourceEntry": "run.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Fancy Pants Adventure",
+      "slug": "fancypantsadventure",
+      "description": "Play Fancy Pants Adventure directly in Room310.",
+      "year": 2026,
+      "source": "html/fancypantsadventure.html",
+      "cover": "covers/fancypantsadventure.png",
+      "sourceBytes": 9097203,
+      "sourceSha256": "0b84d0a5e5de536d22b335e51f8cea77cd04bfe0bc41eb1e54aceca02124ba7b",
+      "sourcePackage": "compiler-syncs@1.0.0/part23.zip",
+      "sourceEntry": "fancypantsadventure.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Flood Runner 2",
+      "slug": "floodrunner-2",
+      "description": "Play Flood Runner 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/floodrunner-2.html",
+      "cover": "covers/floodrunner-2.png",
+      "sourceBytes": 9256313,
+      "sourceSha256": "4ea925aed8e4adb6ed6a4f9cc1f84a7c79c6ebd14d5c8d85f8b9f82aa31e0f8b",
+      "sourcePackage": "scooterandbanana@1.0.0/part52.zip",
+      "sourceEntry": "floodrunner2.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Thisistheonlyleveltoo",
+      "slug": "thisistheonlyleveltoo",
+      "description": "Play Thisistheonlyleveltoo directly in Room310.",
+      "year": 2026,
+      "source": "html/thisistheonlyleveltoo.html",
+      "cover": "covers/thisistheonlyleveltoo.png",
+      "sourceBytes": 9374061,
+      "sourceSha256": "4702bd362759fca78df2570f23385c06fc7c2a40c462a77aff53239ef45cec25",
+      "sourcePackage": "scooterandbanana2@1.0.0/part55.zip",
+      "sourceEntry": "thisistheonlyleveltoo.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Duck Life 2",
+      "slug": "ducklife-2",
+      "description": "Play Duck Life 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/ducklife-2.html",
+      "cover": "covers/ducklife-2.png",
+      "sourceBytes": 9415925,
+      "sourceSha256": "351d267afff4cda2b3f25dd4a7a26ec33be07e510c4a7be042794e71ae945968",
+      "sourcePackage": "happyok7@1.0.0/part12.zip",
+      "sourceEntry": "ducklife2.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Picosschool",
+      "slug": "picosschool",
+      "description": "Play Picosschool directly in Room310.",
+      "year": 2026,
+      "source": "html/picosschool.html",
+      "cover": "covers/picosschool.png",
+      "sourceBytes": 9556224,
+      "sourceSha256": "81af26f4bca43fb2fc331fc7ce30649c46b33deb7e32c05d201f5d1958bfd185",
+      "sourcePackage": "compiler-syncs@1.0.0/part22.zip",
+      "sourceEntry": "picosschool.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Bloxorz",
+      "slug": "bloxorz",
+      "description": "Play Bloxorz directly in Room310.",
+      "year": 2026,
+      "source": "html/bloxorz.html",
+      "cover": "covers/bloxorz.png",
+      "sourceBytes": 9824296,
+      "sourceSha256": "8a87a345f8039033e9c44727f443a01e81d5534731a7296eb10c07effc978a93",
+      "sourcePackage": "jungleanteaters@1.0.0/part33.zip",
+      "sourceEntry": "bloxorz.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Moto X3M 2",
+      "slug": "motox-3-m-2",
+      "description": "Play Moto X3M 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/motox-3-m-2.html",
+      "cover": "covers/motox-3-m-2.png",
+      "sourceBytes": 9837708,
+      "sourceSha256": "f6714a2f37aa81da6a6895e6a921b07adc7d3cbcc228b30c97808fd1a295d328",
+      "sourcePackage": "debuginstyle@1.0.0/part3.zip",
+      "sourceEntry": "motox3m2.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Top-level navigation",
+        "Popup creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution",
+        "Form submission"
+      ]
+    },
+    {
+      "title": "Worldshardestgame 2",
+      "slug": "worldshardestgame-2",
+      "description": "Play Worldshardestgame 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/worldshardestgame-2.html",
+      "cover": "covers/worldshardestgame-2.png",
+      "sourceBytes": 9974723,
+      "sourceSha256": "9497b16acdb9041733aefed9d10047efc1e75bdd6489ac5bd9c0388bede5a2dc",
+      "sourcePackage": "solarandpluto@1.0.0/part21.zip",
+      "sourceEntry": "worldshardestgame2.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Badpiggies",
+      "slug": "badpiggies",
+      "description": "Play Badpiggies directly in Room310.",
+      "year": 2026,
+      "source": "html/badpiggies.html",
+      "cover": "covers/badpiggies.png",
+      "sourceBytes": 10002320,
+      "sourceSha256": "dfb2feabcee30b3e4839130117f9bb8b05016c0a32bf3c77f5e2d4272f6257dc",
+      "sourcePackage": "compiler-syncs@1.0.0/part22.zip",
+      "sourceEntry": "badpiggies.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Vex 6",
+      "slug": "vex-6",
+      "description": "Play Vex 6 directly in Room310.",
+      "year": 2026,
+      "source": "html/vex-6.html",
+      "cover": "covers/vex-6.png",
+      "sourceBytes": 10042324,
+      "sourceSha256": "cda952b0c2da80ee775280d28f780d22175cd8ab5901b79f75894814199fa81b",
+      "sourcePackage": "debuginstyle@1.0.0/part3.zip",
+      "sourceEntry": "vex6.htm",
+      "reviewFindings": [
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Spaceiskey 2",
+      "slug": "spaceiskey-2",
+      "description": "Play Spaceiskey 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/spaceiskey-2.html",
+      "cover": "covers/spaceiskey-2.png",
+      "sourceBytes": 10156649,
+      "sourceSha256": "e69d6d109e3fc46a283f0cfd548a26e29b4c9beefa00f5c7dee3daf372378c1f",
+      "sourcePackage": "scooterandbanana2@1.0.0/part55.zip",
+      "sourceEntry": "spaceiskey2.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Vex X3M",
+      "slug": "vexx-3-m",
+      "description": "Play Vex X3M directly in Room310.",
+      "year": 2026,
+      "source": "html/vexx-3-m.html",
+      "cover": "covers/vexx-3-m.png",
+      "sourceBytes": 10255429,
+      "sourceSha256": "5d246f0e1c1b71a660fe82291561a76a309e260f628cc46f5e999ca66cb77df2",
+      "sourcePackage": "scooterandbanana2@1.0.0/part55.zip",
+      "sourceEntry": "vexx3m.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Helix Jump",
+      "slug": "helixjump",
+      "description": "Play Helix Jump directly in Room310.",
+      "year": 2026,
+      "source": "html/helixjump.html",
+      "cover": "covers/helixjump.png",
+      "sourceBytes": 10506916,
+      "sourceSha256": "1e72c1c77475cb820ee19248b9d551e80eaa755339504b4cd1a64e83b80472ae",
+      "sourcePackage": "scooterandbanana2@1.0.0/part55.zip",
+      "sourceEntry": "helixjump.html",
+      "reviewFindings": [
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Moto X3M 3",
+      "slug": "motox-3-m-3",
+      "description": "Play Moto X3M 3 directly in Room310.",
+      "year": 2026,
+      "source": "html/motox-3-m-3.html",
+      "cover": "covers/motox-3-m-3.png",
+      "sourceBytes": 10593685,
+      "sourceSha256": "669cf42067c924b0285b0a56f58e0bc30824fd22f96fd3eedf225d38f6530740",
+      "sourcePackage": "debuginstyle@1.0.0/part3.zip",
+      "sourceEntry": "motox3m3.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Top-level navigation",
+        "Popup creation",
+        "Browser storage access",
+        "Remote network access",
+        "Form submission"
+      ]
+    },
+    {
+      "title": "Papas Pizzeria",
+      "slug": "papaspizzeria",
+      "description": "Play Papas Pizzeria directly in Room310.",
+      "year": 2026,
+      "source": "html/papaspizzeria.html",
+      "cover": "covers/papaspizzeria.png",
+      "sourceBytes": 10594161,
+      "sourceSha256": "f29969c49bc43f95477f2195acbb01a4769b0179b54a5b570e470ebcacd2946f",
+      "sourcePackage": "krabsandshoe2@1.0.0/part11.zip",
+      "sourceEntry": "papaspizzeria.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Learntoflyidle",
+      "slug": "learntoflyidle",
+      "description": "Play Learntoflyidle directly in Room310.",
+      "year": 2026,
+      "source": "html/learntoflyidle.html",
+      "cover": "covers/learntoflyidle.png",
+      "sourceBytes": 11034269,
+      "sourceSha256": "8d574475366da677c49a2a8d14e8f2ba1b7adf54d4e98d4f0dec14a2c68c9cac",
+      "sourcePackage": "scooterandbanana2@1.0.0/part55.zip",
+      "sourceEntry": "learntoflyidle.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Breakingthebank",
+      "slug": "breakingthebank",
+      "description": "Play Breakingthebank directly in Room310.",
+      "year": 2026,
+      "source": "html/breakingthebank.html",
+      "cover": "covers/breakingthebank.png",
+      "sourceBytes": 11042240,
+      "sourceSha256": "5f18f28a62333d1014f874a2ff8c0ef87166e5999df4a1c08d140c3c8a0c7fa6",
+      "sourcePackage": "krabsandshoe@1.0.0/part9.zip",
+      "sourceEntry": "breakingthebank.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Bloons TD 4",
+      "slug": "bloonstd-4",
+      "description": "Play Bloons TD 4 directly in Room310.",
+      "year": 2026,
+      "source": "html/bloonstd-4.html",
+      "cover": "covers/bloonstd-4.png",
+      "sourceBytes": 11144029,
+      "sourceSha256": "be5fb259a201db6bb56b992701c57d2ca98c5ebe6f7456d1750bf1e3db687a07",
+      "sourcePackage": "first-project-train@1.0.0/part31.zip",
+      "sourceEntry": "bloonsTD4.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Flood Runner 3",
+      "slug": "floodrunner-3",
+      "description": "Play Flood Runner 3 directly in Room310.",
+      "year": 2026,
+      "source": "html/floodrunner-3.html",
+      "cover": "covers/floodrunner-3.png",
+      "sourceBytes": 11490761,
+      "sourceSha256": "d88848f7a5bfcc29df5b1ca1a73283dc1d529178de17ad6a7ca638cde503403e",
+      "sourcePackage": "img-to-edu@1.0.0/part65.zip",
+      "sourceEntry": "floodrunner3.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Ageofwar",
+      "slug": "ageofwar",
+      "description": "Play Ageofwar directly in Room310.",
+      "year": 2026,
+      "source": "html/ageofwar.html",
+      "cover": "covers/ageofwar.png",
+      "sourceBytes": 11642972,
+      "sourceSha256": "85419587056670303cc75a6787bda0fc0fdd11003f50ae5367149f1dbb26f6f2",
+      "sourcePackage": "first-project-train@1.0.0/part30.zip",
+      "sourceEntry": "ageofwar.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Moto X3M",
+      "slug": "motox-3-m",
+      "description": "Play Moto X3M directly in Room310.",
+      "year": 2026,
+      "source": "html/motox-3-m.html",
+      "cover": "covers/motox-3-m.png",
+      "sourceBytes": 11675580,
+      "sourceSha256": "23584bb41b862e4de028e1b3d201a6c3789ed0971c0e02569711a3c71666a82e",
+      "sourcePackage": "debuginstyle@1.0.0/part3.zip",
+      "sourceEntry": "motox3m.htm",
+      "reviewFindings": [
+        "Parent-page access",
+        "Top-level navigation",
+        "Popup creation",
+        "Browser storage access",
+        "Form submission"
+      ]
+    },
+    {
+      "title": "Timeshooter 3",
+      "slug": "timeshooter-3",
+      "description": "Play Timeshooter 3 directly in Room310.",
+      "year": 2026,
+      "source": "html/timeshooter-3.html",
+      "cover": "covers/timeshooter-3.png",
+      "sourceBytes": 11750551,
+      "sourceSha256": "bfb316c1d35878c91a7d70ced9962e78bdfb791a90c29b08e937f06330a305f2",
+      "sourcePackage": "debuginstyle@1.0.0/part4.zip",
+      "sourceEntry": "timeshooter3.htm",
+      "reviewFindings": []
+    },
+    {
+      "title": "Papasburgeria",
+      "slug": "papasburgeria",
+      "description": "Play Papasburgeria directly in Room310.",
+      "year": 2026,
+      "source": "html/papasburgeria.html",
+      "cover": "covers/papasburgeria.png",
+      "sourceBytes": 11966742,
+      "sourceSha256": "ccfdd844e17f8aed52ab56a66d9e0ac04f7dfd8b141c8ed001552faf4ed0a694",
+      "sourcePackage": "scooterandbanana2@1.0.0/part54.zip",
+      "sourceEntry": "papasburgeria.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Earntodie",
+      "slug": "earntodie",
+      "description": "Play Earntodie directly in Room310.",
+      "year": 2026,
+      "source": "html/earntodie.html",
+      "cover": "covers/earntodie.png",
+      "sourceBytes": 12081965,
+      "sourceSha256": "0d155a6c7da1d6282d52bbe896ee7006e856fe9f6e09db06e522c8e1a8de0606",
+      "sourcePackage": "forgetforever@1.0.0/part56.zip",
+      "sourceEntry": "earntodie.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Bob The Robber 2",
+      "slug": "bobtherobber-2",
+      "description": "Play Bob The Robber 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/bobtherobber-2.html",
+      "cover": "covers/bobtherobber-2.png",
+      "sourceBytes": 12404083,
+      "sourceSha256": "20dde77ac82c3fdfd8cdbc9b92532da7f201cba9057cf3f7afb43607ca861c6b",
+      "sourcePackage": "errorswithok@1.0.0/part24.zip",
+      "sourceEntry": "bobtherobber2.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Happywheels",
+      "slug": "happywheels",
+      "description": "Play Happywheels directly in Room310.",
+      "year": 2026,
+      "source": "html/happywheels.html",
+      "cover": "covers/happywheels.png",
+      "sourceBytes": 12677932,
+      "sourceSha256": "e538a166a774a5be1a2a77069e3e1f5259742722f59c6bd4d9e95203e99e2943",
+      "sourcePackage": "errorswithok@1.0.0/part24.zip",
+      "sourceEntry": "happywheels.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Vex X3M 2",
+      "slug": "vexx-3-m-2",
+      "description": "Play Vex X3M 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/vexx-3-m-2.html",
+      "cover": "covers/vexx-3-m-2.png",
+      "sourceBytes": 12721688,
+      "sourceSha256": "46fe63c1fbc0258fc71f262e661acfd0e6e06c8f6dbdec4cae5dde88618561d0",
+      "sourcePackage": "scooterandbanana2@1.0.0/part55.zip",
+      "sourceEntry": "vexx3m2.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Timeshooter 2",
+      "slug": "timeshooter-2",
+      "description": "Play Timeshooter 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/timeshooter-2.html",
+      "cover": "covers/timeshooter-2.png",
+      "sourceBytes": 13148205,
+      "sourceSha256": "7d59aea6a1108cc90dea0b72c547d1a2c3a5c0580e4b3ae13d08c3316083f995",
+      "sourcePackage": "debuginstyle@1.0.0/part4.zip",
+      "sourceEntry": "timeshooter2.html",
+      "reviewFindings": []
+    },
+    {
+      "title": "Geometry Dash",
+      "slug": "geometrydash",
+      "description": "Play Geometry Dash directly in Room310.",
+      "year": 2026,
+      "source": "html/geometrydash.html",
+      "cover": "covers/geometrydash.png",
+      "sourceBytes": 13389848,
+      "sourceSha256": "a7b91253e4e94ae15094050da16c105f41d8a615cf910915b92806ea10f4a724",
+      "sourcePackage": "bakerspalace@1.0.0/part2.zip",
+      "sourceEntry": "geometrydash.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Wheely",
+      "slug": "wheely",
+      "description": "Play Wheely directly in Room310.",
+      "year": 2026,
+      "source": "html/wheely.html",
+      "cover": "covers/wheely.png",
+      "sourceBytes": 13461485,
+      "sourceSha256": "52e8fabe20bcf06215f3925a6d8d5493102b298a21800c2b015e1130630829ce",
+      "sourcePackage": "jungleanteaters@1.0.0/part32.zip",
+      "sourceEntry": "wheely.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Capybara Clicker",
+      "slug": "capybaraclicker",
+      "description": "Play Capybara Clicker directly in Room310.",
+      "year": 2026,
+      "source": "html/capybaraclicker.html",
+      "cover": "covers/capybaraclicker.png",
+      "sourceBytes": 13529131,
+      "sourceSha256": "50a0c5d89c7fef1f3090603d163a9c26ef95daf416820cacd8a2d9deb4e93b80",
+      "sourcePackage": "img-to-edu@1.0.0/part65.zip",
+      "sourceEntry": "capybaraclicker.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Crazycars",
+      "slug": "crazycars",
+      "description": "Play Crazycars directly in Room310.",
+      "year": 2026,
+      "source": "html/crazycars.html",
+      "cover": "covers/crazycars.png",
+      "sourceBytes": 13810366,
+      "sourceSha256": "462dfb11547cad6ac34f47b811f89672b0666844722d21e6070bb7fe12c42cf9",
+      "sourcePackage": "westwhilenorth@1.0.0/part34.zip",
+      "sourceEntry": "crazycars.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Vex 4",
+      "slug": "vex-4",
+      "description": "Play Vex 4 directly in Room310.",
+      "year": 2026,
+      "source": "html/vex-4.html",
+      "cover": "covers/vex-4.png",
+      "sourceBytes": 13885821,
+      "sourceSha256": "8a5143cb1529051ec37f88fdf892573d5c66b7976c37dba32b273973b97638a6",
+      "sourcePackage": "img-to-edu@1.0.0/part65.zip",
+      "sourceEntry": "vex4.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Flood Runner 4",
+      "slug": "floodrunner-4",
+      "description": "Play Flood Runner 4 directly in Room310.",
+      "year": 2026,
+      "source": "html/floodrunner-4.html",
+      "cover": "covers/floodrunner-4.png",
+      "sourceBytes": 13896641,
+      "sourceSha256": "a4b215f3737ed36d7415f90b61af688f612f5cfb6f7f4c8a44d495449567caff",
+      "sourcePackage": "img-to-edu@1.0.0/part65.zip",
+      "sourceEntry": "floodrunner4.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Papas Tacomia",
+      "slug": "papastacomia",
+      "description": "Play Papas Tacomia directly in Room310.",
+      "year": 2026,
+      "source": "html/papastacomia.html",
+      "cover": "covers/papastacomia.png",
+      "sourceBytes": 13996893,
+      "sourceSha256": "ac107277671d97c8e1d0b7748ea2f1936acac43510c6ee00440526c9dca20e50",
+      "sourcePackage": "krabsandshoe2@1.0.0/part11.zip",
+      "sourceEntry": "papastacomia.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Eagleride",
+      "slug": "eagleride",
+      "description": "Play Eagleride directly in Room310.",
+      "year": 2026,
+      "source": "html/eagleride.html",
+      "cover": "covers/eagleride.png",
+      "sourceBytes": 14032048,
+      "sourceSha256": "e8ab804c7a1402eabc24fec99a9af5373d44407036e185555455b025a0944805",
+      "sourcePackage": "img-to-edu@1.0.0/part65.zip",
+      "sourceEntry": "eagleride.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Learntofly 2",
+      "slug": "learntofly-2",
+      "description": "Play Learntofly 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/learntofly-2.html",
+      "cover": "covers/learntofly-2.png",
+      "sourceBytes": 14045140,
+      "sourceSha256": "8cae89203145aa8873ded4eac872d91f570ccba9054b5fc2d145a8bcf5a232da",
+      "sourcePackage": "web-dev-pxj@1.0.0/part29.zip",
+      "sourceEntry": "learntofly2.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Duck Life 5",
+      "slug": "ducklife-5",
+      "description": "Play Duck Life 5 directly in Room310.",
+      "year": 2026,
+      "source": "html/ducklife-5.html",
+      "cover": "covers/ducklife-5.png",
+      "sourceBytes": 14093313,
+      "sourceSha256": "f4c47d0d0f0a8adafb8f1c0b624bbd6746f7c46bb8f997f8e989b5a9df4a4fd9",
+      "sourcePackage": "thepandabearsofcanada@1.0.0/part70.zip",
+      "sourceEntry": "ducklife5.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Angry Birds",
+      "slug": "angrybirds",
+      "description": "Play Angry Birds directly in Room310.",
+      "year": 2026,
+      "source": "html/angrybirds.html",
+      "cover": "covers/angrybirds.png",
+      "sourceBytes": 14147493,
+      "sourceSha256": "5bb47f2ebe02da4878ad2134b441d253e6a1a55daa643a9f109f1d4c0888352b",
+      "sourcePackage": "compiler-syncs@1.0.0/part23.zip",
+      "sourceEntry": "angrybirds.html",
+      "reviewFindings": [
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Redball 4 Vol 3",
+      "slug": "redball-4-vol-3",
+      "description": "Play Redball 4 Vol 3 directly in Room310.",
+      "year": 2026,
+      "source": "html/redball-4-vol-3.html",
+      "cover": "covers/redball-4-vol-3.png",
+      "sourceBytes": 14189624,
+      "sourceSha256": "dc54694bedd0e4384f9ea1296286b9137f30ab5670427f6804a260ee56278924",
+      "sourcePackage": "solarandpluto@1.0.0/part20.zip",
+      "sourceEntry": "redball4vol3.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Papas Freezeria",
+      "slug": "papasfreezeria",
+      "description": "Play Papas Freezeria directly in Room310.",
+      "year": 2026,
+      "source": "html/papasfreezeria.html",
+      "cover": "covers/papasfreezeria.png",
+      "sourceBytes": 14503865,
+      "sourceSha256": "31445e1aff3935514b89ce6f20c86cc88b860ba01593e74be1435fadbc607a62",
+      "sourcePackage": "krabsandshoe2@1.0.0/part11.zip",
+      "sourceEntry": "papasfreezeria.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Duck Life 3",
+      "slug": "ducklife-3",
+      "description": "Play Duck Life 3 directly in Room310.",
+      "year": 2026,
+      "source": "html/ducklife-3.html",
+      "cover": "covers/ducklife-3.png",
+      "sourceBytes": 14855224,
+      "sourceSha256": "72f3bfea01b15b678736ceef68c04f5e7962c2289084805e201e3dc91446dcd5",
+      "sourcePackage": "happyok7@1.0.0/part12.zip",
+      "sourceEntry": "ducklife3.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Papas Pancakeria",
+      "slug": "papaspancakeria",
+      "description": "Play Papas Pancakeria directly in Room310.",
+      "year": 2026,
+      "source": "html/papaspancakeria.html",
+      "cover": "covers/papaspancakeria.png",
+      "sourceBytes": 15007781,
+      "sourceSha256": "ed9ff421cce3cd2fe4d1b4ba3c9ece6ffe46291e2e1aae405c1eb4ae72f1cb61",
+      "sourcePackage": "scooterandbanana2@1.0.0/part54.zip",
+      "sourceEntry": "papaspancakeria.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Riddle School 4",
+      "slug": "riddleschool-4",
+      "description": "Play Riddle School 4 directly in Room310.",
+      "year": 2026,
+      "source": "html/riddleschool-4.html",
+      "cover": "covers/riddleschool-4.png",
+      "sourceBytes": 15028503,
+      "sourceSha256": "4e0fbf79d3e4342d32981a1df3e21f42ad4a494ebf48acd5b341147c66da010f",
+      "sourcePackage": "webpxr2@1.0.0/part14.zip",
+      "sourceEntry": "riddleschool4.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Redball 4 Vol 2",
+      "slug": "redball-4-vol-2",
+      "description": "Play Redball 4 Vol 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/redball-4-vol-2.html",
+      "cover": "covers/redball-4-vol-2.png",
+      "sourceBytes": 15233693,
+      "sourceSha256": "a04b0af5e4f102dd7da08a46dae774794e20a895d53abc93b78150142c994235",
+      "sourcePackage": "solarandpluto@1.0.0/part20.zip",
+      "sourceEntry": "redball4vol2.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Vex 5",
+      "slug": "vex-5",
+      "description": "Play Vex 5 directly in Room310.",
+      "year": 2026,
+      "source": "html/vex-5.html",
+      "cover": "covers/vex-5.png",
+      "sourceBytes": 15661584,
+      "sourceSha256": "4e95611f70e41164a2c58eb2f4eeafdac2f3a203b2efc8a8783271cd70679796",
+      "sourcePackage": "first-project-train@1.0.0/part31.zip",
+      "sourceEntry": "vex5.html",
+      "reviewFindings": [
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Agesofconflict",
+      "slug": "agesofconflict",
+      "description": "Play Agesofconflict directly in Room310.",
+      "year": 2026,
+      "source": "html/agesofconflict.html",
+      "cover": "covers/agesofconflict.png",
+      "sourceBytes": 16215681,
+      "sourceSha256": "80b83b8a64e4912919c75fb95b2bcc71d904e2afe3f5c870407bed12dca52c35",
+      "sourcePackage": "solarandpluto@1.0.0/part20.zip",
+      "sourceEntry": "agesofconflict.html",
+      "reviewFindings": [
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "1 . 5",
+      "slug": "1-5",
+      "description": "Play 1 . 5 directly in Room310.",
+      "year": 2026,
+      "source": "html/1-5.html",
+      "cover": "covers/1-5.png",
+      "sourceBytes": 16523203,
+      "sourceSha256": "cd6781f9058c8ddbd14fd84f97ccbf6a7799a960d66aa82571c2c2a279a3abbf",
+      "sourcePackage": "first-project-train@1.0.0/part31.zip",
+      "sourceEntry": "1.5.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access"
+      ]
+    },
+    {
+      "title": "Carkingarena",
+      "slug": "carkingarena",
+      "description": "Play Carkingarena directly in Room310.",
+      "year": 2026,
+      "source": "html/carkingarena.html",
+      "cover": "covers/carkingarena.png",
+      "sourceBytes": 16532873,
+      "sourceSha256": "4795e70b9a97015d0bcb90fcdf035ed184e3dd71e0ad21e1d35b3aeb48cca6c9",
+      "sourcePackage": "applesondonuts@1.0.0/part69.zip",
+      "sourceEntry": "carkingarena.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Crazymotorcycle",
+      "slug": "crazymotorcycle",
+      "description": "Play Crazymotorcycle directly in Room310.",
+      "year": 2026,
+      "source": "html/crazymotorcycle.html",
+      "cover": "covers/crazymotorcycle.png",
+      "sourceBytes": 16700332,
+      "sourceSha256": "8b3670823db460c0c0d6fc5470883e2967386614039981a0fe2e583c326a06d4",
+      "sourcePackage": "forgetforever2@1.0.0/part58.zip",
+      "sourceEntry": "crazymotorcycle.html",
+      "reviewFindings": [
+        "Parent-page access",
+        "Top-level navigation",
+        "Popup creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Wheely 8",
+      "slug": "wheely-8",
+      "description": "Play Wheely 8 directly in Room310.",
+      "year": 2026,
+      "source": "html/wheely-8.html",
+      "cover": "covers/wheely-8.png",
+      "sourceBytes": 16752313,
+      "sourceSha256": "9ebbcfa5a7d8da3c80ea55d54af3c689d12b3278ebbfdf07799a20e487079f1d",
+      "sourcePackage": "readfortheapple@1.0.0/part48.zip",
+      "sourceEntry": "wheely8.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    },
+    {
+      "title": "Earntodie 2",
+      "slug": "earntodie-2",
+      "description": "Play Earntodie 2 directly in Room310.",
+      "year": 2026,
+      "source": "html/earntodie-2.html",
+      "cover": "covers/earntodie-2.png",
+      "sourceBytes": 16772153,
+      "sourceSha256": "736445e6998e38b6a3b75379053f3306749e7d4403cfe07ea70a748dd62cfac7",
+      "sourcePackage": "forgetforever@1.0.0/part56.zip",
+      "sourceEntry": "earntodie2.html",
+      "reviewFindings": [
+        "Top-level navigation",
+        "Popup creation",
+        "Download creation",
+        "Browser storage access",
+        "Remote network access",
+        "Dynamic code execution"
+      ]
+    }
+  ]
+}

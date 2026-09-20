@@ -1,6 +1,6 @@
 {
   "name": "room310",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,6 +10,7 @@
     "games:covers": "node scripts/generate-pilot-covers.mjs",
     "games:prepare": "node scripts/prepare-pilot-games.mjs",
     "games:import": "node scripts/import-game-collection.mjs",
+    "games:review": "node scripts/apply-authorized-game-review.mjs",
     "games:preview": "node scripts/preview-standalone-import.mjs",
     "version:bump": "node scripts/bump-version.mjs",
     "version:sync": "node scripts/sync-version.mjs",

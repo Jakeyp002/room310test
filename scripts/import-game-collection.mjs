@@ -36,7 +36,7 @@ async function sourceFile(path) {
   return new File([bytes], basename(path), { type: extname(path).toLowerCase() === ".zip" ? "application/zip" : "text/html" });
 }
 
-async function importCollection({ manifestPath, assetsDirectory, apply }) {
+async function importCollection({ manifestPath, assetsDirectory, apply, publishReviewed = false, bestEffort = false }) {
   const manifest = validateImportManifest(JSON.parse(await readFile(manifestPath, "utf8")));
   const preparedGames = [];
   for (const game of manifest.games) {
@@ -61,74 +61,107 @@ async function importCollection({ manifestPath, assetsDirectory, apply }) {
 
   const projectUrl = process.env.SUPABASE_URL;
   const publishableKey = process.env.SUPABASE_PUBLISHABLE_KEY;
+  const managerAccessToken = process.env.ROOM310_MANAGER_ACCESS_TOKEN;
   const email = process.env.ROOM310_MANAGER_EMAIL;
   const password = process.env.ROOM310_MANAGER_PASSWORD;
-  if (!projectUrl || !publishableKey || !email || !password) throw new Error("Set SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, ROOM310_MANAGER_EMAIL, and ROOM310_MANAGER_PASSWORD for --apply.");
-  const client = createClient(projectUrl, publishableKey, { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false } });
-  const { data: authData, error: authError } = await client.auth.signInWithPassword({ email, password });
-  if (authError || !authData.session) throw authError || new Error("Manager sign-in failed.");
-  const { data: profile, error: profileError } = await client.from("profiles").select("role,approved").eq("id", authData.user.id).single();
+  if (!projectUrl || !publishableKey || (!managerAccessToken && (!email || !password))) throw new Error("Set SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, and either ROOM310_MANAGER_ACCESS_TOKEN or the manager email/password for --apply.");
+  const client = createClient(projectUrl, publishableKey, {
+    global: managerAccessToken ? { headers: { Authorization: `Bearer ${managerAccessToken}` } } : undefined,
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+  });
+  let accessToken = managerAccessToken;
+  let managerUser;
+  if (managerAccessToken) {
+    const { data, error } = await client.auth.getUser(managerAccessToken);
+    if (error || !data.user) throw error || new Error("Manager access token verification failed.");
+    managerUser = data.user;
+  } else {
+    const { data, error } = await client.auth.signInWithPassword({ email, password });
+    if (error || !data.session) throw error || new Error("Manager sign-in failed.");
+    accessToken = data.session.access_token;
+    managerUser = data.user;
+  }
+  const { data: profile, error: profileError } = await client.from("profiles").select("role,approved").eq("id", managerUser.id).single();
   if (profileError || !profile?.approved || !["admin", "editor"].includes(profile.role)) throw new Error("The signed-in account is not an approved Room310 manager.");
 
-  let { data: collection, error: collectionError } = await client.from("game_collections").select("id").eq("slug", manifest.collection.slug).maybeSingle();
+  let { data: collection, error: collectionError } = await client.from("game_collections").select("id,status").eq("slug", manifest.collection.slug).maybeSingle();
   if (collectionError) throw collectionError;
   if (!collection) {
     const result = await client.from("game_collections").insert({ ...manifest.collection, status: "draft" }).select("id").single();
     if (result.error) throw result.error;
     collection = result.data;
   } else {
-    const result = await client.from("game_collections").update({ title: manifest.collection.title, description: manifest.collection.description, status: "draft" }).eq("id", collection.id);
+    const result = await client.from("game_collections").update({ title: manifest.collection.title, description: manifest.collection.description }).eq("id", collection.id);
     if (result.error) throw result.error;
   }
 
+  const imported = [];
+  const failed = [];
   for (const item of preparedGames) {
     const { game, prepared, coverBytes, coverType } = item;
-    let { data: row, error: rowError } = await client.from("games").select("id,standalone_html_path,thumbnail_path").eq("slug", game.slug).maybeSingle();
-    if (rowError) throw rowError;
-    const draft = {
-      title: game.title,
-      description: game.description,
-      year: game.year,
-      host_type: "standalone",
-      status: "draft",
-      collection_id: collection.id,
-      external_url: null,
-      embed_html: null,
-      bundle_path: null,
-      standalone_reviewed_sha256: null
-    };
-    if (!row) {
-      const result = await client.from("games").insert({ ...draft, slug: game.slug }).select("id,standalone_html_path,thumbnail_path").single();
-      if (result.error) throw result.error;
-      row = result.data;
-    } else {
-      const result = await client.from("games").update(draft).eq("id", row.id);
-      if (result.error) throw result.error;
-    }
+    try {
+      let { data: row, error: rowError } = await client.from("games").select("id,standalone_html_path,thumbnail_path").eq("slug", game.slug).maybeSingle();
+      if (rowError) throw rowError;
+      const draft = {
+        title: game.title,
+        description: game.description,
+        year: game.year,
+        host_type: "standalone",
+        status: "draft",
+        collection_id: collection.id,
+        external_url: null,
+        embed_html: null,
+        bundle_path: null,
+        standalone_reviewed_sha256: null
+      };
+      if (!row) {
+        const result = await client.from("games").insert({ ...draft, slug: game.slug }).select("id,standalone_html_path,thumbnail_path").single();
+        if (result.error) throw result.error;
+        row = result.data;
+      } else {
+        const result = await client.from("games").update(draft).eq("id", row.id);
+        if (result.error) throw result.error;
+      }
 
-    const htmlPath = `${row.id}/standalone-${prepared.sha256}.html`;
-    await uploadStandaloneTus({ projectUrl, publishableKey, accessToken: authData.session.access_token, file: prepared.uploadFile, objectName: htmlPath, onProgress(done, total) { process.stdout.write(`\r${game.title}: ${Math.round(done / total * 100)}%`); } });
-    process.stdout.write("\n");
-    const coverExtension = extname(game.cover).toLowerCase().replace(".jpeg", ".jpg");
-    const coverPath = `${row.id}/cover-${prepared.sha256.slice(0, 16)}${coverExtension}`;
-    const coverUpload = await client.storage.from("game-thumbnails").upload(coverPath, coverBytes, { contentType: coverType, cacheControl: "3600", upsert: true });
-    if (coverUpload.error) throw coverUpload.error;
-    const updated = await client.from("games").update({ standalone_html_path: htmlPath, source_sha256: prepared.sha256, source_bytes: prepared.bytes, thumbnail_path: coverPath, standalone_reviewed_sha256: null, status: "draft" }).eq("id", row.id);
-    if (updated.error) throw updated.error;
-    if (row.standalone_html_path && row.standalone_html_path !== htmlPath) await client.storage.from("game-standalone").remove([row.standalone_html_path]);
-    if (row.thumbnail_path && row.thumbnail_path !== coverPath) await client.storage.from("game-thumbnails").remove([row.thumbnail_path]);
+      const htmlPath = `${row.id}/standalone-${prepared.sha256}.html`;
+      await uploadStandaloneTus({ projectUrl, publishableKey, accessToken, file: prepared.uploadFile, objectName: htmlPath, onProgress(done, total) { process.stdout.write(`\r${game.title}: ${Math.round(done / total * 100)}%`); } });
+      process.stdout.write("\n");
+      const coverExtension = extname(game.cover).toLowerCase().replace(".jpeg", ".jpg");
+      const coverPath = `${row.id}/cover-${prepared.sha256.slice(0, 16)}${coverExtension}`;
+      const coverUpload = await client.storage.from("game-thumbnails").upload(coverPath, coverBytes, { contentType: coverType, cacheControl: "3600", upsert: true });
+      if (coverUpload.error) throw coverUpload.error;
+      const updated = await client.from("games").update({
+        standalone_html_path: htmlPath,
+        source_sha256: prepared.sha256,
+        source_bytes: prepared.bytes,
+        thumbnail_path: coverPath,
+        standalone_reviewed_sha256: publishReviewed ? prepared.sha256 : null,
+        status: publishReviewed ? "published" : "draft"
+      }).eq("id", row.id);
+      if (updated.error) throw updated.error;
+      if (row.standalone_html_path && row.standalone_html_path !== htmlPath) await client.storage.from("game-standalone").remove([row.standalone_html_path]);
+      if (row.thumbnail_path && row.thumbnail_path !== coverPath) await client.storage.from("game-thumbnails").remove([row.thumbnail_path]);
+      imported.push(game.slug);
+    } catch (error) {
+      failed.push({ slug: game.slug, error: error.message });
+      console.error(`Skipped ${game.title}: ${error.message}`);
+      if (!bestEffort) throw error;
+    }
   }
-  await client.auth.signOut();
-  console.log("Import complete. All games and the collection remain drafts for manual security review and playtesting.");
+  if (!managerAccessToken) await client.auth.signOut();
+  console.log(`Import complete: ${imported.length} imported, ${failed.length} skipped. ${publishReviewed ? "Reviewed games were published." : "Imported games remain drafts."}`);
+  if (failed.length) console.log(JSON.stringify({ failed }, null, 2));
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const args = process.argv.slice(2);
   const apply = args.includes("--apply");
-  const values = args.filter((arg) => arg !== "--apply");
+  const publishReviewed = args.includes("--publish-reviewed");
+  const bestEffort = args.includes("--best-effort");
+  const values = args.filter((arg) => !["--apply", "--publish-reviewed", "--best-effort"].includes(arg));
   const manifestPath = resolve(values[0] || "game-imports/100-games-pilot.json");
   const assetsDirectory = resolve(values[1] || dirname(manifestPath));
-  importCollection({ manifestPath, assetsDirectory, apply }).catch((error) => {
+  importCollection({ manifestPath, assetsDirectory, apply, publishReviewed, bestEffort }).catch((error) => {
     console.error(error.message);
     process.exitCode = 1;
   });
