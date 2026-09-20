@@ -1,6 +1,6 @@
 # Room310
 
-Room310 is an HTML/CSS/JavaScript learning site. Version 0.11.0 adds an oversized, four-thumbnail collection preview for internally hosted games, opening into the existing searchable collection page. It retains the six language-course covers, assignment-aware Study AI help, linked and hosted games, interactive graphs, the deep learning and PyTorch course, assignment formatting and syntax highlighting, and the existing protected administration tools.
+Room310 is an HTML/CSS/JavaScript learning site. Version 0.12.0 gives every current 100+ Games entry researched, game-specific emoji artwork with colorful arcade-style backgrounds and a safe generic fallback for future games. It retains the oversized collection preview, six language-course covers, assignment-aware Study AI help, linked and hosted games, interactive graphs, the deep learning and PyTorch course, assignment formatting and syntax highlighting, and the existing protected administration tools.
 
 ## Versioning
 

@@ -1806,6 +1806,12 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
 .collection-game-cover { aspect-ratio: 16 / 9; display: grid; place-items: center; overflow: hidden; color: var(--paper); background: var(--ink); }
 .collection-game-cover img { width: 100%; height: 100%; display: block; object-fit: cover; }
 .collection-game-cover span { font-size: clamp(58px, 7vw, 96px); font-weight: 700; line-height: .8; letter-spacing: -.08em; }
+.collection-game-cover-emoji { position: relative; isolation: isolate; background: linear-gradient(135deg, var(--cover-start), var(--cover-end)); }
+.collection-game-cover-emoji::before,
+.collection-game-cover-emoji::after { content: ""; position: absolute; z-index: -1; border-radius: 50%; background: rgba(255,255,255,.16); }
+.collection-game-cover-emoji::before { width: 55%; aspect-ratio: 1; top: -24%; right: -12%; }
+.collection-game-cover-emoji::after { width: 42%; aspect-ratio: 1; bottom: -26%; left: -8%; background: rgba(15,23,42,.12); }
+.collection-game-cover .collection-game-emoji { z-index: 1; font-size: clamp(72px, 10vw, 126px); line-height: 1; letter-spacing: 0; filter: drop-shadow(0 16px 16px rgba(15,23,42,.24)); transform: rotate(-4deg); }
 .collection-game-body { min-width: 0; display: grid; grid-template-rows: auto auto 1fr auto; padding: 18px; }
 .collection-game-body small { font: 10px "Courier New", monospace; text-transform: uppercase; }
 .collection-game-body h2 { margin: 16px 0 8px; font-size: clamp(28px, 3.2vw, 45px); line-height: .9; letter-spacing: -.055em; overflow-wrap: anywhere; }

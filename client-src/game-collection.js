@@ -6,6 +6,28 @@ const search = document.querySelector("#collection-search");
 const count = document.querySelector("#collection-count");
 let games = [];
 
+const coverEmoji = new Map([
+  ["2048", "🔢"], ["2048-cupcakes", "🧁"], ["angrybirds", "🐦"], ["bitplanes", "✈️"],
+  ["bloxorz", "🧱"], ["bubbleshooter", "🫧"], ["chess", "♟️"], ["doodlejump", "👽"],
+  ["ducklife", "🦆"], ["ducklife-2", "🦆"], ["ducklife-5", "🦆"], ["earntodie", "🚙"],
+  ["earntodie-2", "🧟"], ["flappybird", "🐤"], ["floodrunner-2", "🏃"], ["floodrunner-4", "🌊"],
+  ["fruitninja", "🍉"], ["geometrydash", "🔷"], ["getaway-shootout", "🔫"], ["hole-io", "🕳️"],
+  ["ironsnout", "🐷"], ["minesweeper", "💣"], ["monkey-mart", "🐒"], ["oppositeday", "🔄"],
+  ["ovo-2", "🏃"], ["pacman", "🟡"], ["papasburgeria", "🍔"], ["paper-io-2", "🗺️"],
+  ["redball-4-vol-2", "🔴"], ["redball-4-vol-3", "🔴"], ["retro-bowl", "🏈"], ["retrohighway", "🏍️"],
+  ["run", "🏃"], ["run-2", "🏃"], ["sandgame", "🏖️"], ["slope", "🟢"],
+  ["snow-rider", "🛷"], ["soccer-random", "⚽"], ["spaceiskey", "🔑"], ["spaceiskey-2", "🚀"],
+  ["stack", "🏗️"], ["stickmerge", "🎯"], ["stickman-hook", "🪝"], ["thisistheonlyleveltoo", "🐘"],
+  ["timeshooter-2", "⏱️"], ["timeshooter-3", "⌛"], ["tomb-of-the-mask", "🎭"], ["trapthecat", "🐈"],
+  ["tunnel-rush", "🌀"], ["vex-6", "🏃"], ["vex-7", "🤸"], ["vexx-3-m", "🏍️"],
+  ["vexx-3-m-2", "🏁"], ["webecomewhatwebehold", "📷"], ["wheely", "🚗"], ["wheely-8", "🛸"]
+]);
+const coverPalettes = [
+  ["#7c3aed", "#22d3ee"], ["#f97316", "#facc15"], ["#ec4899", "#8b5cf6"],
+  ["#10b981", "#38bdf8"], ["#ef4444", "#fb7185"], ["#2563eb", "#60a5fa"],
+  ["#84cc16", "#facc15"], ["#0f172a", "#475569"]
+];
+
 function slugFromPath() {
   return location.pathname.match(/^\/games\/collections\/([a-z0-9][a-z0-9-]{0,69})\/?$/)?.[1] || "";
 }
@@ -15,16 +37,29 @@ function card(game, index) {
   article.className = "collection-game-card";
   const cover = document.createElement("div");
   cover.className = "collection-game-cover";
-  if (game.thumbnailUrl) {
+  const researchedEmoji = coverEmoji.get(game.slug);
+  if (researchedEmoji) {
+    const [start, end] = coverPalettes[index % coverPalettes.length];
+    cover.classList.add("collection-game-cover-emoji");
+    cover.style.setProperty("--cover-start", start);
+    cover.style.setProperty("--cover-end", end);
+    const art = document.createElement("span");
+    art.className = "collection-game-emoji";
+    art.setAttribute("aria-hidden", "true");
+    art.textContent = researchedEmoji;
+    cover.append(art);
+  } else if (game.thumbnailUrl) {
     const image = document.createElement("img");
     image.src = game.thumbnailUrl;
-    image.alt = `Cover artwork for ${game.title}`;
+    image.alt = "";
     image.loading = "lazy";
     cover.append(image);
   } else {
-    const number = document.createElement("span");
-    number.textContent = String(index + 1).padStart(2, "0");
-    cover.append(number);
+    const art = document.createElement("span");
+    art.className = "collection-game-emoji";
+    art.setAttribute("aria-hidden", "true");
+    art.textContent = "🎮";
+    cover.append(art);
   }
   const body = document.createElement("div");
   body.className = "collection-game-body";
@@ -80,7 +115,7 @@ async function loadCollection() {
   if (gameError) throw gameError;
   games = await Promise.all((rows || []).map(async (row) => {
     const game = gameFromRow(row);
-    if (!game.thumbnailPath) return { ...game, thumbnailUrl: "" };
+    if (coverEmoji.has(game.slug) || !game.thumbnailPath) return { ...game, thumbnailUrl: "" };
     const { data: signed } = await supabase.storage.from("game-thumbnails").createSignedUrl(game.thumbnailPath, 3600);
     return { ...game, thumbnailUrl: signed?.signedUrl || "" };
   }));

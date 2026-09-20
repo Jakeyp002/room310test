@@ -23,6 +23,21 @@ test("the native collection has a routed searchable Room310 page", async () => {
   assert.match(build, /"game-collection": "client-src\/game-collection\.js"/);
 });
 
+test("the current collection has researched emoji artwork with a safe future fallback", async () => {
+  const [script, css] = await Promise.all([
+    read("../client-src/game-collection.js"),
+    read("../room310files/style.css")
+  ]);
+  const mapping = script.slice(script.indexOf("const coverEmoji"), script.indexOf("const coverPalettes"));
+  assert.equal(mapping.match(/\["[^"]+",\s*"[^"]+"\]/g)?.length, 56);
+  assert.match(script, /coverEmoji\.has\(game\.slug\) \|\| !game\.thumbnailPath/);
+  assert.match(script, /art\.setAttribute\("aria-hidden", "true"\)/);
+  assert.match(script, /art\.textContent = "🎮"/);
+  assert.doesNotMatch(script, /padStart\(2, "0"\)/);
+  assert.match(css, /\.collection-game-cover-emoji/);
+  assert.match(css, /\.collection-game-emoji/);
+});
+
 test("the standalone review tool uses the production sandbox and includes an escape probe", async () => {
   const preview = await read("../scripts/preview-standalone-import.mjs");
   assert.match(preview, /setAttribute\("sandbox","allow-scripts allow-pointer-lock"\)/);
