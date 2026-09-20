@@ -2507,7 +2507,6 @@ summary:focus-visible {
 .games-hub .public-game-cover { position: relative; min-height: 0; aspect-ratio: 4 / 3; color: #182033; background: var(--game-color); }
 .games-hub .public-game-cover img { transition: transform 180ms ease; }
 .public-game-icon { font-size: clamp(58px, 7vw, 92px); filter: drop-shadow(0 8px 10px rgba(24, 32, 51, 0.12)); }
-.public-game-badge { position: absolute; left: 12px; bottom: 12px; padding: 7px 9px; border-radius: 999px; color: #182033; background: rgba(255,255,255,0.86); font: 700 9px "Courier New", monospace; letter-spacing: 0.04em; text-transform: uppercase; }
 .games-hub .public-game-body { flex: 1; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto 1fr auto; gap: 8px 12px; align-content: stretch; min-height: 150px; padding: 16px; }
 .games-hub .public-game-body h3 { grid-column: 1 / -1; margin: 0; font-size: 21px; line-height: 1.05; letter-spacing: -0.035em; }
 .games-hub .public-game-body p { grid-column: 1 / -1; display: -webkit-box; overflow: hidden; margin: 0; color: #575a69; font-size: 13px; line-height: 1.4; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
@@ -2546,4 +2545,66 @@ summary:focus-visible {
 @media (max-width: 390px) {
   .games-hub .games-list { grid-template-columns: 1fr; }
   .games-hub .public-game-body p { display: -webkit-box; }
+}
+
+/* Language course covers — v0.9 */
+.python-study-page { --language-accent: #ffd43b; --language-wash: #e8f3fb; }
+.java-study-page { --language-accent: #8fd0ff; --language-wash: #e7f5ff; }
+.cpp-study-page { --language-accent: #f3a86f; --language-wash: #fff0e5; }
+.sql-study-page { --language-accent: #b9a9ed; --language-wash: #efeaff; }
+.javascript-study-page { --language-accent: #f0d13f; --language-wash: #fff8cd; }
+.csharp-study-page { --language-accent: #8ed0a0; --language-wash: #e5f7ea; }
+.language-study-hero {
+  min-height: 0;
+  align-items: center;
+  gap: 22px;
+  padding: 56px 64px 68px;
+  background: linear-gradient(135deg, var(--paper), var(--language-wash));
+}
+.language-cover {
+  width: min(100%, 1120px);
+  min-height: 390px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 190px;
+  gap: 28px;
+  padding: 28px;
+  overflow: hidden;
+  border: 2px solid var(--language-accent);
+  border-radius: 20px;
+  color: #e8eef8;
+  background: #111827;
+  box-shadow: 0 18px 38px -10px rgba(24, 32, 51, 0.28);
+}
+.language-code { min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 20px; }
+.language-code > span { color: var(--language-accent); font: 700 11px "Courier New", monospace; letter-spacing: 0.12em; text-transform: uppercase; }
+.language-code > span::before { content: "●  ●  ●  "; color: #ff6b6b; letter-spacing: 0.02em; }
+.language-code pre { min-width: 0; margin: 0; overflow: auto; }
+.language-code code { color: #e8eef8; background: transparent; font: 15px/1.55 "Courier New", monospace; white-space: pre; }
+.language-mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  border-radius: 14px;
+  color: #182033;
+  background: var(--language-accent);
+  text-align: center;
+}
+.language-mark > span { font-size: 54px; line-height: 1; }
+.language-mark strong { font-size: 48px; line-height: 1; letter-spacing: -0.06em; }
+.language-mark small { font: 700 9px "Courier New", monospace; letter-spacing: 0.08em; text-transform: uppercase; }
+.language-study-hero > small { margin-top: 4px; }
+.language-study-hero h1 { margin: 0; text-align: center; }
+.language-study-hero > p { text-align: center; }
+
+@media (max-width: 760px) {
+  .language-study-hero { padding: 28px 18px 46px; }
+  .language-cover { min-height: 0; grid-template-columns: 1fr; gap: 16px; padding: 18px; }
+  .language-code { min-height: 270px; }
+  .language-code code { font-size: 12px; }
+  .language-mark { min-height: 130px; flex-direction: row; }
+  .language-mark > span { font-size: 40px; }
+  .language-mark strong { font-size: 38px; }
+  .language-study-hero h1 { font-size: clamp(54px, 17vw, 88px); }
 }

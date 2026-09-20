@@ -19,7 +19,7 @@ function iconFor(title) {
   return iconRules.find(([pattern]) => pattern.test(title))?.[1] || "🎮";
 }
 
-function makeVisual(title, thumbnailUrl, index, badgeText) {
+function makeVisual(title, thumbnailUrl, index) {
   const visual = document.createElement("div");
   visual.className = "public-game-cover";
   if (thumbnailUrl) {
@@ -35,19 +35,15 @@ function makeVisual(title, thumbnailUrl, index, badgeText) {
     icon.textContent = iconFor(title);
     visual.append(icon);
   }
-  const badge = document.createElement("span");
-  badge.className = "public-game-badge";
-  badge.textContent = badgeText;
-  visual.append(badge);
   visual.style.setProperty("--game-color", colors[index % colors.length]);
   return visual;
 }
 
-function makeCard({ title: name, description: copy, year, hostType, thumbnailUrl, slug }, index) {
+function makeCard({ title: name, description: copy, year, thumbnailUrl, slug }, index) {
   const article = document.createElement("article");
   article.className = "public-game-card";
   article.style.setProperty("--game-color", colors[index % colors.length]);
-  const visual = makeVisual(name, thumbnailUrl, index, hostType === "hosted" ? "Room310" : hostType === "embed" ? "Interactive" : "Browser game");
+  const visual = makeVisual(name, thumbnailUrl, index);
   const body = document.createElement("div");
   body.className = "public-game-body";
   const title = document.createElement("h3");
@@ -67,11 +63,11 @@ function makeCard({ title: name, description: copy, year, hostType, thumbnailUrl
   return article;
 }
 
-function makeCollectionCard({ title: name, description: copy, slug, gameCount }, index) {
+function makeCollectionCard({ title: name, description: copy, slug }, index) {
   const article = document.createElement("article");
   article.className = "public-game-card public-collection-card";
   article.style.setProperty("--game-color", colors[index % colors.length]);
-  const visual = makeVisual(name, "", index, `${gameCount} games`);
+  const visual = makeVisual(name, "", index);
   visual.querySelector(".public-game-icon").textContent = "🎲";
   const body = document.createElement("div");
   body.className = "public-game-body";

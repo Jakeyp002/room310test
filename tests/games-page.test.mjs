@@ -17,6 +17,7 @@ test("Games presents a searchable, growing card library", () => {
   assert.match(css, /--game-color/);
   assert.match(script, /search\?\.addEventListener\("input"/);
   assert.match(script, /entries\.filter/);
+  assert.doesNotMatch(script, /Browser game|public-game-badge|`\$\{gameCount\} games`/);
 });
 
 test("Game cards keep names, focus treatment, and minimum play targets", () => {
