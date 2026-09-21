@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { parseDesmosGraph, graphPageUrl, safeLoginDestination } from "../client-src/graph-utils.js";
+import { extractDesmosGraphFromText, parseDesmosGraph, graphPageUrl, safeLoginDestination } from "../client-src/graph-utils.js";
 
 test("Desmos imports accept share links and iframe code without executing markup", () => {
   const expected = { id: "fmxds1uvhe", url: "https://www.desmos.com/calculator/fmxds1uvhe", embedUrl: "https://www.desmos.com/calculator/fmxds1uvhe" };
@@ -10,6 +10,14 @@ test("Desmos imports accept share links and iframe code without executing markup
 
 test("Desmos imports reject unsafe hosts, protocols, unsaved graphs and non-graph sources", () => {
   for (const source of ["", "javascript:alert(1)", "http://www.desmos.com/calculator/fmxds1uvhe", "https://desmos.com.evil.test/calculator/fmxds1uvhe", "https://www.desmos.com@evil.test/calculator/fmxds1uvhe", "https://admin@desmos.com/calculator/fmxds1uvhe", "https://www.desmos.com:8443/calculator/fmxds1uvhe", "https://www.desmos.com/calculator", "https://www.desmos.com/3d/fmxds1uvhe", "<iframe onload='alert(1)'></iframe>", "x".repeat(4097)]) assert.throws(() => parseDesmosGraph(source));
+});
+
+test("Helper finds a saved Desmos link inside a natural-language question", () => {
+  assert.equal(extractDesmosGraphFromText("Can you explain https://www.desmos.com/calculator/fmxds1uvhe?lang=en#test please?").url, "https://www.desmos.com/calculator/fmxds1uvhe");
+  assert.equal(extractDesmosGraphFromText("Look at desmos.com/calculator/fmxds1uvhe and tell me the vertex").id, "fmxds1uvhe");
+  for (const source of ["No graph here", "https://evil.test/calculator/fmxds1uvhe", "https://www.desmos.com/3d/fmxds1uvhe"]) {
+    assert.equal(extractDesmosGraphFromText(source), null);
+  }
 });
 
 test("graph navigation stays on Room310 and login return paths are allowlisted", () => {

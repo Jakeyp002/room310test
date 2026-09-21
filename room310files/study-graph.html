@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; frame-src 'self'; style-src 'self'; script-src 'self'; img-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+    <title>Interactive graph · Room310</title>
+    <link rel="stylesheet" href="study-graph-viewer.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+  </head>
+  <body>
+    <header class="graph-viewer-header">
+      <a class="graph-viewer-back" href="/helper.html">← Back to Helper</a>
+      <div>
+        <small>Room310 / Desmos</small>
+        <h1 id="graph-viewer-title">Interactive graph</h1>
+      </div>
+      <a id="graph-viewer-source" href="https://www.desmos.com/calculator" target="_blank" rel="noopener noreferrer" hidden>Open original in Desmos ↗</a>
+    </header>
+    <main class="graph-viewer-stage">
+      <iframe id="graph-viewer-frame" title="Full-size interactive Desmos graph" src="/study-graph-runner.html" sandbox="allow-scripts" referrerpolicy="no-referrer"></iframe>
+      <p id="graph-viewer-status" role="status">Opening graph…</p>
+    </main>
+    <script src="study-graph-viewer.js"></script>
+  </body>
+</html>

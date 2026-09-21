@@ -19,6 +19,17 @@ export function parseDesmosGraph(value) {
   return { id: match[1], url: canonical, embedUrl: canonical };
 }
 
+export function extractDesmosGraphFromText(value) {
+  const text = String(value || "");
+  const match = text.match(/(?:https:\/\/)?(?:www\.)?desmos\.com\/calculator\/[a-zA-Z0-9_-]{6,80}(?:[/?#][^\s<>"']*)?/i);
+  if (!match) return null;
+  try {
+    return parseDesmosGraph(match[0]);
+  } catch {
+    return null;
+  }
+}
+
 export function graphPageUrl(slug) {
   return `/graphs/${encodeURIComponent(slug)}`;
 }

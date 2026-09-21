@@ -6,7 +6,7 @@
     <meta name="description" content="Learn with Room 310 Study AI, a guided tutor for math, science, computer science, history, English, and more." />
     <title>Helper · Room310</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="vendor/katex/katex.min.css?v=0.12.0" />
+    <link rel="stylesheet" href="vendor/katex/katex.min.css?v=0.13.0" />
     <link rel="icon" type="image/png" href="favicon.png" />
   </head>
   <body class="helper-page">
@@ -31,7 +31,7 @@
           </div>
           <div>
             <p>Understand the next step.</p>
-            <span>Guided explanations and interactive graphs for your questions.</span>
+            <span>Guided explanations, interactive graphs, and saved Desmos link reading.</span>
           </div>
         </header>
 
@@ -81,7 +81,7 @@
               <div class="study-ai-messages" id="study-ai-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
               <form class="study-ai-composer" id="study-ai-form">
                 <label class="sr-only" for="study-ai-input">Ask Room 310 Study AI a question</label>
-                <textarea id="study-ai-input" rows="1" maxlength="4000" placeholder="Ask a question or describe a graph…" enterkeyhint="send" required></textarea>
+                <textarea id="study-ai-input" rows="1" maxlength="4000" placeholder="Ask a question, describe a graph, or paste a Desmos link…" enterkeyhint="send" required></textarea>
                 <div>
                   <span id="study-ai-status" role="status">Enter to send · Shift+Enter for a new line</span>
                   <div class="study-ai-composer-actions">
@@ -95,8 +95,8 @@
         </div>
       </section>
     </main>
-    <script src="site-polish.js?v=0.12.0"></script>
-    <script src="supabase-config.js?v=0.12.0"></script>
-    <script src="study-ai.js?v=0.12.0"></script>
+    <script src="site-polish.js?v=0.13.0"></script>
+    <script src="supabase-config.js?v=0.13.0"></script>
+    <script src="study-ai.js?v=0.13.0"></script>
   </body>
 </html>

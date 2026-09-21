@@ -13,9 +13,12 @@ window.addEventListener("message", (event) => {
   if (initialized || event.source !== window.parent || event.data?.type !== "room310-graph") return;
   const { apiKey, expressions, bounds } = event.data;
   if (!/^[a-zA-Z0-9_-]{16,100}$/.test(apiKey || "") || !Array.isArray(expressions)
-    || expressions.length < 1 || expressions.length > 8
-    || expressions.some((expression) => typeof expression?.latex !== "string" || expression.latex.length > 240)
-    || !bounds || !["left", "right", "bottom", "top"].every((key) => Number.isFinite(bounds[key]))) {
+    || expressions.length < 1 || expressions.length > 32
+    || expressions.some((expression) => typeof expression?.latex !== "string" || !expression.latex.trim() || expression.latex.length > 500
+      || (expression.color !== undefined && !/^#[0-9a-f]{6}$/i.test(expression.color))
+      || (expression.hidden !== undefined && typeof expression.hidden !== "boolean"))
+    || !bounds || !["left", "right", "bottom", "top"].every((key) => Number.isFinite(bounds[key]) && Math.abs(bounds[key]) <= 1_000_000)
+    || bounds.right <= bounds.left || bounds.top <= bounds.bottom) {
     showError();
     return;
   }
@@ -37,10 +40,16 @@ window.addEventListener("message", (event) => {
         zoomButtons: true,
         images: false,
         links: false,
+        pasteGraphLink: true,
         autosize: true
       });
       const colors = ["#c74440", "#2d70b3", "#388c46", "#6042a6", "#fa7e19", "#000000", "#8c564b", "#d6278b"];
-      calculator.setExpressions(expressions.map(({ latex }, index) => ({ id: `room310_${index + 1}`, latex, color: colors[index] })));
+      calculator.setExpressions(expressions.map(({ latex, color, hidden }, index) => ({
+        id: `room310_${index + 1}`,
+        latex,
+        color: color || colors[index % colors.length],
+        hidden: hidden === true
+      })));
       calculator.setMathBounds(bounds);
       status.hidden = true;
     } catch {

@@ -2032,7 +2032,12 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
 .study-ai-composer-actions { display: flex; gap: 8px; }
 .study-ai-composer #study-ai-graph { background: #fffdf7; }
 .study-ai-composer #study-ai-graph[hidden] { display: none; }
-.study-ai-graph-caption { margin: 18px 0 8px; color: #66635b; font: 700 10px/1.4 "Courier New", monospace; text-transform: uppercase; }
+.study-ai-graph-toolbar { display: flex; justify-content: space-between; gap: 12px; align-items: end; margin: 18px 0 8px; }
+.study-ai-graph-caption { color: #66635b; font: 700 10px/1.4 "Courier New", monospace; text-transform: uppercase; }
+.study-ai-graph-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.study-ai-graph-actions a { padding: 7px 10px; border: 1px solid var(--ink); border-radius: 999px; color: var(--ink); background: #fffdf7; font: 700 9px/1.2 "Courier New", monospace; text-decoration: none; text-transform: uppercase; }
+.study-ai-graph-actions a:hover,
+.study-ai-graph-actions a:focus-visible { color: var(--paper); background: var(--ink); text-decoration: none; }
 .study-ai-graph-frame { display: block; width: 100%; height: min(430px, 56vh); min-height: 300px; border: 1px solid var(--ink); background: #fffdf7; }
 .study-ai-typing { display: inline-flex; gap: 6px; align-items: center; min-height: 24px; }
 .study-ai-typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--ink); animation: study-ai-pulse 1.05s infinite ease-in-out; }
@@ -2066,6 +2071,8 @@ footer { padding: 90px 28px 28px; background: var(--accent); }
   .study-ai-auth > div p { font-size: 15px; }
   .study-ai-messages { padding: 22px 15px; }
   .study-ai-graph-frame { height: min(390px, 52svh); min-height: 270px; }
+  .study-ai-graph-toolbar { align-items: stretch; flex-direction: column; }
+  .study-ai-graph-actions { justify-content: flex-start; }
   .study-ai-composer-actions { width: 100%; }
   .study-ai-composer-actions button { flex: 1; }
   .study-ai-message { width: 94%; margin-bottom: 22px; }

@@ -1,4 +1,5 @@
 import { decorateMarkdown, markdown } from "./ai-renderer.js";
+import { extractDesmosGraphFromText, parseDesmosGraph } from "./graph-utils.js";
 import { configurationMessage, isConfigured, messageFor, supabase } from "./supabase-client.js";
 
 const authPanel = document.querySelector("#study-ai-auth");
@@ -117,11 +118,50 @@ function isGraphRequest(question) {
       || /\b(?:make|create|draw|show|generate)\s+(?:me\s+)?(?:an?\s+)?(?:interactive\s+)?graph\b/i.test(question));
 }
 
+function graphViewerUrl(result) {
+  const payload = JSON.stringify({
+    apiKey: result.desmosApiKey,
+    expressions: result.expressions,
+    bounds: result.bounds,
+    title: typeof result.title === "string" ? result.title : "Room310 interactive graph",
+    sourceUrl: typeof result.sourceUrl === "string" ? result.sourceUrl : ""
+  });
+  const bytes = new TextEncoder().encode(payload);
+  let binary = "";
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return `/study-graph.html#graph=${btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/, "")}`;
+}
+
 function renderGraph(message, result) {
   message.article.classList.add("study-ai-message-graph");
-  const caption = document.createElement("div");
+  const toolbar = document.createElement("div");
+  toolbar.className = "study-ai-graph-toolbar";
+  const caption = document.createElement("span");
   caption.className = "study-ai-graph-caption";
-  caption.textContent = "Interactive graph · change equations, zoom, and explore";
+  caption.textContent = result.sourceUrl
+    ? `${result.title || "Saved Desmos graph"} · imported safely`
+    : "Interactive graph · change equations, zoom, and explore";
+  const actions = document.createElement("span");
+  actions.className = "study-ai-graph-actions";
+  const fullGraph = document.createElement("a");
+  fullGraph.href = graphViewerUrl(result);
+  fullGraph.target = "_blank";
+  fullGraph.rel = "noopener noreferrer";
+  fullGraph.textContent = "Open graph in new tab ↗";
+  actions.append(fullGraph);
+  if (result.sourceUrl) {
+    try {
+      const original = document.createElement("a");
+      original.href = parseDesmosGraph(result.sourceUrl).url;
+      original.target = "_blank";
+      original.rel = "noopener noreferrer";
+      original.textContent = "Open original in Desmos ↗";
+      actions.append(original);
+    } catch {
+      // The server and client both validate Desmos URLs; omit the link if either rejects it.
+    }
+  }
+  toolbar.append(caption, actions);
   const frame = document.createElement("iframe");
   frame.className = "study-ai-graph-frame";
   frame.title = "Interactive Desmos graph created for this Study AI question";
@@ -136,7 +176,7 @@ function renderGraph(message, result) {
       bounds: result.bounds
     }, "*");
   }, { once: true });
-  message.body.append(caption, frame);
+  message.body.append(toolbar, frame);
   messagesElement.scrollTop = messagesElement.scrollHeight;
 }
 
@@ -189,14 +229,18 @@ async function streamTutorResponse(response, assistantMessage) {
 async function sendQuestion(forceGraph = false) {
   const question = input.value.trim();
   if (!question || state.pending || !state.session) return;
-  const graphRequest = forceGraph || isGraphRequest(question);
+  const linkedGraph = extractDesmosGraphFromText(question);
+  const graphRequest = forceGraph || Boolean(linkedGraph) || isGraphRequest(question);
+  const graphMode = linkedGraph ? "graph_link" : "graph";
 
   state.messages.push({ role: "user", content: question });
   createMessage("user", question);
   input.value = "";
   resizeInput();
   setPending(true);
-  statusElement.textContent = graphRequest ? "Building an interactive graph…" : "Room 310 Study AI is thinking…";
+  statusElement.textContent = linkedGraph
+    ? "Reading the saved Desmos graph…"
+    : graphRequest ? "Building an interactive graph…" : "Room 310 Study AI is thinking…";
   const assistantMessage = createMessage("assistant", "", true);
   const controller = new AbortController();
   state.request = controller;
@@ -209,7 +253,7 @@ async function sendQuestion(forceGraph = false) {
         "content-type": "application/json"
       },
       body: JSON.stringify({
-        ...(graphRequest ? { mode: "graph" } : {}),
+        ...(graphRequest ? { mode: graphMode } : {}),
         subject: subjectSelect.value,
         messages: state.messages.slice(-20)
       }),

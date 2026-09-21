@@ -1,0 +1,32 @@
+:root { color-scheme: light; font-family: Arial, Helvetica, sans-serif; color: #182033; background: #f7f4ec; }
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+body { display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.graph-viewer-header {
+  min-height: 76px;
+  display: grid;
+  grid-template-columns: minmax(130px, 1fr) minmax(0, 2fr) minmax(180px, 1fr);
+  gap: 18px;
+  align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid #182033;
+  background: #f7f4ec;
+}
+.graph-viewer-header div { min-width: 0; text-align: center; }
+.graph-viewer-header small { display: block; margin-bottom: 4px; color: #5b63d3; font: 700 9px/1.2 "Courier New", monospace; text-transform: uppercase; }
+.graph-viewer-header h1 { overflow: hidden; margin: 0; font-size: clamp(18px, 2.4vw, 30px); line-height: 1; text-overflow: ellipsis; white-space: nowrap; }
+.graph-viewer-header a { color: #182033; font: 700 10px/1.2 "Courier New", monospace; text-transform: uppercase; text-decoration: none; }
+.graph-viewer-header a:last-child { justify-self: end; padding: 11px 14px; border: 1px solid #182033; border-radius: 999px; background: #bfc4ff; }
+.graph-viewer-header a:hover, .graph-viewer-header a:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
+.graph-viewer-stage { position: relative; min-height: 0; padding: 14px; background: #dfe1ff; }
+.graph-viewer-stage iframe { width: 100%; height: 100%; display: block; border: 1px solid #182033; border-radius: 14px; background: #fffdf7; }
+#graph-viewer-status { position: absolute; inset: 14px; display: grid; place-items: center; margin: 0; padding: 24px; border-radius: 14px; text-align: center; background: #fffdf7; }
+#graph-viewer-status[hidden] { display: none; }
+@media (max-width: 680px) {
+  .graph-viewer-header { min-height: 96px; grid-template-columns: 1fr auto; gap: 8px 12px; padding: 10px 12px; }
+  .graph-viewer-header div { grid-column: 1 / -1; grid-row: 1; }
+  .graph-viewer-header a { grid-row: 2; }
+  .graph-viewer-header a:last-child { padding: 8px 10px; font-size: 9px; }
+  .graph-viewer-stage { padding: 8px; }
+  #graph-viewer-status { inset: 8px; }
+}

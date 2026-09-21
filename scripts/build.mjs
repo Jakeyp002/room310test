@@ -46,6 +46,7 @@ await build({
     graph: "client-src/graph.js",
     "admin-graphs": "client-src/admin-graphs.js",
     "study-ai": "client-src/study-ai.js",
+    "study-graph-viewer": "client-src/study-graph-viewer.js",
     "assignment-help": "client-src/assignment-help.js"
   },
   bundle: true,

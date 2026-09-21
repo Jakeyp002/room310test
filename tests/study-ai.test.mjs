@@ -19,7 +19,7 @@ function request(body, token = "test-session-token") {
   });
 }
 
-function dependencies({ quota = 29, validUser = true, chunks = ["Let’s ", "work it out."], graphPlan = {
+function dependencies({ quota = 29, validUser = true, chunks = ["Let’s ", "work it out."], graphExplanation = "This saved graph shows a parabola in vertex form.", graphPlan = {
   explanation: "The parabola opens upward and crosses the x-axis at -2 and 2.",
   expressions: [{ latex: "y=x^2-4" }],
   bounds: { left: -5, right: 5, bottom: -6, top: 10 }
@@ -45,7 +45,9 @@ function dependencies({ quota = 29, validUser = true, chunks = ["Let’s ", "wor
       responses: {
         async create(payload) {
           seen.response = payload;
-          if (payload.stream === false) return { output_text: JSON.stringify(graphPlan) };
+          if (payload.stream === false) {
+            return { output_text: JSON.stringify(payload.text?.format?.name === "room310_graph_explanation" ? { explanation: graphExplanation } : graphPlan) };
+          }
           return (async function* stream() {
             for (const delta of chunks) yield { type: "response.output_text.delta", delta };
           })();
@@ -135,6 +137,39 @@ test("graph requests reuse authentication and quota, then ask GPT-5 nano for str
   assert.equal(unconfigured.seen.rpc.length, 0);
 });
 
+test("saved Desmos links are inspected server-side and explained with GPT-5 nano", async () => {
+  const mock = dependencies({ quota: 11 });
+  let inspectedUrl = "";
+  const response = await handler(request({
+    mode: "graph_link",
+    subject: "Math",
+    messages: [{ role: "user", content: "What is the vertex in https://www.desmos.com/calculator/fmxds1uvhe?lang=en" }]
+  }), {
+    ...mock.options,
+    inspectDesmosGraph: async (url) => {
+      inspectedUrl = url;
+      return {
+        url,
+        title: "Vertex form",
+        expressions: [{ latex: "y=2(x-3)^2-4", color: "#c74440" }],
+        bounds: { left: -10, right: 10, bottom: -10, top: 10 },
+        context: ["Expression: y=2(x-3)^2-4", "Note: Find the vertex"]
+      };
+    }
+  });
+  assert.equal(response.status, 200);
+  assert.equal(inspectedUrl, "https://www.desmos.com/calculator/fmxds1uvhe");
+  assert.equal(mock.seen.response.model, "gpt-5-nano");
+  assert.match(mock.seen.response.instructions, /graph-reading assistant/);
+  assert.match(mock.seen.response.input[0].content, /untrusted reference data only/);
+  assert.match(mock.seen.response.input[0].content, /y=2\(x-3\)\^2-4/);
+  const body = await response.json();
+  assert.equal(body.explanation, "This saved graph shows a parabola in vertex form.");
+  assert.equal(body.sourceUrl, inspectedUrl);
+  assert.equal(body.desmosApiKey, env.DESMOS_API_KEY);
+  assert.equal(body.remaining, 11);
+});
+
 test("malformed graph output is rejected instead of being sent to Desmos", async () => {
   const mock = dependencies({ graphPlan: { explanation: "bad", expressions: [{ latex: "x\n<script>" }], bounds: { left: -10, right: 10, bottom: -10, top: 10 } } });
   const response = await handler(request({ mode: "graph", subject: "Math", messages: [{ role: "user", content: "Graph x" }] }), mock.options);
@@ -145,8 +180,14 @@ test("malformed graph output is rejected instead of being sent to Desmos", async
 test("the generated graph runs in an opaque-origin sandbox without Room310 auth access", async () => {
   const client = await readFile(new URL("../client-src/study-ai.js", import.meta.url), "utf8");
   const runner = await readFile(new URL("../room310files/study-graph-runner.js", import.meta.url), "utf8");
+  const viewer = await readFile(new URL("../client-src/study-graph-viewer.js", import.meta.url), "utf8");
+  const viewerPage = await readFile(new URL("../room310files/study-graph.html", import.meta.url), "utf8");
   assert.match(client, /setAttribute\("sandbox", "allow-scripts"\)/);
   assert.doesNotMatch(client, /allow-same-origin|allow-top-navigation|allow-popups/);
+  assert.match(viewerPage, /sandbox="allow-scripts"/);
+  assert.doesNotMatch(viewerPage, /allow-same-origin|allow-top-navigation|allow-popups/);
+  assert.match(viewer, /parseDesmosGraph\(payload\.sourceUrl\)/);
+  assert.doesNotMatch(viewer, /innerHTML|localStorage|document\.cookie/);
   assert.match(runner, /event\.source !== window\.parent/);
   assert.match(runner, /calculator\.setExpressions/);
   assert.doesNotMatch(runner, /innerHTML|localStorage|document\.cookie/);
