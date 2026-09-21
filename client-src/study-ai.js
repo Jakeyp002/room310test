@@ -1,6 +1,6 @@
 import { decorateMarkdown, markdown } from "./ai-renderer.js";
 import { extractDesmosGraphFromText, parseDesmosGraph } from "./graph-utils.js";
-import { configurationMessage, isConfigured, messageFor, supabase } from "./supabase-client.js";
+import { configurationMessage, getManager, isConfigured, messageFor, supabase } from "./supabase-client.js";
 
 const authPanel = document.querySelector("#study-ai-auth");
 const chatPanel = document.querySelector("#study-ai-chat");
@@ -17,6 +17,7 @@ const chatForm = document.querySelector("#study-ai-form");
 const input = document.querySelector("#study-ai-input");
 const sendButton = document.querySelector("#study-ai-send");
 const graphButton = document.querySelector("#study-ai-graph");
+const desmosButton = document.querySelector("#study-ai-desmos");
 const statusElement = document.querySelector("#study-ai-status");
 
 const state = {
@@ -24,7 +25,15 @@ const state = {
   messages: [],
   pending: false,
   request: null,
-  remaining: null
+  remaining: null,
+  manager: null,
+  managerCheck: 0,
+  latestGraph: null,
+  latestGraphFrame: null,
+  latestGraphReady: false,
+  latestGraphActions: null,
+  latestDesmosUrl: "",
+  sharingGraph: false
 };
 
 function createMessage(role, content = "", pending = false) {
@@ -60,11 +69,17 @@ function welcomeMessage() {
 function resetChat({ focus = false } = {}) {
   state.messages = [];
   state.remaining = null;
+  state.latestGraph = null;
+  state.latestGraphFrame = null;
+  state.latestGraphReady = false;
+  state.latestGraphActions = null;
+  state.latestDesmosUrl = "";
   messagesElement.replaceChildren();
   createMessage("assistant", welcomeMessage());
   statusElement.textContent = "Enter to send · Shift+Enter for a new line";
   input.value = "";
   resizeInput();
+  updateDesmosAction();
   if (focus) input.focus();
 }
 
@@ -79,6 +94,7 @@ function setPending(pending) {
   input.disabled = pending;
   sendButton.disabled = pending;
   graphButton.disabled = pending || !state.session || !["Math", "Science"].includes(subjectSelect.value);
+  updateDesmosAction();
   subjectSelect.disabled = pending || !state.session;
   newChatButton.disabled = pending || !state.session;
   chatPanel.dataset.state = pending ? "working" : "idle";
@@ -90,9 +106,30 @@ function updateGraphAction() {
   graphButton.disabled = state.pending || !state.session || !available;
 }
 
+function updateDesmosAction() {
+  desmosButton.hidden = !state.manager;
+  desmosButton.disabled = state.pending || state.sharingGraph || !state.latestGraph || !state.latestGraphReady;
+  desmosButton.textContent = state.latestDesmosUrl ? "Open Desmos ↗" : "Edit in Desmos ↗";
+}
+
 function showLoginMessage(text, status = "error") {
   loginMessage.textContent = text;
   loginMessage.dataset.state = status;
+}
+
+async function refreshManager(session) {
+  const check = ++state.managerCheck;
+  state.manager = null;
+  updateDesmosAction();
+  if (!session) return;
+  try {
+    const manager = await getManager();
+    if (check !== state.managerCheck || state.session?.user?.id !== session.user.id) return;
+    state.manager = manager;
+  } catch {
+    state.manager = null;
+  }
+  updateDesmosAction();
 }
 
 function applySession(session) {
@@ -100,6 +137,7 @@ function applySession(session) {
   const previousUserId = state.session?.user?.id || null;
   const nextUserId = validSession?.user?.id || null;
   state.session = validSession;
+  refreshManager(validSession);
   if (previousUserId && previousUserId !== nextUserId) resetChat();
   authPanel.hidden = Boolean(validSession);
   chatPanel.hidden = !validSession;
@@ -168,6 +206,12 @@ function renderGraph(message, result) {
   frame.src = "/study-graph-runner.html";
   frame.setAttribute("sandbox", "allow-scripts");
   frame.referrerPolicy = "no-referrer";
+  state.latestGraph = result;
+  state.latestGraphFrame = frame;
+  state.latestGraphReady = false;
+  state.latestGraphActions = actions;
+  state.latestDesmosUrl = "";
+  updateDesmosAction();
   frame.addEventListener("load", () => {
     frame.contentWindow?.postMessage({
       type: "room310-graph",
@@ -178,6 +222,89 @@ function renderGraph(message, result) {
   }, { once: true });
   message.body.append(toolbar, frame);
   messagesElement.scrollTop = messagesElement.scrollHeight;
+}
+
+window.addEventListener("message", (event) => {
+  if (event.source !== state.latestGraphFrame?.contentWindow || event.data?.type !== "room310-graph-ready") return;
+  state.latestGraphReady = true;
+  updateDesmosAction();
+});
+
+function captureLatestGraph() {
+  const frame = state.latestGraphFrame;
+  if (!frame?.contentWindow || !state.latestGraphReady) return Promise.reject(new Error("Wait for the graph to finish loading, then try again."));
+  const requestId = crypto.randomUUID();
+  return new Promise((resolve, reject) => {
+    const timeout = window.setTimeout(() => {
+      window.removeEventListener("message", receive);
+      reject(new Error("The graph preview took too long. Try again."));
+    }, 15_000);
+    function receive(event) {
+      if (event.source !== frame.contentWindow || event.data?.type !== "room310-graph-snapshot" || event.data.requestId !== requestId) return;
+      window.clearTimeout(timeout);
+      window.removeEventListener("message", receive);
+      if (event.data.error) reject(new Error(event.data.error));
+      else resolve(event.data.snapshot);
+    }
+    window.addEventListener("message", receive);
+    frame.contentWindow.postMessage({ type: "room310-graph-snapshot-request", requestId }, "*");
+  });
+}
+
+function addDesmosLink(url) {
+  if (!state.latestGraphActions || state.latestGraphActions.querySelector("[data-desmos-edit-link]")) return;
+  const link = document.createElement("a");
+  link.href = url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.dataset.desmosEditLink = "";
+  link.textContent = "Edit snapshot in Desmos ↗";
+  state.latestGraphActions.append(link);
+}
+
+async function openLatestGraphInDesmos() {
+  if (!state.manager || state.sharingGraph || !state.session) return;
+  if (state.latestDesmosUrl) {
+    window.open(state.latestDesmosUrl, "_blank", "noopener,noreferrer");
+    return;
+  }
+  const popup = window.open("", "_blank");
+  if (popup) {
+    popup.opener = null;
+    popup.document.title = "Opening Desmos…";
+    popup.document.body.textContent = "Room310 is creating your editable Desmos snapshot…";
+  }
+  state.sharingGraph = true;
+  updateDesmosAction();
+  statusElement.textContent = "Creating an experimental Desmos snapshot…";
+  try {
+    const snapshot = await captureLatestGraph();
+    const response = await fetch("/api/desmos/snapshot", {
+      method: "POST",
+      headers: {
+        authorization: `Bearer ${state.session.access_token}`,
+        "content-type": "application/json"
+      },
+      body: JSON.stringify(snapshot)
+    });
+    if (!response.ok) throw new Error(await readJsonError(response));
+    const result = await response.json();
+    if (typeof result.url !== "string" || !/^https:\/\/www\.desmos\.com\/calculator\/[a-z0-9]{10}$/.test(result.url)) {
+      throw new Error("Desmos returned an invalid graph link. Try again.");
+    }
+    state.latestDesmosUrl = result.url;
+    addDesmosLink(result.url);
+    statusElement.textContent = popup
+      ? "Opened in Desmos. Sign in there if you want to save it to your Desmos account."
+      : "Snapshot ready. Click Open Desmos to edit it.";
+    if (popup) popup.location.replace(result.url);
+  } catch (error) {
+    popup?.close();
+    statusElement.textContent = error.message || "The Desmos snapshot could not be created. Try again.";
+  } finally {
+    state.sharingGraph = false;
+    updateDesmosAction();
+  }
 }
 
 async function readJsonError(response) {
@@ -339,6 +466,7 @@ chatForm.addEventListener("submit", (event) => {
 });
 
 graphButton.addEventListener("click", () => sendQuestion(true));
+desmosButton.addEventListener("click", openLatestGraphInDesmos);
 
 input.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {

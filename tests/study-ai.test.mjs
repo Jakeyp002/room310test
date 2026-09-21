@@ -190,6 +190,9 @@ test("the generated graph runs in an opaque-origin sandbox without Room310 auth 
   assert.doesNotMatch(viewer, /innerHTML|localStorage|document\.cookie/);
   assert.match(runner, /event\.source !== window\.parent/);
   assert.match(runner, /calculator\.setExpressions/);
+  assert.match(runner, /calculator\.getExpressions\(\)/);
+  assert.match(runner, /calculator\.asyncScreenshot/);
+  assert.match(runner, /event\.source !== window\.parent/);
   assert.doesNotMatch(runner, /innerHTML|localStorage|document\.cookie/);
 });
 
@@ -392,6 +395,7 @@ test("Helper page owns Study AI and every public navigation places Helper betwee
   assert.match(helper, /id="study-ai-subject"/);
   assert.match(helper, /Shift\+Enter for a new line/);
   assert.match(helper, /does not save Study AI conversations/);
+  assert.match(helper, /id="study-ai-desmos"/);
   assert.match(helper, /aria-current="page" href="helper\.html">Helper/);
   assert.doesNotMatch(study, /id="study-ai"|study-ai\.js|supabase-config\.js/);
   for (const file of publicFiles.filter((name) => name.endsWith(".html"))) {
@@ -401,6 +405,10 @@ test("Helper page owns Study AI and every public navigation places Helper betwee
     assert.match(page, />Study<\/a>\s*<a[^>]+>Helper<\/a>\s*<a[^>]+>Games<\/a>/, `${file} navigation order`);
   }
   assert.match(client, /messages: state\.messages\.slice\(-20\)/);
+  assert.match(client, /const manager = await getManager\(\)/);
+  assert.match(client, /fetch\("\/api\/desmos\/snapshot"/);
+  assert.match(client, /event\.source !== state\.latestGraphFrame\?\.contentWindow/);
+  assert.doesNotMatch(client, /localStorage\.setItem|sessionStorage\.setItem/);
   assert.doesNotMatch(`${helper}\n${client}`, /OPENAI_API_KEY|NETLIFY_AI_GATEWAY_KEY|sk-[A-Za-z0-9_-]{12}/);
   assert.match(build, /"study-ai": "client-src\/study-ai\.js"/);
   assert.match(migration, /primary key \(user_id, window_started_at\)/);
