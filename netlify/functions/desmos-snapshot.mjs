@@ -78,7 +78,7 @@ export async function saveDesmosSnapshot(payload, { fetcher = fetch, hash = crea
 export default async function handler(request, options = {}) {
   if (request.method !== "POST") return json(405, { error: "Use POST to create a Desmos snapshot." });
   const token = request.headers.get("authorization")?.match(/^Bearer (.+)$/i)?.[1];
-  if (!token) return json(401, { error: "Sign in with an approved administrator account." });
+  if (!token) return json(401, { error: "Sign in to Room310 to create a Desmos snapshot." });
   const env = options.env || process.env;
   if (!env.SUPABASE_URL || !env.SUPABASE_PUBLISHABLE_KEY) return json(503, { error: "Desmos sharing is not configured yet." });
   try {
@@ -94,8 +94,6 @@ export default async function handler(request, options = {}) {
     });
     const { data: auth, error: authError } = await client.auth.getUser(token);
     if (authError || !auth.user) return json(401, { error: "Your session expired. Sign in again." });
-    const { data: profile, error: profileError } = await client.from("profiles").select("role,approved").eq("id", auth.user.id).single();
-    if (profileError || !profile?.approved || !["admin", "editor"].includes(profile.role)) return json(403, { error: "Only approved Graphs administrators can create Desmos snapshots." });
     return json(200, await saveDesmosSnapshot(payload, { fetcher: options.fetcher, hash: options.hash, stateSeed: options.stateSeed }));
   } catch (error) {
     const timedOut = ["AbortError", "TimeoutError"].includes(error?.name);

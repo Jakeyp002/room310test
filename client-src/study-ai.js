@@ -1,6 +1,6 @@
 import { decorateMarkdown, markdown } from "./ai-renderer.js";
 import { extractDesmosGraphFromText, parseDesmosGraph } from "./graph-utils.js";
-import { configurationMessage, getManager, isConfigured, messageFor, supabase } from "./supabase-client.js";
+import { configurationMessage, isConfigured, messageFor, supabase } from "./supabase-client.js";
 
 const authPanel = document.querySelector("#study-ai-auth");
 const chatPanel = document.querySelector("#study-ai-chat");
@@ -26,8 +26,6 @@ const state = {
   pending: false,
   request: null,
   remaining: null,
-  manager: null,
-  managerCheck: 0,
   latestGraph: null,
   latestGraphFrame: null,
   latestGraphReady: false,
@@ -107,7 +105,7 @@ function updateGraphAction() {
 }
 
 function updateDesmosAction() {
-  desmosButton.hidden = !state.manager;
+  desmosButton.hidden = !state.session;
   desmosButton.disabled = state.pending || state.sharingGraph || !state.latestGraph || !state.latestGraphReady;
   desmosButton.textContent = state.latestDesmosUrl ? "Open Desmos ↗" : "Edit in Desmos ↗";
 }
@@ -117,27 +115,11 @@ function showLoginMessage(text, status = "error") {
   loginMessage.dataset.state = status;
 }
 
-async function refreshManager(session) {
-  const check = ++state.managerCheck;
-  state.manager = null;
-  updateDesmosAction();
-  if (!session) return;
-  try {
-    const manager = await getManager();
-    if (check !== state.managerCheck || state.session?.user?.id !== session.user.id) return;
-    state.manager = manager;
-  } catch {
-    state.manager = null;
-  }
-  updateDesmosAction();
-}
-
 function applySession(session) {
   const validSession = session?.access_token && session.user && !session.user.is_anonymous ? session : null;
   const previousUserId = state.session?.user?.id || null;
   const nextUserId = validSession?.user?.id || null;
   state.session = validSession;
-  refreshManager(validSession);
   if (previousUserId && previousUserId !== nextUserId) resetChat();
   authPanel.hidden = Boolean(validSession);
   chatPanel.hidden = !validSession;
@@ -263,7 +245,7 @@ function addDesmosLink(url) {
 }
 
 async function openLatestGraphInDesmos() {
-  if (!state.manager || state.sharingGraph || !state.session) return;
+  if (state.sharingGraph || !state.session) return;
   if (state.latestDesmosUrl) {
     window.open(state.latestDesmosUrl, "_blank", "noopener,noreferrer");
     return;

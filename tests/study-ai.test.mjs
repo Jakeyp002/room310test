@@ -405,7 +405,8 @@ test("Helper page owns Study AI and every public navigation places Helper betwee
     assert.match(page, />Study<\/a>\s*<a[^>]+>Helper<\/a>\s*<a[^>]+>Games<\/a>/, `${file} navigation order`);
   }
   assert.match(client, /messages: state\.messages\.slice\(-20\)/);
-  assert.match(client, /const manager = await getManager\(\)/);
+  assert.match(client, /desmosButton\.hidden = !state\.session/);
+  assert.doesNotMatch(client, /getManager/);
   assert.match(client, /fetch\("\/api\/desmos\/snapshot"/);
   assert.match(client, /event\.source !== state\.latestGraphFrame\?\.contentWindow/);
   assert.doesNotMatch(client, /localStorage\.setItem|sessionStorage\.setItem/);

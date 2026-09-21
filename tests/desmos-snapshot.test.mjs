@@ -21,8 +21,8 @@ function request(body = payload, token = "test-admin-session") {
   });
 }
 
-function dependencies({ user = true, approved = true, role = "admin", upstreamOk = true } = {}) {
-  const seen = { token: null, profileId: null, upstream: null };
+function dependencies({ user = true, upstreamOk = true } = {}) {
+  const seen = { token: null, upstream: null };
   const createSupabaseClient = () => ({
     auth: {
       async getUser(token) {
@@ -31,21 +31,6 @@ function dependencies({ user = true, approved = true, role = "admin", upstreamOk
           ? { data: { user: { id: "00000000-0000-4000-8000-000000000310" } }, error: null }
           : { data: { user: null }, error: new Error("expired") };
       }
-    },
-    from(table) {
-      assert.equal(table, "profiles");
-      return {
-        select(columns) {
-          assert.equal(columns, "role,approved");
-          return {
-            eq(column, id) {
-              assert.equal(column, "id");
-              seen.profileId = id;
-              return { async single() { return { data: { approved, role }, error: null }; } };
-            }
-          };
-        }
-      };
     }
   });
   const fetcher = async (url, options) => {
@@ -76,7 +61,7 @@ test("Desmos state contains only validated calculator fields", () => {
   assert.equal(JSON.stringify(state).includes("thumbnailData"), false);
 });
 
-test("approved Graphs administrators can create the experimental Desmos snapshot", async () => {
+test("any authenticated Room310 user can create the experimental Desmos snapshot", async () => {
   const mock = dependencies();
   const response = await handler(request(), mock.options);
   assert.equal(response.status, 200);
@@ -92,15 +77,9 @@ test("approved Graphs administrators can create the experimental Desmos snapshot
   assert.equal(mock.seen.upstream.options.body.includes("test-admin-session"), false);
 });
 
-test("anonymous, expired, unapproved, and non-manager accounts cannot create snapshots", async () => {
+test("anonymous and expired sessions cannot create snapshots", async () => {
   assert.equal((await handler(request(payload, ""), dependencies().options)).status, 401);
   assert.equal((await handler(request(), dependencies({ user: false }).options)).status, 401);
-  const unapproved = dependencies({ approved: false });
-  assert.equal((await handler(request(), unapproved.options)).status, 403);
-  assert.equal(unapproved.seen.upstream, null);
-  const student = dependencies({ role: "student" });
-  assert.equal((await handler(request(), student.options)).status, 403);
-  assert.equal(student.seen.upstream, null);
 });
 
 test("upstream failures are reported without inventing a working Desmos URL", async () => {
